@@ -14,7 +14,7 @@ function App() {
 
   getData();
 
-  return <div className="text-blue-600">Hot Six~</div>;
+  return <div className="text-accent">Hot Six~</div>;
 }
 
 export default App;
