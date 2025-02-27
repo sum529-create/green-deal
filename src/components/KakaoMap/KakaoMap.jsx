@@ -31,9 +31,9 @@ const KakaoMap = ({ level, mode, productList }) => {
         <MapMarker
           position={location} // ip 기반으로 현재 내 위치 지정
           image={{
-            src: 'null', // 프로필 사진 들어갈 예정
+            src: 'https://cdn-static.zep.us/static/assets/baked-avartar-images/10-35-3-253.png', // 프로필 사진 들어갈 예정
             size: {
-              width: 34,
+              width: 39,
               height: 39,
             },
             options: {
@@ -52,17 +52,35 @@ const KakaoMap = ({ level, mode, productList }) => {
                 onClick={() => handleClickProduct(product)}
               />
               {productInfo && productInfo.id === product.id && (
-                <CustomOverlayMap position={product.location} yAnchor={1.7}>
+                <CustomOverlayMap position={product.location} yAnchor={1.4}>
                   <div
                     style={{
-                      padding: '42px',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      padding: '20px',
                       backgroundColor: '#fff',
                       border: '2px solid rgb(85 204 201)',
                       borderRadius: '15px',
                       color: '#000',
+                      textAlign: 'center',
+                      minWidth: '120px',
                     }}
                   >
-                    {product.product_description}
+                    <div style={{ fontWeight: 'bold', marginBottom: '5px' }}>
+                      {product.name}
+                    </div>
+                    <div style={{ color: '#666', marginBottom: '5px' }}>
+                      {Number(product.price).toLocaleString()}원
+                    </div>
+                    <div style={{ fontSize: '12px', color: '#888' }}>
+                      {product.users.name}{' '}
+                      {new Date(product.createdAt)
+                        .toISOString()
+                        .slice(2, 10)
+                        .replace(/-/g, '.')}
+                    </div>
                   </div>
                 </CustomOverlayMap>
               )}
