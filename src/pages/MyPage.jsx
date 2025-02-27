@@ -1,10 +1,9 @@
 import React from 'react';
 import { useState } from 'react';
 import Button from '../components/common/Button';
+import ProfileSection from '../components/mypage/ProfileSection';
 
 const MyPage = () => {
-  const [isUpdating, setIsUpdating] = useState(false);
-  const [nickname, setNickname] = useState('테스트닉네임');
   const [currentTab, setCurrentTab] = useState('selling');
   const [products, setProducts] = useState([
     {
@@ -71,14 +70,6 @@ const MyPage = () => {
     },
   ]); // UI를 위해 임시로 만든 찜한 상품
 
-  const handleToggleClick = () => {
-    setIsUpdating((prev) => !prev);
-  };
-
-  const handleNicknameChange = (e) => {
-    setNickname(e.target.value);
-  };
-
   const handleTabChange = (tapType) => {
     setCurrentTab(tapType);
   };
@@ -99,44 +90,7 @@ const MyPage = () => {
   return (
     <div className="flex items-center justify-center h-screen gap-14">
       <section className="flex flex-col items-center justify-center gap-10 w-[400px] h-[830px] p-6 bg-light-gray rounded-md">
-        <div className="flex flex-col items-center justify-center gap-4 w-[300px] h-[458px] px-10 py-[30px] bg-white">
-          <Button
-            type="button"
-            variant="primary"
-            size="medium"
-            onClick={() => {
-              console.log('이미지 선택 버튼이 클릭되었습니다.');
-            }}
-          >
-            이미지 선택
-          </Button>
-          <img
-            src={null}
-            alt="프로필 이미지"
-            className="object-cover w-[130px] h-[130px] bg-light-gray rounded-full"
-          />
-
-          {isUpdating ? (
-            <input
-              type="text"
-              value={nickname}
-              onChange={handleNicknameChange}
-              className="w-[210px] h-[32px] border border-dark rounded-md text-center"
-            />
-          ) : (
-            <p className="text-title-sm">{nickname}</p>
-          )}
-          <p className="text-title-sm">email@example.com</p>
-
-          <Button
-            type="button"
-            variant="primary"
-            size="large"
-            onClick={handleToggleClick}
-          >
-            {isUpdating ? '프로필 수정 완료' : '프로필 수정'}
-          </Button>
-        </div>
+        <ProfileSection />
 
         <div className="w-[300px] h-[210px] rounded-md">
           <button
