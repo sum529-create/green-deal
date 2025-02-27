@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { CustomOverlayMap, Map, MapMarker } from 'react-kakao-maps-sdk';
 import { getUserLocation } from '../../utils/getUserLocation';
+import { DUMMY_LISTS } from '../../constants/DUMMY_LISTS';
 
 const KakaoMap = ({ level, mode }) => {
   const [location, setLocation] = useState({ lat: 33.450701, lng: 126.570667 });
@@ -20,9 +21,14 @@ const KakaoMap = ({ level, mode }) => {
       >
         {mode === 'productList' && (
           <div>
-            <MapMarker position={location}>
-              <div>아이폰 팔아요</div>
-            </MapMarker>
+            {DUMMY_LISTS.map((product) => {
+              return (
+                <MapMarker
+                  key={product.id}
+                  position={product.location}
+                ></MapMarker>
+              );
+            })}
           </div>
         )}
       </Map>
