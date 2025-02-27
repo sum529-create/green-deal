@@ -87,8 +87,6 @@ const ProductRegistration = () => {
           />
         </div>
       </div>
-
-      {/* 위치 선택 모달은 실제 구현 시 추가됩니다 */}
     </div>
   );
 };
