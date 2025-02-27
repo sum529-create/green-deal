@@ -15,13 +15,14 @@ export const PRODUCT_CATEGORIES = [
   '기타',
 ];
 export const INITIAL_ADD_PRODUCT_DATA = {
-  title: '',
+  name: '',
+  category: '',
   price: '',
   quality: '',
   refund: '',
-  category: '',
-  description: '',
   location: { lat: null, lng: null },
-  image: null,
+  description: '',
+  img: null,
   soldout: true,
+  updated_at: null,
 };
