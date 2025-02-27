@@ -149,7 +149,12 @@ const ProductList = () => {
       <div className="flex flex-col w-full md:w-3/4">
         <span className="p-4 text-2xl">지금 우리 동네 인기 매물 TOP 20</span>
         <div className="flex-grow full min-h-[400px]">
-          <KakaoMap level={5} mode={'productList'} productList={productList} />
+          <KakaoMap
+            level={5}
+            mode={'productList'}
+            productList={productList}
+            selectedProduct={selectedProduct}
+          />
         </div>
       </div>
     </div>
