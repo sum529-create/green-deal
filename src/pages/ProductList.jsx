@@ -13,7 +13,7 @@ const productList = [
     price: '10000',
     quality: '최상',
     refund: false,
-    location: { lat: 33.450701, lng: 126.570667 },
+    location: { lat: 37.5558858, lng: 126.9176464 },
     description: '싸다 싸! 신발보다 싸!',
     img: 'https://alephksa.com/cdn/shop/files/iPhone_14_Blue_PDP_Image_Position-1A__WWEN_0853ab85-adc4-47fb-8955-43df09cca9f1.jpg?v=1688733593&width=2048',
     user_id: 1,
@@ -33,7 +33,7 @@ const productList = [
     price: '100000',
     quality: '중상',
     refund: false,
-    location: { lat: 33.250701, lng: 126.270667 },
+    location: { lat: 37.5576954, lng: 126.9206567 },
     description: '사용감 살짝 있습니다!',
     img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT8aVBdXsDP6B4DJ9un1nLcIF-jwa3n-fjUeQ&s',
     user_id: 2,
@@ -53,7 +53,7 @@ const productList = [
     price: '1000000',
     quality: '최상',
     refund: false,
-    location: { lat: 33.550701, lng: 126.670667 },
+    location: { lat: 37.5539707, lng: 126.9198014 },
     description: '개봉만 했습니다.',
     img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRVi1KsUu2PdmxovPkDmUbXtykLZwkg4RavvA&s',
     user_id: 3,
@@ -73,7 +73,7 @@ const productList = [
     price: '10000',
     quality: '최상',
     efund: false,
-    location: { lat: 33.450701, lng: 126.570666 },
+    location: { lat: 37.5496465, lng: 126.9109405 },
     description: '싸다 싸! 신발보다 싸!',
     img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRVi1KsUu2PdmxovPkDmUbXtykLZwkg4RavvA&s',
     user_id: 4,
@@ -93,7 +93,7 @@ const productList = [
     price: '10000',
     quality: '최상',
     refund: false,
-    location: { lat: 33.450701, lng: 126.570667 },
+    location: { lat: 37.5451337, lng: 126.9191348 },
     description: '싸다 싸! 신발보다 싸!',
     img: 'https://alephksa.com/cdn/shop/files/iPhone_14_Blue_PDP_Image_Position-1A__WWEN_0853ab85-adc4-47fb-8955-43df09cca9f1.jpg?v=1688733593&width=2048',
     user_id: 5,
@@ -113,27 +113,7 @@ const productList = [
     price: '10000',
     quality: '최상',
     refund: false,
-    location: { lat: 33.450701, lng: 126.576667 },
-    description: '싸다 싸! 신발보다 싸!',
-    img: 'https://alephksa.com/cdn/shop/files/iPhone_14_Blue_PDP_Image_Position-1A__WWEN_0853ab85-adc4-47fb-8955-43df09cca9f1.jpg?v=1688733593&width=2048',
-    user_id: 1,
-    soldout: true,
-    updated_at: '',
-    users: {
-      name: '최수진',
-      profile_img:
-        'https://cdn-static.zep.us/static/assets/baked-avartar-images/2-25-11-73.png',
-    },
-  },
-  {
-    id: 7,
-    createdAt: '2024-02-27T12:34:56.789Z',
-    name: '아이폰11',
-    category: '디지털기기',
-    price: '10000',
-    quality: '최상',
-    refund: false,
-    location: { lat: 33.450301, lng: 126.570667 },
+    location: { lat: 37.5620962, lng: 126.9198479 },
     description: '싸다 싸! 신발보다 싸!',
     img: 'https://alephksa.com/cdn/shop/files/iPhone_14_Blue_PDP_Image_Position-1A__WWEN_0853ab85-adc4-47fb-8955-43df09cca9f1.jpg?v=1688733593&width=2048',
     user_id: 1,
@@ -169,7 +149,7 @@ const ProductList = () => {
       <div className="flex flex-col w-full md:w-3/4">
         <span className="p-4 text-2xl">지금 우리 동네 인기 매물 TOP 20</span>
         <div className="flex-grow full min-h-[400px]">
-          <KakaoMap level={5} />
+          <KakaoMap level={5} mode={'productList'} productList={productList} />
         </div>
       </div>
     </div>
