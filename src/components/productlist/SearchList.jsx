@@ -11,6 +11,7 @@ const SearchList = ({
       {filteredProducts?.map((product) => {
         return (
           <SearchListItem
+            key={product.id}
             product={product}
             selectedProduct={selectedProduct}
             setSelectedProduct={setSelectedProduct}
