@@ -12,13 +12,11 @@ const KakaoMap = ({ level }) => {
   }, []);
 
   return (
-    <div className="w-full h-full">
-      <Map
-        center={location}
-        level={level}
-        style={{ width: '100%', height: '100%' }}
-      />
-    </div>
+    <Map
+      center={location}
+      level={level}
+      style={{ width: '100%', height: '100%' }}
+    />
   );
 };
 
