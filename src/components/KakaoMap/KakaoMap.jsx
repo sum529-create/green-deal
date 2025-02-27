@@ -16,12 +16,17 @@ const KakaoMap = ({ level, mode, productList }) => {
     setProductInfo(product);
   };
 
+  const handleClickMap = () => {
+    setProductInfo(null);
+  };
+
   return (
     <div className="w-full h-full">
       <Map
         center={location}
         level={level}
         style={{ width: '100%', height: '100%' }}
+        onClick={handleClickMap}
       >
         <MapMarker
           position={location} // ip 기반으로 현재 내 위치 지정
