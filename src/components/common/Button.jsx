@@ -18,7 +18,7 @@ const Button = ({
     primary:
       'text-white bg-deep-mint hover:bg-darkmint hover:border-darkmint border-transparent',
     outline:
-      'text-deep-mint border-2 border-deep-mint hover:bg-darkmint hover:border-darkmint hover:text-white',
+      'text-deep-mint bg-white border-2 border-deep-mint hover:bg-darkmint hover:border-darkmint hover:text-white',
   };
   return (
     <button
