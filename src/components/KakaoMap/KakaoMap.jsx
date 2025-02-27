@@ -23,6 +23,22 @@ const KakaoMap = ({ level, mode, productList }) => {
         level={level}
         style={{ width: '100%', height: '100%' }}
       >
+        <MapMarker
+          position={location} // ip 기반으로 현재 내 위치 지정
+          image={{
+            src: 'null', // 프로필 사진 들어갈 예정
+            size: {
+              width: 34,
+              height: 39,
+            },
+            options: {
+              offset: {
+                x: 27,
+                y: 69,
+              },
+            },
+          }}
+        ></MapMarker>
         {mode === 'productList' &&
           productList.map((product) => (
             <div key={product.id}>
@@ -30,14 +46,14 @@ const KakaoMap = ({ level, mode, productList }) => {
                 position={product.location}
                 onClick={() => handleClickProduct(product)}
               />
-
               {productInfo && productInfo.id === product.id && (
                 <CustomOverlayMap position={product.location} yAnchor={1.7}>
                   <div
                     style={{
                       padding: '42px',
                       backgroundColor: '#fff',
-                      border: '1px solid black',
+                      border: '2px solid rgb(85 204 201)',
+                      borderRadius: '15px',
                       color: '#000',
                     }}
                   >
