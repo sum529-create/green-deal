@@ -14,3 +14,14 @@ export const PRODUCT_CATEGORIES = [
   '반려동식물용품',
   '기타',
 ];
+export const INITIAL_ADD_PRODUCT_DATA = {
+  title: '',
+  price: '',
+  quality: '',
+  refund: '',
+  category: '',
+  description: '',
+  location: { lat: null, lng: null },
+  image: null,
+  soldout: true,
+};
