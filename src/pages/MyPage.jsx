@@ -54,20 +54,12 @@ const MyPage = () => {
   ]);
 
   const [wishlist, setWishlist] = useState([
-    // {
-    //   id: 1,
-    //   name: '아이폰 133 팝니다.',
-    //   price: '1,130,000',
-    //   img: '',
-    //   soldout: false,
-    // },
-    // {
-    //   id: 2,
-    //   name: '갤럭시 S213 팝니다.',
-    //   price: '1,150,000',
-    //   img: '',
-    //   soldout: false,
-    // },
+    {
+      id: 2,
+      created_at: '2024-03-02T00:00:00.000Z',
+      product_id: 2,
+      user_id: 1,
+    },
   ]); // UI를 위해 임시로 만든 찜한 상품
 
   const handleTabChange = (tapType) => {
@@ -77,11 +69,13 @@ const MyPage = () => {
   const getFilteredItems = () => {
     switch (currentTab) {
       case 'selling':
-        return products.filter((item) => !item.soldout);
+        return products.filter((item) => item.user_id === 1 && !item.soldout);
       case 'sold':
-        return products.filter((item) => item.soldout);
+        return products.filter((item) => item.user_id === 1 && item.soldout);
       case 'wishlist':
-        return wishlist;
+        return products.filter((product) =>
+          wishlist.some((wish) => wish.product_id === product.id),
+        );
       default:
         return [];
     }
