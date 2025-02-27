@@ -9,65 +9,65 @@ const MyPage = () => {
     {
       id: 1,
       createdAt: '2024-02-27T12:34:56.789Z',
-      product_name: '아이폰11',
-      product_category: '디지털기기',
-      product_price: '10000',
-      product_quality: '최상',
-      product_refund: false,
-      product_location: { lat: 33.450701, lng: 126.570667 },
-      product_description: '싸다 싸! 신발보다 싸!',
-      product_img: '',
+      name: '아이폰11',
+      category: '디지털기기',
+      price: '10000',
+      quality: '최상',
+      refund: false,
+      location: { lat: 33.450701, lng: 126.570667 },
+      description: '싸다 싸! 신발보다 싸!',
+      img: '',
       user_id: 1,
-      product_soldout: false,
+      soldout: false,
       updated_at: '',
     },
     {
       id: 2,
       createdAt: '2024-02-28T12:34:56.789Z',
-      product_name: '축구공',
-      product_category: '스포츠/레저',
-      product_price: '100000',
-      product_quality: '중상',
-      product_refund: false,
-      product_location: { lat: 33.250701, lng: 126.270667 },
-      product_description: '사용감 살짝 있습니다!',
-      product_img: '',
+      name: '축구공',
+      category: '스포츠/레저',
+      price: '100000',
+      quality: '중상',
+      refund: false,
+      location: { lat: 33.250701, lng: 126.270667 },
+      description: '사용감 살짝 있습니다!',
+      img: '',
       user_id: 2,
-      product_soldout: false,
+      soldout: false,
       updated_at: '2024-02-29T12:34:56.789Z',
     },
     {
       id: 3,
       createdAt: '2024-02-27T12:38:56.789Z',
-      product_name: '맥북 Aire',
-      product_category: '디지털기기',
-      product_price: '1000000',
-      product_quality: '최상',
-      product_refund: false,
-      product_location: { lat: 33.550701, lng: 126.670667 },
-      product_description: '개봉만 했습니다.',
-      product_img: '',
+      name: '맥북 Aire',
+      category: '디지털기기',
+      price: '1000000',
+      quality: '최상',
+      refund: false,
+      location: { lat: 33.550701, lng: 126.670667 },
+      description: '개봉만 했습니다.',
+      img: '',
       user_id: 1,
-      product_soldout: true,
+      soldout: true,
       updated_at: '',
     },
   ]);
 
   const [wishlist, setWishlist] = useState([
-    {
-      id: 1,
-      product_name: '아이폰 133 팝니다.',
-      product_price: '1,130,000',
-      product_img: '',
-      product_soldout: false,
-    },
-    {
-      id: 2,
-      product_name: '갤럭시 S213 팝니다.',
-      product_price: '1,150,000',
-      product_img: '',
-      product_soldout: false,
-    },
+    // {
+    //   id: 1,
+    //   name: '아이폰 133 팝니다.',
+    //   price: '1,130,000',
+    //   img: '',
+    //   soldout: false,
+    // },
+    // {
+    //   id: 2,
+    //   name: '갤럭시 S213 팝니다.',
+    //   price: '1,150,000',
+    //   img: '',
+    //   soldout: false,
+    // },
   ]); // UI를 위해 임시로 만든 찜한 상품
 
   const handleTabChange = (tapType) => {
@@ -77,9 +77,9 @@ const MyPage = () => {
   const getFilteredItems = () => {
     switch (currentTab) {
       case 'selling':
-        return products.filter((item) => !item.product_soldout);
+        return products.filter((item) => !item.soldout);
       case 'sold':
-        return products.filter((item) => item.product_soldout);
+        return products.filter((item) => item.soldout);
       case 'wishlist':
         return wishlist;
       default:
@@ -140,34 +140,36 @@ const MyPage = () => {
               : '찜한 상품'}
         </h1>
         <div className="grid grid-cols-3 gap-10 overflow-hidden">
-          {getFilteredItems().map((item) => (
-            <article
-              key={item.id}
-              className="flex flex-col items-center justify-center w-[250px] h-[280px] bg-gray-100 rounded-md border-2 border-light-gray"
-            >
-              <img
-                src={item.product_img || null} // 이미지가 없을 경우 null로 변경!
-                alt={item.product_name}
-                className="object-cover w-full h-[160px] rounded-t-md bg-light-gray"
-              />
-              <div className="w-full h-[120px] p-2">
-                <h3 className="font-semibold text-title-sm">
-                  {item.product_name}
-                </h3>
-                <p className="mb-2 text-gray-500 text-md text-deep-mint">
-                  {item.product_price}
-                </p>
-                <div className="flex items-center justify-center gap-4">
-                  <Button type="button" variant="outline" size="medium">
-                    삭제
-                  </Button>
-                  <Button type="button" variant="primary" size="medium">
-                    수정
-                  </Button>
+          {getFilteredItems().length === 0 ? (
+            <div className="text-lg">아직 아무런 상품도 없습니다. </div>
+          ) : (
+            getFilteredItems().map((item) => (
+              <article
+                key={item.id}
+                className="flex flex-col items-center justify-center w-[250px] h-[280px] bg-gray-100 rounded-md border-2 border-light-gray"
+              >
+                <img
+                  src={item.img || null} // 이미지가 없을 경우 null로 변경!
+                  alt={item.name}
+                  className="object-cover w-full h-[160px] rounded-t-md bg-light-gray"
+                />
+                <div className="w-full h-[120px] p-2">
+                  <h3 className="font-semibold text-title-sm">{item.name}</h3>
+                  <p className="mb-2 text-gray-500 text-md text-deep-mint">
+                    {item.price}
+                  </p>
+                  <div className="flex items-center justify-center gap-4">
+                    <Button type="button" variant="outline" size="medium">
+                      삭제
+                    </Button>
+                    <Button type="button" variant="primary" size="medium">
+                      수정
+                    </Button>
+                  </div>
                 </div>
-              </div>
-            </article>
-          ))}
+              </article>
+            ))
+          )}
         </div>
       </section>
     </div>
