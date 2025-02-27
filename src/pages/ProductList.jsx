@@ -1,5 +1,8 @@
 import React from 'react';
 import KakaoMap from '../components/KakaoMap/KakaoMap';
+import { useState } from 'react';
+import SearchBar from '../components/ProductList/SearchBar';
+import SearchList from '../components/ProductList/SearchList';
 
 const productList = [
   {
@@ -123,16 +126,35 @@ const productList = [
     },
   },
 ];
+
 const ProductList = () => {
+  const [search, setSearch] = useState('');
+  const [selectedProduct, setSelectedProduct] = useState(null);
+
+  const filteredProducts = productList.filter((product) =>
+    product.name.includes(search),
+  );
+
   return (
-    <div className="flex flex-col w-full h-screen md:flex-row">
-      <div className="w-full p-4 md:w-1/4 bg-mint">
-        <p className="font-bold text-title-lg">검색</p>
+    <div className="flex flex-col w-full h-screen overflow-hidden md:flex-row">
+      <div className="w-full mr-4 border-r border-light-gray h-full bg-white md:w-[360px]">
+        <SearchBar setSearch={setSearch} />
+        <SearchList
+          filteredProducts={filteredProducts || []}
+          selectedProduct={selectedProduct}
+          setSelectedProduct={setSelectedProduct}
+          setSearch={setSelectedProduct}
+        />
       </div>
       <div className="flex flex-col w-full md:w-3/4">
         <span className="p-4 text-2xl">지금 우리 동네 인기 매물 TOP 20</span>
         <div className="flex-grow full min-h-[400px]">
-          <KakaoMap level={5} mode={'productList'} productList={productList} />
+          <KakaoMap
+            level={5}
+            mode={'productList'}
+            productList={productList}
+            selectedProduct={selectedProduct}
+          />
         </div>
       </div>
     </div>
