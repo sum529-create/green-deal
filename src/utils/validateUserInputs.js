@@ -15,23 +15,36 @@ export const validateEmail = (email, setError, clearErrors) =>
 /**
  * 닉네임 유효성 검사
  */
-export const validateUserName = (userName, setError, clearErrors) =>
+export const validateUserName = async (userName, setError, clearErrors) => {
   debounceInputs(() => {
     if (userName && userName.length < 3) {
-      setError('userName', { message: '닉네임은 최소 3자 이상이어야 합니다.' });
+      setError('userName', {
+        message: '닉네임은 최소 3글자 이상이어야 합니다.',
+      });
     } else {
       clearErrors('userName');
     }
   });
-
+};
 /**
  * 비밀번호 유효성 검사
  */
 export const validatePassword = (password, setError, clearErrors) =>
   debounceInputs(() => {
+    const minLength = 8;
     const passwordPattern =
       /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]+$/;
-    if (password && !passwordPattern.test(password)) {
+
+    if (!password) {
+      clearErrors('password');
+      return;
+    }
+
+    if (password.length < minLength) {
+      setError('password', {
+        message: '비밀번호는 최소 8자 이상이어야 합니다.',
+      });
+    } else if (!passwordPattern.test(password)) {
       setError('password', {
         message:
           '비밀번호는 영문, 숫자, 특수문자를 최소 1개 이상 포함해야 합니다.',
