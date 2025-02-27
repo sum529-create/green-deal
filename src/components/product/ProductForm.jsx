@@ -2,50 +2,58 @@ import React from 'react';
 import { useState } from 'react';
 import Button from '../common/Button';
 import { PRODUCT_CATEGORIES } from '../../constants/constants';
+import { useEffect } from 'react';
 
 const ProductForm = ({ product, onChangeProduct, onSubmit }) => {
   const [isLocationModalOpen, setIsLocationModalOpen] = useState(false);
-  const {
-    title,
-    price,
-    condition,
-    exchangeable,
-    category,
-    description,
-    location,
-  } = product;
+  const { name, price, quality, refund, category, description } = product;
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     const newValue =
-      name === 'price' ? e.target.value.replace(/[^\d]/g, '') : value;
+      name === 'price'
+        ? e.target.value.replace(/[^\d]/g, '')
+        : name === 'refund'
+          ? name === 'true'
+          : value;
     onChangeProduct({
       [name]: newValue,
     });
   };
 
+  useEffect(() => {
+    console.log('변경된 location:', product.location);
+  }, [product.location]);
+
   // 위치 추가 모달 열기
   const openLocationModal = () => {
     setIsLocationModalOpen(true);
+    onChangeProduct({
+      location: JSON.stringify({ lat: 33.450701, lng: 126.570667 }),
+    });
   };
 
   // 폼 제출 핸들러
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     // 필수 필드 검증
-    if (!title.trim()) {
-      alert('판매 물품명을 입력하세요');
+    if (!name.trim()) {
+      alert('판매 물품을 입력하세요');
       return;
     }
     if (!price) {
       alert('판매 금액을 입력하세요');
       return;
     }
-    if (!condition) {
+    if (price <= 0) {
+      alert('판매 금액을 정확히 입력해주세요');
+      return;
+    }
+    if (!quality) {
       alert('물품 상태를 선택하세요');
       return;
     }
-    if (!exchangeable) {
+    if (refund === '') {
       alert('교환 가능 여부를 선택하세요');
       return;
     }
@@ -69,8 +77,8 @@ const ProductForm = ({ product, onChangeProduct, onSubmit }) => {
         </label>
         <input
           type="text"
-          value={title}
-          name="title"
+          value={name}
+          name="name"
           onChange={handleChange}
           placeholder="제목"
           className="w-full p-2 border rounded-[10px] border-gray focus:outline-none focus:ring-1 focus:ring-graish-green"
@@ -105,19 +113,19 @@ const ProductForm = ({ product, onChangeProduct, onSubmit }) => {
             물품 상태
           </label>
           <select
-            value={condition}
-            name="condition"
+            value={quality}
+            name="quality"
             onChange={handleChange}
             className="w-full p-2 border rounded-[10px] border-gray focus:outline-none focus:ring-1 focus:ring-graish-green"
           >
             <option value="">선택해주세요</option>
-            <option value="mint">최상</option>
-            <option value="excellent">상</option>
-            <option value="good">중상</option>
-            <option value="fair">보통</option>
-            <option value="average">중하</option>
-            <option value="poor">하</option>
-            <option value="bad">최하</option>
+            <option value="최상">최상</option>
+            <option value="상">상</option>
+            <option value="중상">중상</option>
+            <option value="보통">보통</option>
+            <option value="중하">중하</option>
+            <option value="하">하</option>
+            <option value="최하">최하</option>
           </select>
         </div>
 
@@ -127,14 +135,14 @@ const ProductForm = ({ product, onChangeProduct, onSubmit }) => {
             교환 가능 여부
           </label>
           <select
-            value={exchangeable}
-            name="exchangeable"
+            value={refund}
+            name="refund"
             onChange={handleChange}
             className="w-full p-2 border rounded-[10px] border-gray focus:outline-none focus:ring-1 focus:ring-graish-green"
           >
             <option value="">선택하세요</option>
-            <option value="yes">교환 가능</option>
-            <option value="no">교환 불가능</option>
+            <option value="true">교환 가능</option>
+            <option value="false">교환 불가능</option>
           </select>
         </div>
       </div>
@@ -181,10 +189,6 @@ const ProductForm = ({ product, onChangeProduct, onSubmit }) => {
         <Button onClick={openLocationModal} variant="outline" size="medium">
           추가
         </Button>
-
-        {location && (
-          <span className="ml-3 text-sm text-gray-600">{location}</span>
-        )}
       </div>
 
       {/* 등록 버튼 */}

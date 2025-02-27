@@ -2,9 +2,11 @@ import React from 'react';
 import Button from '../common/Button';
 import { useEffect } from 'react';
 import { useState } from 'react';
+import { useRef } from 'react';
 
 const ProductImageUpload = ({ image, onChangeImage }) => {
   const [imageUrl, setImageUrl] = useState(null);
+  const fileInputRef = useRef();
   useEffect(() => {
     return () => {
       if (imageUrl) {
@@ -34,9 +36,9 @@ const ProductImageUpload = ({ image, onChangeImage }) => {
   return (
     <div className="flex flex-col items-center mb-4">
       <div className="flex items-center justify-center w-full mb-4 bg-white border border-gray-300 rounded-lg h-[25rem]">
-        {image ? (
+        {imageUrl ? (
           <img
-            src={URL.createObjectURL(image)}
+            src={imageUrl}
             alt="업로드된 이미지"
             className="object-contain max-w-full max-h-full"
           />
@@ -51,6 +53,7 @@ const ProductImageUpload = ({ image, onChangeImage }) => {
         type="file"
         accept="image/*"
         className="hidden"
+        ref={fileInputRef}
         onChange={handleImageChange}
       />
 
