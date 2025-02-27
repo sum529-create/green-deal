@@ -3,6 +3,8 @@ import { useState } from 'react';
 import Button from '../components/common/Button';
 
 const MyPage = () => {
+  const [isUpdating, setIsUpdating] = useState(false);
+  const [nickname, setNickname] = useState('테스트닉네임');
   const [currentTab, setCurrentTab] = useState('selling');
   const [products, setProducts] = useState([
     {
@@ -69,6 +71,14 @@ const MyPage = () => {
     },
   ]); // UI를 위해 임시로 만든 찜한 상품
 
+  const handleToggleClick = () => {
+    setIsUpdating((prev) => !prev);
+  };
+
+  const handleNicknameChange = (e) => {
+    setNickname(e.target.value);
+  };
+
   const handleTabChange = (tapType) => {
     setCurrentTab(tapType);
   };
@@ -105,14 +115,26 @@ const MyPage = () => {
             alt="프로필 이미지"
             className="object-cover w-[130px] h-[130px] bg-light-gray rounded-full"
           />
-          <input
-            type="text"
-            placeholder="닉네임"
-            className="w-[210px] h-[32px] border border-dark rounded-md text-center"
-          />
+
+          {isUpdating ? (
+            <input
+              type="text"
+              value={nickname}
+              onChange={handleNicknameChange}
+              className="w-[210px] h-[32px] border border-dark rounded-md text-center"
+            />
+          ) : (
+            <p className="text-title-sm">{nickname}</p>
+          )}
           <p className="text-title-sm">email@example.com</p>
-          <Button Button type="button" variant="primary" size="large">
-            프로필 수정
+
+          <Button
+            type="button"
+            variant="primary"
+            size="large"
+            onClick={handleToggleClick}
+          >
+            {isUpdating ? '프로필 수정 완료' : '프로필 수정'}
           </Button>
         </div>
 
