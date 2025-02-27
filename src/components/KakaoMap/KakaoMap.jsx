@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Map } from 'react-kakao-maps-sdk';
 import { getUserLocation } from '../../utils/getUserLocation';
 
-const KakaoMap = ({ width, height }) => {
+const KakaoMap = ({ level }) => {
   const [location, setLocation] = useState({ lat: 33.450701, lng: 126.570667 });
 
   useEffect(() => {
@@ -12,12 +12,13 @@ const KakaoMap = ({ width, height }) => {
   }, []);
 
   return (
-    <Map
-      center={location}
-      className="w-full h-full"
-      style={{ width, height }}
-      level={3}
-    />
+    <div className="w-full h-full">
+      <Map
+        center={location}
+        level={level}
+        style={{ width: '100%', height: '100%' }}
+      />
+    </div>
   );
 };
 
