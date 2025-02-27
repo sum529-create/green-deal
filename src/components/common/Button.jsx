@@ -10,9 +10,9 @@ const Button = ({
 }) => {
   const baseUrl = 'transition-all leading-none duration-200 rounded-full ';
   const sizeStyle = {
-    small: 'px-3 py-1 text-caption min-w-[80px] h-[20px]',
-    medium: 'px-4 py-2 text-text-md min-w-[100px] h-[40px]',
-    large: 'px-6 py-3 text-title-sm min-w-[210px] h-[50px]',
+    small: 'px-3 py-1 text-caption min-w-[80px]',
+    medium: 'px-4 py-2 text-text-md min-w-[100px]',
+    large: 'px-6 py-3 text-title-sm min-w-[210px]',
   };
   const variantStyles = {
     primary:
