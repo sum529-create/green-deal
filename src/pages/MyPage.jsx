@@ -1,9 +1,19 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useState } from 'react';
 import Button from '../components/common/Button';
-import ProfileSection from '../components/mypage/ProfileSection';
+import ProfileSection from '../components/myPage/ProfileSection';
+import useUserStore from '../store/userStore';
 
 const MyPage = () => {
+  //제가 임시로 했어요.
+  const userLogin = useUserStore((state) => state.userLogin);
+
+  useEffect(() => {
+    userLogin();
+  }, [userLogin]);
+  
+  const user = useUserStore((state) => state.user);
+
   const [currentTab, setCurrentTab] = useState('selling');
   const [products, setProducts] = useState([
     {
@@ -84,7 +94,7 @@ const MyPage = () => {
   return (
     <div className="flex items-center justify-center h-screen gap-14">
       <section className="flex flex-col items-center justify-center gap-10 w-[400px] h-[830px] p-6 bg-light-gray rounded-md">
-        <ProfileSection />
+        <ProfileSection user={user} />
 
         <div className="w-[300px] h-[210px] rounded-md">
           <button

@@ -2,50 +2,87 @@ import React, { useState, useEffect } from 'react';
 import Button from '../common/Button';
 import { supabase } from '../../api/client';
 
-const ProfileSection = () => {
-  const [nickname, setNickname] = useState('테스트닉네임');
+const ProfileSection = ({ user }) => {
+  const [nickname, setNickname] = useState(null);
   const [isUpdating, setIsUpdating] = useState(false);
-  const [testUser, setTestUser] = useState(null);
+  const [userdata, setUserdata] = useState(null);
   const [imageUrl, setImageUrl] = useState('');
 
-  // 데이터 가져오기
-  const getUserData = async () => {
-    const { data, error } = await supabase.from('users').select('*');
+  const fetchUserData = async () => {
+    if (!user?.id) return;
+
+    const { data, error } = await supabase
+      .from('users')
+      .select('*')
+      .eq('user_id', user.id)
+      .single();
+
     if (error) {
-      console.error('Error:', error);
+      console.error('유저 데이터 가져오기 오류:', error.message);
+    } else {
+      setUserdata(data);
+      setNickname(data.name);
     }
-    setTestUser(data[0]);
-    setNickname(data[0]?.name || '테스트닉네임');
-    setImageUrl(data[0]?.profile_img || null);
   };
 
   useEffect(() => {
-    getUserData();
-  }, []);
+    fetchUserData();
+  }, [user]);
 
-  // 이미지 선택 후 업로드하는 함수
-  const handleImageChange = (e) => {
+  const handleImageChange = async (e) => {
     const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImageUrl(reader.result);
-      };
-      reader.readAsDataURL(file);
+    if (!file) return;
+
+    const isConfirmed = window.confirm('프로필 이미지를 수정하겠습니까?');
+    if (!isConfirmed) return;
+
+    const encodeFileName = (fileName) =>
+      encodeURIComponent(fileName).replace(/[!'()*]/g, escape);
+    const fileName = encodeFileName(file.name);
+    const filePath = `profiles/${fileName}`;
+
+    const { error } = await supabase.storage
+      .from('test')
+      .upload(filePath, file, { upsert: true });
+
+    if (error) {
+      console.error('이미지 업로드 오류:', error.message);
+      return;
     }
+
+    const { data: urlData } = supabase.storage
+      .from('test')
+      .getPublicUrl(filePath);
+    setImageUrl(urlData.publicUrl);
   };
 
   const handleProfileUpdate = async () => {
-    if (isUpdating) {
-      // 여기에 Supabase 업데이트 로직 추가할것입니다.
-      // console.log('업데이트된 닉네임:', nickname);
-      // console.log('업데이트된 프로필 이미지:', imageUrl);
+    if (!isUpdating) {
+      setIsUpdating(true);
+      return;
     }
-    setIsUpdating((prev) => !prev);
+
+    if (!userdata?.user_id) {
+      console.error('사용자 데이터가 없습니다.', userdata);
+      return;
+    }
+
+    const { error } = await supabase
+      .from('users')
+      .update({ name: nickname })
+      .eq('user_id', userdata.user_id);
+
+    if (error) {
+      console.error('프로필 업데이트 오류:', error.message);
+    } else {
+      console.log('프로필 업데이트 완료!');
+      await fetchUserData();
+    }
+
+    setIsUpdating(false);
   };
 
-  // 로딩 상태 임시로 처리
-  if (!testUser) {
+  if (!userdata) {
     return <div>Loading...</div>;
   }
 
@@ -55,7 +92,7 @@ const ProfileSection = () => {
         type="button"
         variant="primary"
         size="medium"
-        onClick={() => document.getElementById('profile-image-input').click()} // 버튼 클릭 시 input 트리거
+        onClick={() => document.getElementById('profile-image-input').click()}
       >
         이미지 선택
       </Button>
@@ -69,7 +106,7 @@ const ProfileSection = () => {
       />
 
       <img
-        src={imageUrl || null}
+        src={imageUrl || '/profile_default.png'}
         alt="프로필 이미지"
         className="object-cover w-[130px] h-[130px] bg-light-gray rounded-full"
       />
@@ -81,9 +118,9 @@ const ProfileSection = () => {
           className="w-[210px] h-[32px] border border-dark rounded-md text-center"
         />
       ) : (
-        <p className="text-title-sm">{testUser.name}</p>
+        <p className="text-title-sm">{userdata?.name}</p>
       )}
-      <p className="text-title-sm">{testUser.email}</p>
+      <p className="text-title-sm">{userdata?.email}</p>
       <Button
         type="button"
         variant="primary"
