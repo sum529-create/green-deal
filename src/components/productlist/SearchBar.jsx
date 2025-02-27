@@ -18,7 +18,7 @@ const SearchBar = ({ setSearch }) => {
   };
 
   return (
-    <div className="flex items-center p-3 overflow-hidden bg-white border-4 rounded-lg border-mint">
+    <div className="flex items-center p-3 m-5 overflow-hidden bg-white border-4 rounded-lg border-mint">
       <HiSearch size={24} strokeWidth={0} className="flex-shrink-0 text-mint" />
       <input
         type="text"

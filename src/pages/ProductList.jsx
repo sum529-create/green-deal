@@ -1,7 +1,7 @@
 import React from 'react';
 import KakaoMap from '../components/KakaoMap/KakaoMap';
-import SearchBar from '../components/ProductList/SearchBar';
 import { useState } from 'react';
+import SearchBar from '../components/ProductList/SearchBar';
 import SearchList from '../components/ProductList/SearchList';
 
 const productList = [
@@ -80,6 +80,36 @@ const productList = [
     soldout: true,
     updated_at: '',
   },
+  {
+    id: 6,
+    createdAt: '2024-02-27T12:34:56.789Z',
+    name: '아이폰11',
+    category: '디지털기기',
+    price: '10000',
+    quality: '최상',
+    refund: false,
+    location: { lat: 33.450701, lng: 126.570667 },
+    description: '싸다 싸! 신발보다 싸!',
+    img: '',
+    user_id: 1,
+    soldout: true,
+    updated_at: '',
+  },
+  {
+    id: 7,
+    createdAt: '2024-02-27T12:34:56.789Z',
+    name: '아이폰11',
+    category: '디지털기기',
+    price: '10000',
+    quality: '최상',
+    refund: false,
+    location: { lat: 33.450701, lng: 126.570667 },
+    description: '싸다 싸! 신발보다 싸!',
+    img: '',
+    user_id: 1,
+    soldout: true,
+    updated_at: '',
+  },
 ];
 
 const ProductList = () => {
@@ -90,8 +120,8 @@ const ProductList = () => {
   );
 
   return (
-    <div className="flex flex-col w-full h-screen md:flex-row">
-      <div className="w-full mr-4 border-r-2 border-light-gray bg-white md:w-[360px]">
+    <div className="flex flex-col w-full h-screen overflow-hidden md:flex-row">
+      <div className="w-full mr-4 border-r-2 border-light-gray h-full bg-white md:w-[360px]">
         <SearchBar setSearch={setSearch} />
         <SearchList filteredProducts={filteredProducts || []} />
       </div>
