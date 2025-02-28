@@ -33,6 +33,13 @@ const ProfileSection = ({ user }) => {
     fetchUserData();
   }, [user]);
 
+  // 파일명 생성 함수(한글이 포함된 파일도 업로드하기 위해)
+  const getFileName = (file) => {
+    const extension = file.name.slice(file.name.lastIndexOf('.') + 1); // 확장자만(png)
+    const randomName = `${Date.now()}-${Math.floor(Math.random() * 100000)}.${extension}`; //최대한 중복없게
+    return randomName;
+  };
+
   // 프로필 이미지 변경
   const handleImageChange = async (e) => {
     const file = e.target.files[0];
@@ -41,22 +48,13 @@ const ProfileSection = ({ user }) => {
     const isConfirmed = window.confirm('프로필 이미지를 수정하겠습니까?');
     if (!isConfirmed) return;
 
-    const getFileName = (file) => {
-      const extension = file.name.split('.').pop(); // 파일 확장자 추출 (png)
-      const hasKorean = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/.test(file.name); // 한글 포함 여부 검사
-      if (hasKorean) {
-        return `${Date.now()}-${Math.floor(Math.random() * 100000)}.${extension}`; // 최대한 중복이 안되게끔
-      }
-      return file.name;
-    };
-
     const fileName = getFileName(file);
     const filePath = `profiles/${fileName}`;
 
     // 이미지 업로드
     const { error } = await supabase.storage
       .from('profileImg')
-      .upload(filePath, file, { upsert: true }); // 동일한 이미지명 덮어쓰기
+      .upload(filePath, file, { upsert: false });
 
     if (error) {
       console.error('이미지 업로드 오류:', error.message);
