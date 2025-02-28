@@ -34,9 +34,9 @@ const ProfileSection = ({ user }) => {
           )}
         </>
       ) : (
-        <p className="text-title-sm">{userdata?.name}</p>
+        <p className="text-title-sm">{userdata?.name ?? '게스트'}</p>
       )}
-      <p className="text-title-sm">{userdata?.email}</p>
+      <p className="text-title-sm">{userdata?.email ?? '이메일'}</p>
       <Button
         type="button"
         variant="primary"

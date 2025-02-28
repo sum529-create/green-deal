@@ -1,8 +1,6 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../api/client';
-
-const MAX_SIZE = 2 * 1024 * 1024; // 2MB
-const ALLOWED_EXTENSIONS = ['image/jpeg', 'image/png'];
+import { ALLOWED_IMAGE_TYPES, BUCKET_NAME, MAX_FILE_SIZE, PROFILES_DIRECTORY } from '../constants/mypageConstants';
 
 const useProfileImage = (userdata) => {
   const [imageUrl, setImageUrl] = useState('');
@@ -17,11 +15,11 @@ const useProfileImage = (userdata) => {
     const file = e.target.files[0];
     if (!file) return;
 
-    if (file.size > MAX_SIZE) {
+    if (file.size > MAX_FILE_SIZE) {
       alert('2MB 이하의 파일을 선택해주세요.');
       return;
     }
-    if (!ALLOWED_EXTENSIONS.includes(file.type)) {
+    if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
       alert('JPG 또는 PNG 형식의 이미지만 업로드 가능합니다.');
       return;
     }
@@ -30,10 +28,10 @@ const useProfileImage = (userdata) => {
     if (!isConfirmed) return;
 
     const fileName = `${Date.now()}-${Math.floor(Math.random() * 100000)}.${file.name.split('.').pop()}`;
-    const filePath = `profiles/${fileName}`;
+    const filePath = `${PROFILES_DIRECTORY}/${fileName}`;
 
     const { error: uploadError } = await supabase.storage
-      .from('profileImg')
+      .from(BUCKET_NAME)
       .upload(filePath, file, { upsert: false });
 
     if (uploadError) {
@@ -42,7 +40,7 @@ const useProfileImage = (userdata) => {
     }
 
     const { data: urlData, error: urlError } = await supabase.storage
-      .from('profileImg')
+      .from(BUCKET_NAME)
       .getPublicUrl(filePath);
 
     if (urlError) {
