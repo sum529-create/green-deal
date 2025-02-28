@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { FaRegStar } from 'react-icons/fa';
 import Comments from '../components/comments/Comments';
 import { useParams } from 'react-router-dom';
+import useUserStore from '../store/userStore';
+import Button from '../components/common/Button';
 
 const ProductDetail = () => {
   // 상품테이블 더미데이터
@@ -18,7 +20,7 @@ const ProductDetail = () => {
       description: '싸다 싸! 신발보다 싸!',
       img: 'https://alephksa.com/cdn/shop/files/iPhone_14_Blue_PDP_Image_Position-1A__WWEN_0853ab85-adc4-47fb-8955-43df09cca9f1.jpg?v=1688733593&width=2048',
       user_id: 20250229084522,
-      soldout: true,
+      soldout: false,
       updated_at: '',
     },
     {
@@ -85,18 +87,32 @@ const ProductDetail = () => {
   ]);
 
   // 현재 로그인 한 유저정보 넣을 자리
+  // const currentUser = useUserStore((state) => state.user); // Zustand에서 로그인한 유저 정보 가져오기
+  // const isOwner = currentUser?.user_id === product.user_id; // 로그인 유저가 상품의 작성자인지 확인
 
   //
   const { id } = useParams(); // 패스파라미터 id 가져오기
   const product = productLists.find((item) => item.id === +id);
   // 판매자 정보 가져오기
-  const seller = users.find((user) => +user.user_id === +product.user_id);
+  const seller = users.find((user) => user.user_id === product.user_id);
+
+  //
+  // 예시 로그인 유저, 테스트용
+  const currentTestUser = users.find(
+    (user) => +user.user_id === Number(20250229084522),
+  );
+  //
+  // 예시 게시글 작성자 확인 , 테스트용
+  const isTestOwner = currentTestUser?.user_id === product.user_id;
+  console.log('isTestOwner>>>', isTestOwner);
 
   if (!product) {
-    return <p className="text-center"> 상품을 찾을 수 없습니다.</p>;
+    return (
+      <p className="text-center text-title-sm"> 상품을 찾을 수 없습니다.</p>
+    );
   }
 
-  // 상품 판매 완료 처리
+  // 상품 판매 완료 처리 >> db 연동 필요
   const handleCheckAsSold = () => {
     setProductLists((prev) =>
       prev.map((item) =>
@@ -111,7 +127,7 @@ const ProductDetail = () => {
         {/* 상품 이미지 */}
         <div className="flex items-center justify-center p-6 w-[580px] h-[730px] bg-light-gray">
           <img
-            src={product.img || '기본이미지 경로'}
+            src={product.img}
             alt={product.name}
             className="object-cover w-full bg-gray-200 rounded-lg"
           />
@@ -122,10 +138,10 @@ const ProductDetail = () => {
           <div className="flex flex-col pace-y-6">
             {/* 상품명, 판매여부 & 찜하기 */}
             <div className="flex justify-between p-4">
-              <div className="flex">
+              <div className="flex items-center">
                 <h2 className="text-2xl font-bold">{product.name}</h2>
                 <span
-                  className={`mx-4 px-3 py-1 text-caption min-w-[80px] rounded-full ${product.soldout ? 'bg-gray' : 'bg-deep-mint'}`}
+                  className={`flex items-center justify-center mx-4 px-3 text-caption min-w-[80px] rounded-full ${product.soldout ? 'bg-gray text-deep-gray' : 'bg-deep-mint text-white'}`}
                 >
                   {product.soldout ? '판매 완료' : '판매중'}
                 </span>
@@ -186,17 +202,18 @@ const ProductDetail = () => {
             <p className="text-gray-600">{product.description}</p>
           </div>
 
-          {/* 판매글 작성자에게만 보이는 버튼 */}
-          {/* 로그인한 유저 id와 게시글 작성자 일치 && !soldout 추가 수정 예정 */}
-          {/* {user.user_id === product.user_id && */}
-          {!product.soldout && (
-            <button
-              onClick={handleCheckAsSold}
-              className="w-full py-3 text-lg font-semibold text-white transition rounded-full bg-deep-mint hover:bg-darkmint"
-            >
-              판매완료
-            </button>
-          )}
+          {/* 판매글 작성자에게만 보이는 판매완료 버튼 */}
+          <Button
+            type="button"
+            onClick={
+              isTestOwner && !product.soldout ? handleCheckAsSold : undefined
+            }
+            size="large"
+            variant={isTestOwner && !product.soldout ? 'outline' : 'disabled'}
+            disabled={!isTestOwner || product.soldout}
+          >
+            {product.soldout ? '거래종료' : '판매완료'}
+          </Button>
         </div>
       </div>
 
