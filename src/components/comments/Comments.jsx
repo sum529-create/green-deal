@@ -1,6 +1,7 @@
 import React from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useState } from 'react';
+import Button from '../common/Button';
 
 const Comments = ({ users }) => {
   //댓글테이블 더미데이터
@@ -46,16 +47,18 @@ const Comments = ({ users }) => {
     <div className="p-6 bg-white rounded-sm shadow-md">
       {/* comments add components */}
       <div className="mb-6">
-        <p className="font-semibold text-gray-700">
-          댓글/문의{' '}
+        <p className="font-semibold text-black">
+          댓글/문의{'  '}
           <span className="text-deep-mint">{productComments.length}개</span>
         </p>
-        <form className="flex w-full gap-5 bg-white">
+        <form className="flex items-center gap-5 p-4 border rounded-lg border-light-gray">
           <textarea
             placeholder="댓글을 입력하세요."
-            className="w-full p-3 mt-2 text-sm rounded-lg resize-none focus:ring-2 focus:ring-deep-mint focus:outline-none"
+            className="w-full p-3 mt-2 text-sm bg-white rounded-lg resize-none focus:ring-1 focus:ring-mint focus:outline-none"
           ></textarea>
-          <button>등록</button>
+          <Button type="submit" size="medium">
+            등록
+          </Button>
         </form>
       </div>
 
@@ -73,20 +76,40 @@ const Comments = ({ users }) => {
                 key={comment.id}
                 className="p-4 border rounded-lg border-light-gray"
               >
-                <div className="flex items-start gap-3">
-                  {/* 프로필이미지 */}
-                  <img src={user.profile_img} alt={user.name} />
-                  <div>
-                    {/* 작성자 닉네임 */}
-                    <h3 className="text-sm font-semibold text-black">
-                      {user.name}
-                    </h3>
-                    {/* 작성날짜 */}
-                    <span className="text-xs text-light-gray">
-                      {new Date(comment.created_at).toLocaleDateString()}
-                    </span>
-                    {/* 댓글 내용 */}
-                    <p className="text-sm text-black">{comment.content}</p>
+                <div className="flex justify-between gap-3">
+                  <div className="flex items-start gap-3">
+                    {/* 프로필이미지 */}
+                    <img
+                      src={user.profile_img}
+                      alt={user.name}
+                      className="w-12 h-12 rounded-full bg-deep-mint"
+                    />
+                    <div>
+                      <div className="flex gap-3">
+                        {/* 작성자 닉네임 */}
+                        <h3 className="text-sm font-semibold text-black">
+                          {user.name}
+                        </h3>
+                        {/* 작성날짜 */}
+                        <span className="text-xs text-light-gray">
+                          {new Date(comment.created_at).toLocaleDateString()}
+                        </span>
+                      </div>
+
+                      {/* 댓글 내용 */}
+                      <p className="text-sm text-deep-gray">
+                        {comment.content}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    <Button type="button" size="small">
+                      수정
+                    </Button>
+                    <Button type="button" size="small" variant="outline">
+                      삭제
+                    </Button>
                   </div>
                 </div>
               </li>
@@ -95,13 +118,6 @@ const Comments = ({ users }) => {
         ) : (
           <p>아직 댓글이 없습니다.</p>
         )}
-
-        {/* <li className="comment-seller">
-        //   <img src="/" alt="user_profile_img" />
-        //   <h3>seller</h3>
-        //   <span>2025-02-26</span>
-        //   <p>오후 6시 이후로 가능합니다.</p>
-        // </li> */}
       </ul>
     </div>
   );
