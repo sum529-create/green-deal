@@ -21,7 +21,7 @@ const Router = () => {
       element: <ProductList />,
     },
     {
-      path: '/product/detail',
+      path: '/product/detail/:id',
       element: <ProductDetail />,
     },
     // 로그인 했을 때만 접근 가능
