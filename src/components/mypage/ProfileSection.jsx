@@ -33,7 +33,7 @@ const ProfileSection = ({ user }) => {
     fetchUserData();
   }, [user]);
 
-  //프로필 이미지 변경
+  // 프로필 이미지 변경
   const handleImageChange = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -42,29 +42,42 @@ const ProfileSection = ({ user }) => {
     if (!isConfirmed) return;
 
     const getFileName = (file) => {
-      const extension = file.name.split('.').pop(); // 파일 확장자만 추출(png)
-      return `${Date.now()}-${Math.floor(Math.random() * 100000)}.${extension}`; //최대한 중복이 안되게끔
+      const extension = file.name.split('.').pop(); // 파일 확장자 추출 (png)
+      const hasKorean = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/.test(file.name); // 한글 포함 여부 검사
+      if (hasKorean) {
+        return `${Date.now()}-${Math.floor(Math.random() * 100000)}.${extension}`; // 최대한 중복이 안되게끔
+      }
+      return file.name;
     };
 
     const fileName = getFileName(file);
     const filePath = `profiles/${fileName}`;
 
+    // 이미지 업로드
     const { error } = await supabase.storage
-      .from('test')
-      .upload(filePath, file, { upsert: true }); //동일한 이미지명 덮어쓰기
+      .from('profileImg')
+      .upload(filePath, file, { upsert: true }); // 동일한 이미지명 덮어쓰기
 
     if (error) {
       console.error('이미지 업로드 오류:', error.message);
+      alert('프로필 이미지 업로드에 실패했습니다. 다시 시도해주세요.');
       return;
     }
 
-    //업로드한 이미지 가져오기
-    const { data: urlData } = supabase.storage
-      .from('test')
+    // URL 만들기
+    const { data: urlData, error: urlError } = await supabase.storage
+      .from('profileImg')
       .getPublicUrl(filePath);
-    const newImageUrl = urlData.publicUrl;
 
-    //유저 프로필 이미지 업데이트
+    if (urlError) {
+      console.error('URL 가져오기 오류:', urlError.message);
+      alert('URL 가져오기 실패');
+      return;
+    }
+    const newImageUrl = urlData.publicUrl;
+    setImageUrl(newImageUrl);
+
+    // 유저 프로필 이미지 업데이트
     const { error: updateError } = await supabase
       .from('users')
       .update({ profile_img: newImageUrl })
@@ -72,10 +85,11 @@ const ProfileSection = ({ user }) => {
 
     if (updateError) {
       console.error('프로필 이미지 업데이트 오류:', updateError.message);
+      alert('프로필 이미지 업데이트에 실패했습니다. 다시 시도해주세요.');
     } else {
       console.log('프로필 이미지 업데이트 완료!');
-      setImageUrl(newImageUrl);
       await fetchUserData();
+      alert('프로필 이미지가 성공적으로 업데이트되었습니다.');
     }
   };
 
