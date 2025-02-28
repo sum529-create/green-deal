@@ -76,7 +76,7 @@ const KakaoMap = ({ level, mode, productList, selectedProduct }) => {
                   clickable={true}
                 >
                   <Link
-                    to={`/product/detail?id=${product.id}`}
+                    to={`/product/detail/id=${product.id}`}
                     style={{
                       pointerEvents: 'auto',
                       display: 'flex',
@@ -90,7 +90,6 @@ const KakaoMap = ({ level, mode, productList, selectedProduct }) => {
                       color: '#000',
                       textAlign: 'center',
                       minWidth: '120px',
-                      pointerEvents: 'auto',
                     }}
                   >
                     <div style={{ fontWeight: 'bold', marginBottom: '5px' }}>
