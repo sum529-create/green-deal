@@ -1,17 +1,16 @@
 import React, { useEffect } from 'react';
 import { useState } from 'react';
 import Button from '../components/common/Button';
-import ProfileSection from '../components/myPage/ProfileSection';
+import ProfileSection from '../components/mypage/ProfileSection';
 import useUserStore from '../store/userStore';
 
 const MyPage = () => {
-  //제가 임시로 했어요.
   const userLogin = useUserStore((state) => state.userLogin);
 
   useEffect(() => {
     userLogin();
   }, [userLogin]);
-  
+
   const user = useUserStore((state) => state.user);
 
   const [currentTab, setCurrentTab] = useState('selling');

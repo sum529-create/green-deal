@@ -8,6 +8,8 @@ const ProfileSection = ({ user }) => {
   const [userdata, setUserdata] = useState(null);
   const [imageUrl, setImageUrl] = useState('');
 
+  console.log(userdata);
+
   const fetchUserData = async () => {
     if (!user?.id) return;
 
@@ -22,6 +24,7 @@ const ProfileSection = ({ user }) => {
     } else {
       setUserdata(data);
       setNickname(data.name);
+      setImageUrl(data.profile_img || '/profile_default.png');
     }
   };
 
@@ -53,7 +56,20 @@ const ProfileSection = ({ user }) => {
     const { data: urlData } = supabase.storage
       .from('test')
       .getPublicUrl(filePath);
-    setImageUrl(urlData.publicUrl);
+    const newImageUrl = urlData.publicUrl;
+
+    const { error: updateError } = await supabase
+      .from('users')
+      .update({ profile_img: newImageUrl })
+      .eq('user_id', userdata.user_id);
+
+    if (updateError) {
+      console.error('프로필 이미지 업데이트 오류:', updateError.message);
+    } else {
+      console.log('프로필 이미지 업데이트 완료!');
+      setImageUrl(newImageUrl);
+      await fetchUserData();
+    }
   };
 
   const handleProfileUpdate = async () => {
