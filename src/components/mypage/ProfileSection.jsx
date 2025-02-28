@@ -1,176 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import Button from '../common/Button';
-import { supabase } from '../../api/client';
 import ProfileImage from './ProfileImage';
-
-const MAX_SIZE = 2 * 1024 * 1024; // 2MB
-const ALLOWED_EXTENSIONS = ['image/jpeg', 'image/png'];
+import useProfileInfo from '../../hooks/useProfileInfo';
+import useProfileImage from '../../hooks/useProfileImage';
 
 const ProfileSection = ({ user }) => {
-  const [nickname, setNickname] = useState(null);
-  const [imageUrl, setImageUrl] = useState('');
-  const [isUpdating, setIsUpdating] = useState(false);
-  const [userdata, setUserdata] = useState(null);
-  const [errorMessage, setErrorMessage] = useState('');
-
-  // 유저 데이터 가져오기
-  const fetchUserData = async () => {
-    if (!user?.id) return;
-
-    const { data, error } = await supabase
-      .from('users')
-      .select('*')
-      .eq('user_id', user.id)
-      .single();
-
-    if (error) {
-      console.error('유저 데이터 가져오기 오류:', error.message);
-      return;
-    }
-
-    setUserdata(data);
-    setNickname(data.name);
-    setImageUrl(data.profile_img || '/profile_default.png');
-  };
-
-  useEffect(() => {
-    fetchUserData();
-  }, [user]);
-
-  // 파일명 생성 함수(한글이 포함된 파일도 업로드하기 위해)
-  const getFileName = (file) => {
-    const extension = file.name.split('.').pop(); // 확장자(png, jpg)
-    return `${Date.now()}-${Math.floor(Math.random() * 100000)}.${extension}`; //최대한 중복 없게
-  };
-
-  // 프로필 이미지 변경
-  const handleImageChange = async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-
-    //파일 크기 제한
-    const MAX_SIZE = 2 * 1024 * 1024; // 2MB
-    if (file.size > MAX_SIZE) {
-      alert('2MB 이하의 파일을 선택해주세요.');
-      return;
-    }
-
-    // 확장자 제한 (JPG, PNG만 허용)
-    const allowedExtensions = ['image/jpeg', 'image/png'];
-    if (!allowedExtensions.includes(file.type)) {
-      alert('JPG 또는 PNG 형식의 이미지만 업로드 가능합니다.');
-      return;
-    }
-
-    const isConfirmed = window.confirm('프로필 이미지를 수정하겠습니까?');
-    if (!isConfirmed) return;
-
-    const fileName = getFileName(file);
-    const filePath = `profiles/${fileName}`;
-
-    // 이미지 업로드
-    const { error: uploadError } = await supabase.storage
-      .from('profileImg')
-      .upload(filePath, file, { upsert: false });
-
-    if (uploadError) {
-      console.error('이미지 업로드 오류:', uploadError.message);
-      return alert('프로필 이미지 업로드에 실패했습니다.');
-    }
-
-    //url 가져오기
-    const { data: urlData, error: urlError } = await supabase.storage
-      .from('profileImg')
-      .getPublicUrl(filePath);
-
-    if (urlError) {
-      console.error('URL 가져오기 오류:', urlError.message);
-      return alert('URL 가져오기 실패');
-    }
-
-    setImageUrl(urlData.publicUrl);
-
-    // 프로필 이미지 업데이트
-    const { error: updateError } = await supabase
-      .from('users')
-      .update({ profile_img: urlData.publicUrl })
-      .eq('user_id', userdata.user_id);
-
-    if (updateError) {
-      console.error('프로필 이미지 업데이트 오류:', updateError.message);
-      return alert('프로필 이미지 업데이트에 실패했습니다.');
-    }
-
-    // console.log('프로필 이미지 업데이트 완료!');
-    await fetchUserData();
-    alert('프로필 이미지가 성공적으로 업데이트되었습니다.');
-  };
-
-  // 프로필 정보 수정
-  const handleProfileUpdate = async () => {
-    if (!isUpdating) {
-      setIsUpdating(true);
-      return;
-    }
-
-    if (!userdata?.user_id) {
-      console.error('사용자 데이터가 없습니다.', userdata);
-      alert('사용자 정보를 찾을 수 없습니다.');
-      return;
-    }
-
-    // 닉네임 유효성 검사 (3~15자)
-    if (nickname.length < 3 || nickname.length > 15) {
-      setErrorMessage('닉네임은 3~15자 사이여야 합니다.');
-      return;
-    }
-
-    // 닉네임이 변경되지 않았다면 업데이트하지 않음
-    if (nickname === userdata.name) {
-      const isConfirmed = window.confirm('프로필 닉네임을 수정하겠습니까?');
-      if (isConfirmed) {
-        setErrorMessage('닉네임이 변경되지 않았습니다.');
-        return;
-      } else {
-        setIsUpdating(false);
-        return;
-      }
-    }
-    // 닉네임 중복 검사
-    const { data, error: checkError } = await supabase
-      .from('users')
-      .select('name')
-      .eq('name', nickname);
-
-    if (checkError) {
-      console.error('닉네임 중복 검사 오류:', checkError);
-      setErrorMessage('중복 검사 중 오류가 발생했습니다.');
-      return;
-    }
-
-    if (data.length > 0) {
-      setErrorMessage('이미 사용 중인 닉네임입니다.');
-      return;
-    }
-
-    setErrorMessage('');
-
-    const { error } = await supabase
-      .from('users')
-      .update({ name: nickname })
-      .eq('user_id', userdata.user_id);
-
-    if (error) {
-      console.error('프로필 업데이트 오류:', error.message);
-      setErrorMessage('프로필 업데이트 중 오류가 발생했습니다.');
-      return;
-    }
-
-    console.log('프로필 업데이트 완료!');
-    await fetchUserData();
-    alert('프로필이 성공적으로 업데이트되었습니다.');
-    setIsUpdating(false);
-  };
+  const {
+    userdata,
+    nickname,
+    setNickname,
+    isUpdating,
+    errorMessage,
+    handleProfileUpdate,
+    fetchUserData,
+  } = useProfileInfo(user);
+  const { imageUrl, handleImageChange } = useProfileImage(userdata);
 
   if (!userdata) return <div>Loading...</div>;
 
