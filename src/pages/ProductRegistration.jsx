@@ -5,11 +5,28 @@ import { upsertData } from '../utils/upsertData';
 import { INITIAL_ADD_PRODUCT_DATA } from '../constants/constants';
 import { supabase } from '../api/client';
 import { useNavigate } from 'react-router-dom';
+import useUserStore from '../store/userStore';
 
 const ProductRegistration = () => {
   // 상태 관리
   const [product, setProduct] = useState(INITIAL_ADD_PRODUCT_DATA);
   const navigate = useNavigate();
+  const user = useUserStore((state) => state.user);
+
+  async function checkAuth() {
+    const {
+      data: { user },
+      error,
+    } = await supabase.auth.getUser();
+
+    if (error) {
+      console.error('Error fetching user:', error);
+    } else {
+      console.log('Current user ID:', user?.id);
+    }
+  }
+
+  checkAuth();
 
   const handleImageChange = (newImg) => {
     setProduct((value) => ({
@@ -33,8 +50,9 @@ const ProductRegistration = () => {
     try {
       // 이미지 업로드
       const file = product.img;
+      const timestamp = Date.now();
       const fileExt = file.name.split('.').pop();
-      const fileName = `product_01.${fileExt}`; // 임시 파일명
+      const fileName = `product_${user.id + timestamp}.${fileExt}`; // 임시 파일명
       const filePath = `products/${fileName}`;
 
       const { error: uploadStgError } = await supabase.storage
@@ -51,6 +69,7 @@ const ProductRegistration = () => {
       const updatedProduct = {
         ...product,
         img: imgUrl,
+        user_id: user.id,
       };
 
       // 업데이트된 상품 데이터 업로드
