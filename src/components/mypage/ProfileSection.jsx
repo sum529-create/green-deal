@@ -36,7 +36,7 @@ const ProfileSection = ({ user }) => {
   // 파일명 생성 함수(한글이 포함된 파일도 업로드하기 위해)
   const getFileName = (file) => {
     const extension = file.name.slice(file.name.lastIndexOf('.') + 1); // 확장자만(png)
-    const randomName = `${Date.now()}-${Math.floor(Math.random() * 100000)}.${extension}`; //최대한 중복없게
+    const randomName = `${Date.now()}-${Math.floor(Math.random() * 100000)}.${extension}`; // 최대한 중복없게
     return randomName;
   };
 
@@ -91,7 +91,7 @@ const ProfileSection = ({ user }) => {
     }
   };
 
-  //프로필 정보 수정
+  // 프로필 정보 수정
   const handleProfileUpdate = async () => {
     if (!isUpdating) {
       setIsUpdating(true);
@@ -100,9 +100,44 @@ const ProfileSection = ({ user }) => {
 
     if (!userdata?.user_id) {
       console.error('사용자 데이터가 없습니다.', userdata);
+      setIsUpdating(false);
       return;
     }
 
+    // 닉네임 유효성 검사 (3~15자)
+    if (nickname.length < 3 || nickname.length > 15) {
+      alert('닉네임은 3~15자 사이여야 합니다.');
+      setIsUpdating(false);
+      return;
+    }
+
+    // 닉네임이 변경되지 않았다면 업데이트하지 않음
+    if (nickname === userdata.name) {
+      alert('닉네임이 변경되지 않았습니다.');
+      setIsUpdating(false);
+      return;
+    }
+
+    // 닉네임 중복 검사
+    const { data, error: checkError } = await supabase
+      .from('users')
+      .select('name')
+      .eq('name', nickname);
+
+    if (checkError) {
+      console.error('닉네임 중복 검사 오류:', checkError);
+      alert('중복 검사 중 오류가 발생했습니다.');
+      setIsUpdating(false);
+      return;
+    }
+
+    if (data.length > 0) {
+      alert('이미 사용 중인 닉네임입니다.');
+      setIsUpdating(false);
+      return;
+    }
+
+    // 닉네임 업데이트 진행
     const { error } = await supabase
       .from('users')
       .update({ name: nickname })
@@ -110,9 +145,11 @@ const ProfileSection = ({ user }) => {
 
     if (error) {
       console.error('프로필 업데이트 오류:', error.message);
+      alert('프로필 업데이트 중 오류가 발생했습니다.');
     } else {
       console.log('프로필 업데이트 완료!');
       await fetchUserData();
+      alert('프로필이 성공적으로 업데이트되었습니다.');
     }
 
     setIsUpdating(false);
