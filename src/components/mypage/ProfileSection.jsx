@@ -206,7 +206,7 @@ const ProfileSection = ({ user }) => {
           <input
             type="text"
             value={nickname}
-            onChange={(e) => setNickname(e.target.value)}
+            onChange={(e) => setNickname(e.target.value.trim())}
             className="w-[210px] h-[32px] border border-dark rounded-md text-center"
           />
           {errorMessage && (
