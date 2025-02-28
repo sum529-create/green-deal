@@ -198,22 +198,30 @@ const ProductDetail = () => {
 
           {/* 상품 설명 */}
           <div>
-            <h3 className="text-lg font-semibold text-gray-700">상품 설명</h3>
-            <p className="text-gray-600">{product.description}</p>
-          </div>
+            <div>
+              <h3 className="text-lg font-semibold text-gray-700">상품 설명</h3>
+              <p className="text-gray-600">{product.description}</p>
+            </div>
 
-          {/* 판매글 작성자에게만 보이는 판매완료 버튼 */}
-          <Button
-            type="button"
-            onClick={
-              isTestOwner && !product.soldout ? handleCheckAsSold : undefined
-            }
-            size="large"
-            variant={isTestOwner && !product.soldout ? 'outline' : 'disabled'}
-            disabled={!isTestOwner || product.soldout}
-          >
-            {product.soldout ? '거래종료' : '판매완료'}
-          </Button>
+            {/* 판매글 작성자에게만 보이는 판매완료 버튼 */}
+            {isTestOwner && (
+              <Button
+                type="button"
+                onClick={
+                  isTestOwner && !product.soldout
+                    ? handleCheckAsSold
+                    : undefined
+                }
+                size="large"
+                variant={
+                  isTestOwner && !product.soldout ? 'outline' : 'disabled'
+                }
+                disabled={!isTestOwner || product.soldout}
+              >
+                {product.soldout ? '거래종료' : '판매완료'}
+              </Button>
+            )}
+          </div>
         </div>
       </div>
 
