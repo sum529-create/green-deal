@@ -2,31 +2,16 @@ import React, { useState } from 'react';
 import ProductImageUpload from '../components/product/ProductImageUpload';
 import ProductForm from '../components/product/ProductForm';
 import { upsertData } from '../utils/upsertData';
-import { INITIAL_ADD_PRODUCT_DATA } from '../constants/constants';
 import { supabase } from '../api/client';
 import { useNavigate } from 'react-router-dom';
 import useUserStore from '../store/userStore';
+import { INITIAL_ADD_PRODUCT_DATA } from '../constants/productConstants';
 
 const ProductRegistration = () => {
   // 상태 관리
   const [product, setProduct] = useState(INITIAL_ADD_PRODUCT_DATA);
   const navigate = useNavigate();
   const user = useUserStore((state) => state.user);
-
-  async function checkAuth() {
-    const {
-      data: { user },
-      error,
-    } = await supabase.auth.getUser();
-
-    if (error) {
-      console.error('Error fetching user:', error);
-    } else {
-      console.log('Current user ID:', user?.id);
-    }
-  }
-
-  checkAuth();
 
   const handleImageChange = (newImg) => {
     setProduct((value) => ({
@@ -71,14 +56,17 @@ const ProductRegistration = () => {
         img: imgUrl,
         user_id: user.id,
       };
-
       // 업데이트된 상품 데이터 업로드
-      await upsertData(updatedProduct, 'products');
-      console.log('제품 등록 데이터:', updatedProduct);
+      const { data, error } = await upsertData(updatedProduct, 'products');
 
-      handleImageChange(imgUrl);
-
-      // navigate('/products');
+      if (error) {
+        alert('상품 등록에 실패하였습니다.');
+        throw error;
+      }
+      if (data) {
+        alert('상품이 등록되었습니다.');
+        return navigate('/product');
+      }
     } catch (error) {
       console.error('상품 등록 실패:', error.message);
       alert('상품 등록에 실패했습니다. 다시 시도해주세요.');
