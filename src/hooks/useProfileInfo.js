@@ -1,11 +1,7 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../api/client';
 import { ERROR_MESSAGES } from '../constants/mypageConstants';
-import {
-  validateNickname,
-  checkNicknameDuplication,
-  updateProfile,
-} from './profileUtils';
+import { checkNicknameDuplication, updateProfile } from '../utils/profileUtils';
 
 const useProfileInfo = (user) => {
   const [userdata, setUserdata] = useState(null);
@@ -35,6 +31,23 @@ const useProfileInfo = (user) => {
     fetchUserData();
   }, [user]);
 
+  // 유효성 검사
+  const validateNickname = (nickname, userdata) => {
+    if (nickname.length < 3) {
+      return { valid: false, error: ERROR_MESSAGES.invalidLength };
+    }
+
+    if (nickname === userdata.name) {
+      const isConfirmed = window.confirm('프로필 닉네임을 수정하겠습니까?');
+      if (!isConfirmed) {
+        setIsUpdating(false);
+      }
+      return { valid: false, error: ERROR_MESSAGES.noChange };
+    }
+
+    return { valid: true };
+  };
+
   const handleProfileUpdate = async () => {
     if (!isUpdating) {
       setIsUpdating(true);
@@ -49,7 +62,7 @@ const useProfileInfo = (user) => {
     }
 
     // 유효성 검사
-    const validation = validateNickname(nickname, userdata);
+    const validation = await validateNickname(nickname, userdata);
     if (!validation.valid) {
       setErrorMessage(validation.error);
       return;

@@ -1,22 +1,6 @@
 import { supabase } from '../api/client';
 import { ERROR_MESSAGES } from '../constants/mypageConstants';
 
-// 유효성 검사
-export const validateNickname = (nickname, userdata) => {
-  if (nickname.length < 3) {
-    return { valid: false, error: ERROR_MESSAGES.invalidLength };
-  }
-
-  if (nickname === userdata.name) {
-    const isConfirmed = window.confirm('프로필 닉네임을 수정하겠습니까?');
-    if (isConfirmed) {
-      return { valid: false, error: ERROR_MESSAGES.noChange };
-    }
-  }
-
-  return { valid: true };
-};
-
 // 닉네임 중복 검사
 export const checkNicknameDuplication = async (nickname) => {
   const { data, error: checkError } = await supabase
