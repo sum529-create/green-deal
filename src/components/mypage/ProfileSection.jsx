@@ -7,6 +7,7 @@ const ProfileSection = ({ user }) => {
   const [isUpdating, setIsUpdating] = useState(false);
   const [userdata, setUserdata] = useState(null);
   const [imageUrl, setImageUrl] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
   // console.log(userdata);
 
@@ -100,22 +101,26 @@ const ProfileSection = ({ user }) => {
 
     if (!userdata?.user_id) {
       console.error('사용자 데이터가 없습니다.', userdata);
-      setIsUpdating(false);
+      setErrorMessage('사용자 정보를 찾을 수 없습니다.');
       return;
     }
 
     // 닉네임 유효성 검사 (3~15자)
     if (nickname.length < 3 || nickname.length > 15) {
-      alert('닉네임은 3~15자 사이여야 합니다.');
-      setIsUpdating(false);
+      setErrorMessage('닉네임은 3~15자 사이여야 합니다.');
       return;
     }
 
     // 닉네임이 변경되지 않았다면 업데이트하지 않음
     if (nickname === userdata.name) {
-      alert('닉네임이 변경되지 않았습니다.');
-      setIsUpdating(false);
-      return;
+      const isConfirmed = window.confirm('프로필 닉네임을 수정하겠습니까?');
+      if (isConfirmed) {
+        setErrorMessage('닉네임이 변경되지 않았습니다.');
+        return;
+      } else {
+        setIsUpdating(false);
+        return;
+      }
     }
 
     // 닉네임 중복 검사
@@ -126,18 +131,17 @@ const ProfileSection = ({ user }) => {
 
     if (checkError) {
       console.error('닉네임 중복 검사 오류:', checkError);
-      alert('중복 검사 중 오류가 발생했습니다.');
-      setIsUpdating(false);
+      setErrorMessage('중복 검사 중 오류가 발생했습니다.');
       return;
     }
 
     if (data.length > 0) {
-      alert('이미 사용 중인 닉네임입니다.');
-      setIsUpdating(false);
+      setErrorMessage('이미 사용 중인 닉네임입니다.');
       return;
     }
 
-    // 닉네임 업데이트 진행
+    setErrorMessage('');
+
     const { error } = await supabase
       .from('users')
       .update({ name: nickname })
@@ -145,7 +149,7 @@ const ProfileSection = ({ user }) => {
 
     if (error) {
       console.error('프로필 업데이트 오류:', error.message);
-      alert('프로필 업데이트 중 오류가 발생했습니다.');
+      setErrorMessage('프로필 업데이트 중 오류가 발생했습니다.');
     } else {
       console.log('프로필 업데이트 완료!');
       await fetchUserData();
@@ -184,12 +188,17 @@ const ProfileSection = ({ user }) => {
         className="object-cover w-[130px] h-[130px] bg-light-gray rounded-full"
       />
       {isUpdating ? (
-        <input
-          type="text"
-          value={nickname}
-          onChange={(e) => setNickname(e.target.value)}
-          className="w-[210px] h-[32px] border border-dark rounded-md text-center"
-        />
+        <>
+          <input
+            type="text"
+            value={nickname}
+            onChange={(e) => setNickname(e.target.value)}
+            className="w-[210px] h-[32px] border border-dark rounded-md text-center"
+          />
+          {errorMessage && (
+            <p className="mt-1 text-sm text-point-color">{errorMessage}</p>
+          )}
+        </>
       ) : (
         <p className="text-title-sm">{userdata?.name}</p>
       )}
