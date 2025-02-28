@@ -9,8 +9,6 @@ const ProfileSection = ({ user }) => {
   const [imageUrl, setImageUrl] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
 
-  // console.log(userdata);
-
   //유저 데이터 가져오기
   const fetchUserData = async () => {
     if (!user?.id) return;
@@ -34,9 +32,11 @@ const ProfileSection = ({ user }) => {
     fetchUserData();
   }, [user]);
 
+  // console.log(userdata);
+
   // 파일명 생성 함수(한글이 포함된 파일도 업로드하기 위해)
   const getFileName = (file) => {
-    const extension = file.name.slice(file.name.lastIndexOf('.') + 1); // 확장자만(png)
+    const extension = file.name.slice(file.name.lastIndexOf('.') + 1); // 확장자만(png/jpg)
     const randomName = `${Date.now()}-${Math.floor(Math.random() * 100000)}.${extension}`; // 최대한 중복없게
     return randomName;
   };
@@ -45,6 +45,20 @@ const ProfileSection = ({ user }) => {
   const handleImageChange = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
+
+    // 파일 크기 제한 (2MB 이하)
+    const MAX_SIZE = 2 * 1024 * 1024; // 2MB
+    if (file.size > MAX_SIZE) {
+      alert('2MB 이하의 파일을 선택해주세요.');
+      return;
+    }
+
+    // 확장자 제한 (JPG, PNG만 허용)
+    const allowedExtensions = ['image/jpeg', 'image/png'];
+    if (!allowedExtensions.includes(file.type)) {
+      alert('JPG 또는 PNG 형식의 이미지만 업로드 가능합니다.');
+      return;
+    }
 
     const isConfirmed = window.confirm('프로필 이미지를 수정하겠습니까?');
     if (!isConfirmed) return;
@@ -101,7 +115,7 @@ const ProfileSection = ({ user }) => {
 
     if (!userdata?.user_id) {
       console.error('사용자 데이터가 없습니다.', userdata);
-      setErrorMessage('사용자 정보를 찾을 수 없습니다.');
+      alert('사용자 정보를 찾을 수 없습니다.');
       return;
     }
 
@@ -196,7 +210,7 @@ const ProfileSection = ({ user }) => {
             className="w-[210px] h-[32px] border border-dark rounded-md text-center"
           />
           {errorMessage && (
-            <p className="mt-1 text-sm text-point-color">{errorMessage}</p>
+            <p className="mt-1 text-text-sm text-point-color">{errorMessage}</p>
           )}
         </>
       ) : (

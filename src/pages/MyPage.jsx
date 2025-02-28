@@ -158,9 +158,7 @@ const MyPage = () => {
                 />
                 <div className="w-full h-[120px] p-2">
                   <h3 className="font-semibold text-title-sm">{item.name}</h3>
-                  <p className="mb-2 text-gray-500 text-md text-deep-mint">
-                    {item.price}
-                  </p>
+                  <p className="mb-2 text-md text-deep-mint">{item.price}</p>
                   <div className="flex items-center justify-center gap-4">
                     <Button type="button" variant="outline" size="medium">
                       삭제
