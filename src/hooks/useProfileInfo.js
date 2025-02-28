@@ -1,6 +1,11 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../api/client';
 import { ERROR_MESSAGES } from '../constants/mypageConstants';
+import {
+  validateNickname,
+  checkNicknameDuplication,
+  updateProfile,
+} from './profileUtils';
 
 const useProfileInfo = (user) => {
   const [userdata, setUserdata] = useState(null);
@@ -33,6 +38,7 @@ const useProfileInfo = (user) => {
   const handleProfileUpdate = async () => {
     if (!isUpdating) {
       setIsUpdating(true);
+      setErrorMessage('');
       return;
     }
 
@@ -42,54 +48,29 @@ const useProfileInfo = (user) => {
       return;
     }
 
-    if (nickname.length < 3) {
-      setErrorMessage(ERROR_MESSAGES.invalidLength);
+    // 유효성 검사
+    const validation = validateNickname(nickname, userdata);
+    if (!validation.valid) {
+      setErrorMessage(validation.error);
       return;
-    }
-
-    if (nickname === userdata.name) {
-      const isConfirmed = window.confirm('프로필 닉네임을 수정하겠습니까?');
-      if (isConfirmed) {
-        setErrorMessage(ERROR_MESSAGES.noChange);
-        return;
-      } else {
-        setIsUpdating(false);
-        return;
-      }
     }
 
     // 닉네임 중복 검사
-    const { data, error: checkError } = await supabase
-      .from('users')
-      .select('name')
-      .eq('name', nickname);
-
-    if (checkError) {
-      console.error('닉네임 중복 검사 오류:', checkError);
-      setErrorMessage(ERROR_MESSAGES.checkFailed);
+    const duplicationCheck = await checkNicknameDuplication(nickname);
+    if (!duplicationCheck.valid) {
+      setErrorMessage(duplicationCheck.error);
       return;
     }
 
-    if (data.length > 0) {
-      setErrorMessage(ERROR_MESSAGES.duplicate);
-      return;
+    // 프로필 업데이트
+    const result = await updateProfile(nickname, userdata);
+    if (result.success) {
+      setIsUpdating(false);
+      await fetchUserData();
+      alert('프로필이 성공적으로 업데이트되었습니다.');
+    } else {
+      setErrorMessage(result.error);
     }
-
-    setErrorMessage('');
-    const { error } = await supabase
-      .from('users')
-      .update({ name: nickname })
-      .eq('user_id', userdata.user_id);
-
-    if (error) {
-      console.error('프로필 업데이트 오류:', error.message);
-      setErrorMessage(ERROR_MESSAGES.updateFailed);
-      return;
-    }
-
-    alert('프로필이 성공적으로 업데이트되었습니다.');
-    setIsUpdating(false);
-    await fetchUserData();
   };
 
   return {
@@ -99,7 +80,7 @@ const useProfileInfo = (user) => {
     isUpdating,
     errorMessage,
     handleProfileUpdate,
-    fetchUserData, // 필요하면 외부에서 호출할 수 있도록 반환
+    fetchUserData,
   };
 };
 
