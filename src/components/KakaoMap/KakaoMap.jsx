@@ -31,6 +31,7 @@ const KakaoMap = ({ level, mode, productList, selectedProduct }) => {
     }
   }, [selectedProduct, productList]);
 
+  // MapProductModal 닫기 기능
   const handleClickMap = () => {
     setProductInfo(null);
   };
