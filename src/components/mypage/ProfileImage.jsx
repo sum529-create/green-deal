@@ -1,19 +1,22 @@
 import React from 'react';
 import Button from '../common/Button';
+import { useRef } from 'react';
 
 const ProfileImage = ({ imageUrl, handleImageChange }) => {
+  const fileInputRef = useRef(null);
   return (
     <div className="flex flex-col items-center justify-center gap-4">
       <Button
         type="button"
         variant="primary"
         size="medium"
-        onClick={() => document.getElementById('profile-image-input').click()}
+        onClick={() => fileInputRef.current.click()}
       >
         이미지 선택
       </Button>
 
       <input
+        ref={fileInputRef}
         id="profile-image-input"
         type="file"
         accept="image/*"
