@@ -8,8 +8,9 @@ const ProfileSection = ({ user }) => {
   const [userdata, setUserdata] = useState(null);
   const [imageUrl, setImageUrl] = useState('');
 
-  console.log(userdata);
+  // console.log(userdata);
 
+  //유저 데이터 가져오기
   const fetchUserData = async () => {
     if (!user?.id) return;
 
@@ -32,6 +33,7 @@ const ProfileSection = ({ user }) => {
     fetchUserData();
   }, [user]);
 
+  //프로필 이미지 변경
   const handleImageChange = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -39,25 +41,30 @@ const ProfileSection = ({ user }) => {
     const isConfirmed = window.confirm('프로필 이미지를 수정하겠습니까?');
     if (!isConfirmed) return;
 
-    const encodeFileName = (fileName) =>
-      encodeURIComponent(fileName).replace(/[!'()*]/g, escape);
-    const fileName = encodeFileName(file.name);
+    const getFileName = (file) => {
+      const extension = file.name.split('.').pop(); // 파일 확장자만 추출(png)
+      return `${Date.now()}-${Math.floor(Math.random() * 100000)}.${extension}`; //최대한 중복이 안되게끔
+    };
+
+    const fileName = getFileName(file);
     const filePath = `profiles/${fileName}`;
 
     const { error } = await supabase.storage
       .from('test')
-      .upload(filePath, file, { upsert: true });
+      .upload(filePath, file, { upsert: true }); //동일한 이미지명 덮어쓰기
 
     if (error) {
       console.error('이미지 업로드 오류:', error.message);
       return;
     }
 
+    //업로드한 이미지 가져오기
     const { data: urlData } = supabase.storage
       .from('test')
       .getPublicUrl(filePath);
     const newImageUrl = urlData.publicUrl;
 
+    //유저 프로필 이미지 업데이트
     const { error: updateError } = await supabase
       .from('users')
       .update({ profile_img: newImageUrl })
@@ -72,6 +79,7 @@ const ProfileSection = ({ user }) => {
     }
   };
 
+  //프로필 정보 수정
   const handleProfileUpdate = async () => {
     if (!isUpdating) {
       setIsUpdating(true);
