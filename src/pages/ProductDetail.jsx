@@ -141,7 +141,7 @@ const ProductDetail = () => {
             <div className="flex items-center gap-4"></div>
           </div>
 
-          <hr />
+          <hr className="border-t-1 border-light-gray" />
 
           {/* 판매자 정보 */}
           <div className="flex items-center gap-3">
@@ -153,7 +153,7 @@ const ProductDetail = () => {
             <span className="text-gray-700">{seller?.name}</span>
           </div>
 
-          <hr />
+          <hr className="border-t-1 border-light-gray" />
 
           {/* 상품 상세 정보 */}
           <div className="flex gap-8">
@@ -179,7 +179,7 @@ const ProductDetail = () => {
             </div>
           </div>
 
-          <hr />
+          <hr className="border-t-1 border-light-gray" />
 
           {/* 상품 설명 */}
           <div>
