@@ -9,27 +9,10 @@ import { supabase } from '../api/client';
  * @param {string} conflictColumn - 중복처리기준 컬럼
  * @returns {Promise}
  */
-export const upsertData = async (data, tableName, conflictColumn = '') => {
-  if (!data) {
-    console.error('data 값은 필수입니다.');
-    return;
-  }
-  if (!tableName) {
-    console.error('tableName 값은 필수입니다.');
-    return;
-  }
-  try {
-    const { error } = await supabase
-      .from(tableName)
-      .upsert(data, { onConflict: conflictColumn || undefined });
-    if (error) {
-      console.error('데이터 삽입/업데이트 실패하였습니다: ', error);
-      return;
-    } else {
-      return alert('새로운 상품이 추가되었습니다.');
-    }
-  } catch (error) {
-    console.error('서버 오류가 발생하였습니다: ', error);
-    return;
-  }
+export const upsertData = async (product, tableName, conflictColumn = '') => {
+  const { data, error } = await supabase
+    .from(tableName)
+    .upsert(product, { onConflict: conflictColumn || undefined })
+    .select();
+  return { data, error };
 };
