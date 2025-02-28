@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { FaRegStar } from 'react-icons/fa';
-import { useSearchParams } from 'react-router-dom';
 import Comments from '../components/comments/Comments';
+import { useParams } from 'react-router-dom';
 
 const ProductDetail = () => {
   // 상품테이블 더미데이터
@@ -87,8 +87,7 @@ const ProductDetail = () => {
   // 현재 로그인 한 유저정보 넣을 자리
 
   //
-  const [searchParams] = useSearchParams(); //쿼리스트링값 가져오기
-  const id = searchParams.get('id'); // ?id=
+  const { id } = useParams(); // 패스파라미터 id 가져오기
   const product = productLists.find((item) => item.id === +id);
   // 판매자 정보 가져오기
   const seller = users.find((user) => +user.user_id === +product.user_id);
@@ -126,7 +125,7 @@ const ProductDetail = () => {
               <div className="flex">
                 <h2 className="text-2xl font-bold">{product.name}</h2>
                 <span
-                  className={`px-4 py-1 text-sm text-deep-mint rounded-full ${product.soldout ? 'bg-gray-400' : 'bg-deep-mint'}`}
+                  className={`mx-4 px-3 py-1 text-caption min-w-[80px] rounded-full ${product.soldout ? 'bg-gray' : 'bg-deep-mint'}`}
                 >
                   {product.soldout ? '판매 완료' : '판매중'}
                 </span>

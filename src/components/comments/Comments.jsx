@@ -1,6 +1,5 @@
-import React from 'react';
-import { useSearchParams } from 'react-router-dom';
-import { useState } from 'react';
+import React, { useState } from 'react';
+import { useParams } from 'react-router-dom';
 import Button from '../common/Button';
 
 const Comments = ({ users }) => {
@@ -24,8 +23,8 @@ const Comments = ({ users }) => {
     },
   ]);
 
-  const [searchParams] = useSearchParams();
-  const productId = searchParams.get('id');
+  const { id } = useParams();
+  const productId = id; //
 
   // 댓글 입력 상태
   const [newComment, setNewComment] = useState('');
