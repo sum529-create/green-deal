@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../api/client';
+import { ERROR_MESSAGES } from '../constants/mypageConstants';
 
 const useProfileInfo = (user) => {
   const [userdata, setUserdata] = useState(null);
@@ -36,20 +37,20 @@ const useProfileInfo = (user) => {
     }
 
     if (!userdata?.user_id) {
-      alert('사용자 정보를 찾을 수 없습니다.');
+      alert(ERROR_MESSAGES.notFound);
       setIsUpdating(false);
       return;
     }
 
-    if (nickname.length < 3 || nickname.length > 15) {
-      setErrorMessage('닉네임은 3~15자 사이여야 합니다.');
+    if (nickname.length < 3) {
+      setErrorMessage(ERROR_MESSAGES.invalidLength);
       return;
     }
 
     if (nickname === userdata.name) {
       const isConfirmed = window.confirm('프로필 닉네임을 수정하겠습니까?');
       if (isConfirmed) {
-        setErrorMessage('닉네임이 변경되지 않았습니다.');
+        setErrorMessage(ERROR_MESSAGES.noChange);
         return;
       } else {
         setIsUpdating(false);
@@ -65,12 +66,12 @@ const useProfileInfo = (user) => {
 
     if (checkError) {
       console.error('닉네임 중복 검사 오류:', checkError);
-      setErrorMessage('중복 검사 중 오류가 발생했습니다.');
+      setErrorMessage(ERROR_MESSAGES.checkFailed);
       return;
     }
 
     if (data.length > 0) {
-      setErrorMessage('이미 사용 중인 닉네임입니다.');
+      setErrorMessage(ERROR_MESSAGES.duplicate);
       return;
     }
 
@@ -82,7 +83,7 @@ const useProfileInfo = (user) => {
 
     if (error) {
       console.error('프로필 업데이트 오류:', error.message);
-      setErrorMessage('프로필 업데이트 중 오류가 발생했습니다.');
+      setErrorMessage(ERROR_MESSAGES.updateFailed);
       return;
     }
 
