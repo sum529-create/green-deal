@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import ProductImageUpload from '../components/product/ProductImageUpload';
 import ProductForm from '../components/product/ProductForm';
-import { upsertData } from '../utils/upsertData';
+import { upsertData } from '../api/upsertData';
 import { supabase } from '../api/client';
 import { useNavigate } from 'react-router-dom';
 import useUserStore from '../store/userStore';
