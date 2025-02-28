@@ -44,7 +44,7 @@ const Comments = ({ users }) => {
   };
 
   return (
-    <div className="p-6 bg-white rounded-sm shadow-md">
+    <div className="p-6 bg-white rounded-sm">
       {/* comments add components */}
       <div className="mb-6">
         <p className="font-semibold text-black">
