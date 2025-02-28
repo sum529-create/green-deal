@@ -1,15 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import Button from '../common/Button';
 import { supabase } from '../../api/client';
+import ProfileImage from './ProfileImage';
+
+const MAX_SIZE = 2 * 1024 * 1024; // 2MB
+const ALLOWED_EXTENSIONS = ['image/jpeg', 'image/png'];
 
 const ProfileSection = ({ user }) => {
   const [nickname, setNickname] = useState(null);
+  const [imageUrl, setImageUrl] = useState('');
   const [isUpdating, setIsUpdating] = useState(false);
   const [userdata, setUserdata] = useState(null);
-  const [imageUrl, setImageUrl] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
 
-  //유저 데이터 가져오기
+  // 유저 데이터 가져오기
   const fetchUserData = async () => {
     if (!user?.id) return;
 
@@ -21,24 +25,22 @@ const ProfileSection = ({ user }) => {
 
     if (error) {
       console.error('유저 데이터 가져오기 오류:', error.message);
-    } else {
-      setUserdata(data);
-      setNickname(data.name);
-      setImageUrl(data.profile_img || '/profile_default.png');
+      return;
     }
+
+    setUserdata(data);
+    setNickname(data.name);
+    setImageUrl(data.profile_img || '/profile_default.png');
   };
 
   useEffect(() => {
     fetchUserData();
   }, [user]);
 
-  // console.log(userdata);
-
   // 파일명 생성 함수(한글이 포함된 파일도 업로드하기 위해)
   const getFileName = (file) => {
-    const extension = file.name.slice(file.name.lastIndexOf('.') + 1); // 확장자만(png/jpg)
-    const randomName = `${Date.now()}-${Math.floor(Math.random() * 100000)}.${extension}`; // 최대한 중복없게
-    return randomName;
+    const extension = file.name.split('.').pop(); // 확장자(png, jpg)
+    return `${Date.now()}-${Math.floor(Math.random() * 100000)}.${extension}`; //최대한 중복 없게
   };
 
   // 프로필 이미지 변경
@@ -46,7 +48,7 @@ const ProfileSection = ({ user }) => {
     const file = e.target.files[0];
     if (!file) return;
 
-    // 파일 크기 제한 (2MB 이하)
+    //파일 크기 제한
     const MAX_SIZE = 2 * 1024 * 1024; // 2MB
     if (file.size > MAX_SIZE) {
       alert('2MB 이하의 파일을 선택해주세요.');
@@ -67,43 +69,41 @@ const ProfileSection = ({ user }) => {
     const filePath = `profiles/${fileName}`;
 
     // 이미지 업로드
-    const { error } = await supabase.storage
+    const { error: uploadError } = await supabase.storage
       .from('profileImg')
       .upload(filePath, file, { upsert: false });
 
-    if (error) {
-      console.error('이미지 업로드 오류:', error.message);
-      alert('프로필 이미지 업로드에 실패했습니다. 다시 시도해주세요.');
-      return;
+    if (uploadError) {
+      console.error('이미지 업로드 오류:', uploadError.message);
+      return alert('프로필 이미지 업로드에 실패했습니다.');
     }
 
-    // URL 만들기
+    //url 가져오기
     const { data: urlData, error: urlError } = await supabase.storage
       .from('profileImg')
       .getPublicUrl(filePath);
 
     if (urlError) {
       console.error('URL 가져오기 오류:', urlError.message);
-      alert('URL 가져오기 실패');
-      return;
+      return alert('URL 가져오기 실패');
     }
-    const newImageUrl = urlData.publicUrl;
-    setImageUrl(newImageUrl);
 
-    // 유저 프로필 이미지 업데이트
+    setImageUrl(urlData.publicUrl);
+
+    // 프로필 이미지 업데이트
     const { error: updateError } = await supabase
       .from('users')
-      .update({ profile_img: newImageUrl })
+      .update({ profile_img: urlData.publicUrl })
       .eq('user_id', userdata.user_id);
 
     if (updateError) {
       console.error('프로필 이미지 업데이트 오류:', updateError.message);
-      alert('프로필 이미지 업데이트에 실패했습니다. 다시 시도해주세요.');
-    } else {
-      console.log('프로필 이미지 업데이트 완료!');
-      await fetchUserData();
-      alert('프로필 이미지가 성공적으로 업데이트되었습니다.');
+      return alert('프로필 이미지 업데이트에 실패했습니다.');
     }
+
+    // console.log('프로필 이미지 업데이트 완료!');
+    await fetchUserData();
+    alert('프로필 이미지가 성공적으로 업데이트되었습니다.');
   };
 
   // 프로필 정보 수정
@@ -136,7 +136,6 @@ const ProfileSection = ({ user }) => {
         return;
       }
     }
-
     // 닉네임 중복 검사
     const { data, error: checkError } = await supabase
       .from('users')
@@ -164,43 +163,20 @@ const ProfileSection = ({ user }) => {
     if (error) {
       console.error('프로필 업데이트 오류:', error.message);
       setErrorMessage('프로필 업데이트 중 오류가 발생했습니다.');
-    } else {
-      console.log('프로필 업데이트 완료!');
-      await fetchUserData();
-      alert('프로필이 성공적으로 업데이트되었습니다.');
+      return;
     }
 
+    console.log('프로필 업데이트 완료!');
+    await fetchUserData();
+    alert('프로필이 성공적으로 업데이트되었습니다.');
     setIsUpdating(false);
   };
 
-  if (!userdata) {
-    return <div>Loading...</div>;
-  }
+  if (!userdata) return <div>Loading...</div>;
 
   return (
     <div className="flex flex-col items-center justify-center gap-4 w-[300px] h-[458px] px-10 py-[30px] bg-white">
-      <Button
-        type="button"
-        variant="primary"
-        size="medium"
-        onClick={() => document.getElementById('profile-image-input').click()}
-      >
-        이미지 선택
-      </Button>
-
-      <input
-        id="profile-image-input"
-        type="file"
-        accept="image/*"
-        onChange={handleImageChange}
-        className="hidden"
-      />
-
-      <img
-        src={imageUrl || '/profile_default.png'}
-        alt="프로필 이미지"
-        className="object-cover w-[130px] h-[130px] bg-light-gray rounded-full"
-      />
+      <ProfileImage imageUrl={imageUrl} handleImageChange={handleImageChange} />
       {isUpdating ? (
         <>
           <input
