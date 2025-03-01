@@ -12,11 +12,8 @@ const ProfileSection = ({ user }) => {
     isUpdating,
     errorMessage,
     handleProfileUpdate,
-    fetchUserData,
   } = useProfileInfo(user);
   const { imageUrl, handleImageChange } = useProfileImage(userdata);
-
-  if (!userdata) return <div>Loading...</div>;
 
   return (
     <div className="flex flex-col items-center justify-center gap-4 w-[300px] h-[458px] px-10 py-[30px] bg-white">
