@@ -1,71 +1,47 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import Button from '../common/Button';
+import { supabase } from '../../api/client';
+import CommentForm from './CommentForm';
 
 const Comments = ({ users }) => {
-  //댓글테이블 더미데이터
-  const [comments, setComments] = useState([
-    {
-      id: 21,
-      created_at: '2025-02-27 08:55:57.141131+00',
-      content: '직거래 가능한 시간 알려주세요',
-      user_id: '20250227074521',
-      product_id: '1',
-      updated_at: '',
-    },
-    {
-      id: 22,
-      created_at: '2025-02-27 14:55:57.141131+00',
-      content: '오후 8시 이후로 가능합니다!',
-      user_id: '20250229084522',
-      product_id: '1',
-      updated_at: '',
-    },
-  ]);
-
   const { id } = useParams();
   const productId = id; //
+  const [comments, setComments] = useState([]); // 댓글 상태
 
-  // 댓글 입력 상태
-  const [newComment, setNewComment] = useState('');
+  // DB에서 해당 상품의 댓글 불러오기
+  useEffect(() => {
+    const fetchComments = async () => {
+      const { data, error } = await supabase
+        .from('comments')
+        .select('*')
+        .eq('product_id', productId)
+        .order('created_at', { ascending: false });
 
-  // 현재 상품에 해당하는 댓글 필터링
-  const productComments = comments.filter(
-    (comment) => comment.product_id === productId,
-  );
-
-  //댓글 추가 로직 생성해야함
-  const handleAddComment = (e) => {
-    e.preventDefault();
-
-    if (!newComment.trim()) return;
-    //setComments([...comments, newComment])
-  };
+      if (error) {
+        console.error('댓글 불러오기 에러: ', error);
+      } else {
+        setComments(data);
+      }
+    };
+    fetchComments();
+  }, [productId]);
 
   return (
     <div className="p-6 bg-white rounded-sm">
-      {/* comments add components */}
       <div className="mb-6">
-        <p className="font-semibold text-black">
-          댓글/문의{'  '}
-          <span className="text-deep-mint">{productComments.length}개</span>
+        <p className="mb-3 font-semibold text-black">
+          댓글/문의 <span className="text-deep-mint">{comments.length}개</span>
         </p>
-        <form className="flex items-center gap-5 p-4 border rounded-lg border-light-gray">
-          <textarea
-            placeholder="댓글을 입력하세요."
-            className="w-full p-3 mt-2 text-sm bg-white rounded-lg resize-none focus:ring-1 focus:ring-mint focus:outline-none"
-          ></textarea>
-          <Button type="submit" size="medium">
-            등록
-          </Button>
-        </form>
+        {/* 댓글 입력 폼 */}
+        <CommentForm productId={productId} setComments={setComments} />
       </div>
 
       {/* 댓글 목록 */}
       <ul className="space-y-6">
         {/* map으로 뿌리기 */}
-        {productComments.length > 0 ? (
-          productComments.map((comment) => {
+        {comments.length > 0 ? (
+          comments.map((comment) => {
             // 댓글 작성자 찾기
             const user = users.find(
               (user) => user.user_id.toString() === comment.user_id,
