@@ -1,7 +1,6 @@
 import { supabase } from './client';
 
 export const fetchUserData = async (userId) => {
-  if (!userId) return { data: null, error: '유효하지 않은 사용자 ID' };
 
   const { data, error } = await supabase
     .from('users')
