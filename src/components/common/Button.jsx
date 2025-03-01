@@ -7,6 +7,7 @@ const Button = ({
   variant = 'primary',
   size = 'medium',
   disabled = false,
+  className = '',
 }) => {
   const baseUrl = 'transition-all leading-none duration-200 rounded-full ';
   const sizeStyle = {
@@ -24,7 +25,7 @@ const Button = ({
   return (
     <button
       type={type}
-      className={`${baseUrl} ${sizeStyle[size]} ${variantStyles[variant]}`}
+      className={`${baseUrl} ${sizeStyle[size]} ${variantStyles[variant]} ${className}`}
       onClick={onClick}
       disabled={disabled}
     >
