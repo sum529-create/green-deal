@@ -43,7 +43,7 @@ const MyPage = () => {
 
     if (data) {
       const wishProducts = data.map((item) => item.products);
-      setWishlist(wishProducts); // 찜 목록을 상품 데이터로 직접 저장
+      setWishlist(wishProducts);
     }
   };
 
@@ -53,6 +53,27 @@ const MyPage = () => {
       fetchWishlist();
     }
   }, [user]);
+
+  const removeProduct = async (productId) => {
+    if (!user?.id) {
+      return;
+    }
+
+    const { error } = await supabase
+      .from('products')
+      .delete()
+      .eq('id', productId)
+      .eq('user_id', user.id);
+
+    if (error) {
+      console.error('상품 삭제 오류:', error.message);
+      return;
+    }
+
+    setProducts((prevProducts) =>
+      prevProducts.filter((item) => item.id !== productId),
+    );
+  };
 
   const handleTabChange = (tabType) => {
     setCurrentTab(tabType);
@@ -149,7 +170,12 @@ const MyPage = () => {
                     <div className="flex items-center justify-center gap-4">
                       {currentTab === 'selling' && (
                         <>
-                          <Button type="button" variant="outline" size="medium">
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="medium"
+                            onClick={() => removeProduct(item.id)}
+                          >
                             삭제
                           </Button>
                           <Button type="button" variant="primary" size="medium">
@@ -159,7 +185,12 @@ const MyPage = () => {
                       )}
 
                       {currentTab === 'sold' && (
-                        <Button type="button" variant="outline" size="medium">
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="medium"
+                          onClick={() => removeProduct(item.id)}
+                        >
                           삭제
                         </Button>
                       )}
