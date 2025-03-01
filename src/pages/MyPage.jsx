@@ -5,6 +5,7 @@ import ProfileSection from '../components/mypage/ProfileSection';
 import useUserStore from '../store/userStore';
 import { useEffect } from 'react';
 import { supabase } from '../api/client';
+import { useNavigate } from 'react-router-dom';
 
 const MyPage = () => {
   const user = useUserStore((state) => state.user);
@@ -12,6 +13,7 @@ const MyPage = () => {
   const [currentTab, setCurrentTab] = useState('selling');
   const [products, setProducts] = useState([]);
   const [wishlist, setWishlist] = useState([]);
+  const navigate = useNavigate();
 
   // 상품 불러오기
   const fetchProducts = async () => {
@@ -172,6 +174,21 @@ const MyPage = () => {
                 </div>
               </article>
             ))
+          )}
+
+          {/* 추가: 물품 등록하기 버튼 */}
+          {currentTab === 'selling' && (
+            <article
+              className="flex flex-col items-center justify-center w-[250px] h-[280px] bg-gray-100 rounded-md border-2 border-dashed border-light-gray cursor-pointer"
+              onClick={() => {
+                navigate('/product/registration');
+              }}
+            >
+              <div className="flex flex-col items-center justify-center w-full h-full text-deep-mint">
+                <span className="text-title-md">+</span>
+                <p className="mt-2 text-title-sm">물품 등록하기</p>
+              </div>
+            </article>
           )}
         </div>
       </section>
