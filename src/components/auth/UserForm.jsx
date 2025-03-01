@@ -10,11 +10,13 @@ import {
   validateUserName,
 } from '../../utils/validateUserInputs';
 import { supabase } from '../../api/client';
+import useUserStore from '../../store/userStore';
 
 const UserForm = () => {
   const pageParams = useLocation().pathname.split('/')[1];
   const navigate = useNavigate();
   const [CheckedDuplication, setCheckedDuplication] = useState(false);
+  const setUser = useUserStore((state) => state.setUser);
 
   const {
     register,
@@ -95,7 +97,8 @@ const UserForm = () => {
       const userData = await authSignIn(email, password);
 
       if (userData) {
-        navigate('/');
+        setUser(userData.session.user);
+        navigate('/product');
       }
     } catch (error) {
       if (error.message.includes('Invalid login credentials')) {

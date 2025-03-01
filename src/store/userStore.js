@@ -1,21 +1,35 @@
 import { create } from 'zustand';
 import { supabase } from '../api/client';
+import { persist } from 'zustand/middleware';
 
-const useUserStore = create((set) => ({
-  user: null,
-  isLogin: false,
-  setUser: (user) => set({ user, isLogin: !!user }),
-  resetUser: () => set({ user: null, isLogin: false }),
-}));
+const useUserStore = create(
+  persist(
+    (set) => ({
+      user: null,
+      isLogin: false,
+      setUser: (user) => set({ user, isLogin: true }),
+      clearUser: () => set({ user: null, isLogin: false }),
+    }),
+    {
+      name: 'user-storage',
+    },
+  ),
+);
 
 export const handleAuthStateChange = async () => {
-  supabase.auth.onAuthStateChange((event, session) => {
-    if (event === 'SIGNED_IN' && session) {
-      useUserStore.setState({ user: session.user, isLogin: true });
-    } else if (event === 'SIGNED_OUT') {
-      useUserStore.setState({ user: null, isLogin: false });
-    }
-  });
+  const { setUser, clearUser } = useUserStore.getState();
+
+  const { data: unsubscribe } = supabase.auth.onAuthStateChange(
+    (event, session) => {
+      if (event === 'SIGNED_IN' && session) {
+        setUser(session.user);
+      } else if (event === 'SIGNED_OUT') {
+        clearUser();
+      }
+    },
+  );
+
+  return unsubscribe;
 };
 
 export default useUserStore;
