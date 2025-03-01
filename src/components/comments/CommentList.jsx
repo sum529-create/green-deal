@@ -62,7 +62,7 @@ const CommentList = ({
             <li
               key={comment.id}
               className={`p-4 border rounded-lg border-light-gray ${
-                isProductOwnerComment && ' bg-light-gray'
+                isProductOwnerComment && ' bg-light-mint'
               }`}
             >
               <div className="flex justify-between gap-3">
@@ -74,14 +74,14 @@ const CommentList = ({
                     className="w-12 h-12 rounded-full bg-deep-mint"
                   />
                   <div className="w-full">
-                    <div className="flex gap-3">
+                    <div className="flex items-center gap-3">
                       {/* 작성자 닉네임 */}
                       <h3 className="text-sm font-semibold text-black">
                         {user.name}
                       </h3>
 
                       {/* 작성날짜 */}
-                      <span className="text-xs text-light-gray">
+                      <span className="text-xs text-gray">
                         {new Date(comment.created_at).toLocaleDateString()}
                       </span>
                     </div>
