@@ -7,6 +7,7 @@ const Input = ({
   inputMode = '',
   onChange,
   placeholder,
+  onKeyDown,
   className,
 }) => {
   const INPUT_DEFAULT_STYLE =
@@ -20,6 +21,7 @@ const Input = ({
       inputMode={inputMode}
       onChange={onChange}
       placeholder={placeholder}
+      onKeyDown={onKeyDown}
       className={`${INPUT_DEFAULT_STYLE} ${className}`}
     />
   );
