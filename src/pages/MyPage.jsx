@@ -85,7 +85,7 @@ const MyPage = () => {
   };
 
   return (
-    <div className="flex items-center justify-center h-screen gap-14">
+    <div className="flex items-center justify-center min-h-screen gap-14">
       <section className="flex flex-col items-center justify-center gap-10 w-[400px] h-[830px] p-6 bg-light-gray rounded-md">
         <ProfileSection user={user} />
 
