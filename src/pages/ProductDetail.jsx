@@ -1,110 +1,48 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FaRegStar } from 'react-icons/fa';
 import Comments from '../components/comments/Comments';
 import { useParams } from 'react-router-dom';
 import useUserStore from '../store/userStore';
 import Button from '../components/common/Button';
+import { supabase } from '../api/client';
 
 const ProductDetail = () => {
-  // 상품테이블 더미데이터
-  const [productLists, setProductLists] = useState([
-    {
-      id: 1,
-      createdAt: '2024-02-27T12:34:56.789Z',
-      name: '아이폰11',
-      category: '디지털기기',
-      price: '10000',
-      quality: '최상',
-      refund: false,
-      location: { lat: 33.450701, lng: 126.570667 },
-      description: '싸다 싸! 신발보다 싸!',
-      img: 'https://alephksa.com/cdn/shop/files/iPhone_14_Blue_PDP_Image_Position-1A__WWEN_0853ab85-adc4-47fb-8955-43df09cca9f1.jpg?v=1688733593&width=2048',
-      user_id: 20250229084522,
-      soldout: false,
-      updated_at: '',
-    },
-    {
-      id: 2,
-      createdAt: '2024-02-28T12:34:56.789Z',
-      name: '축구공',
-      category: '스포츠/레저',
-      price: '100000',
-      quality: '중상',
-      refund: false,
-      location: { lat: 33.250701, lng: 126.270667 },
-      description: '사용감 살짝 있습니다!',
-      img: 'https://cdn-static.zep.us/static/assets/baked-avartar-images/2-25-11-73.png',
-      user_id: 20250228074523,
-      soldout: true,
-      updated_at: '2024-02-29T12:34:56.789Z',
-    },
-    {
-      id: 3,
-      createdAt: '2024-02-27T12:38:56.789Z',
-      name: '맥북 Air',
-      category: '디지털기기',
-      price: '1000000',
-      quality: '최상',
-      refund: false,
-      location: { lat: 33.550701, lng: 126.670667 },
-      description: '개봉만 했습니다.',
-      img: 'https://cdn-static.zep.us/static/assets/baked-avartar-images/10-539-44-430.png',
-      user_id: 20250227074521,
-      soldout: true,
-      updated_at: '',
-    },
-  ]);
+  // State
+  const [products, setProducts] = useState([]);
+  const [users, setUsers] = useState([]);
 
-  // 유저정보 테이블 더미데이터
-  const [users] = useState([
-    {
-      id: 11,
-      created_at: '2025-02-27 07:45:22.595391+00',
-      user_id: 20250227074521,
-      email: 'test4@spartan.com',
-      name: '연진이',
-      profile_img:
-        'https://cdn-static.zep.us/static/assets/baked-avartar-images/10-539-44-430.png',
-    },
-    {
-      id: 12,
-      created_at: '2025-02-28 07:45:22.595391+00',
-      user_id: 20250228074523,
-      email: 'test5@sparta.com',
-      name: '오토바이있음',
-      profile_img:
-        'https://cdn-static.zep.us/static/assets/baked-avartar-images/7-361-52-630.png',
-    },
-    {
-      id: 13,
-      created_at: '2025-02-29 08:45:22.595391+00',
-      user_id: 20250229084522,
-      email: 'test6@sparta.com',
-      name: 'MBTI공쥬',
-      profile_img:
-        'https://cdn-static.zep.us/static/assets/baked-avartar-images/1-529-65-73.png',
-    },
-  ]);
+  // 로그인한 유저 정보
+  const currentUser = useUserStore((state) => state.user);
+  const isLogin = useUserStore((state) => state.isLogin);
+  const { id } = useParams(); // url에서 상품 id 가져오기
 
-  // 현재 로그인 한 유저정보 넣을 자리
-  // const currentUser = useUserStore((state) => state.user); // Zustand에서 로그인한 유저 정보 가져오기
-  // const isOwner = currentUser?.user_id === product.user_id; // 로그인 유저가 상품의 작성자인지 확인
+  // DB에서 데이터 가져오기
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const { data, error } = await supabase.from('products').select('*');
+        if (error) throw error;
+        setProducts(data);
+      } catch (error) {
+        console.error('제품 데이터 로드 에러', error.message);
+      }
+    };
 
-  //
-  const { id } = useParams(); // 패스파라미터 id 가져오기
-  const product = productLists.find((item) => item.id === +id);
-  // 판매자 정보 가져오기
-  const seller = users.find((user) => user.user_id === product.user_id);
+    const fetchUsers = async () => {
+      try {
+        const { data, error } = await supabase.from('users').select('*');
+        if (error) throw error;
+        setUsers(data);
+      } catch (error) {
+        console.log('사용자 데이터 로드 에러', error);
+      }
+    };
+    fetchProducts();
+    fetchUsers();
+  }, []);
 
-  //
-  // 예시 로그인 유저, 테스트용
-  const currentTestUser = users.find(
-    (user) => +user.user_id === Number(20250229084522),
-  );
-  //
-  // 예시 게시글 작성자 확인 , 테스트용
-  const isTestOwner = currentTestUser?.user_id === product.user_id;
-  console.log('isTestOwner>>>', isTestOwner);
+  // 현재 상품 찾기
+  const product = products.find((item) => item.id === +id);
 
   if (!product) {
     return (
@@ -112,13 +50,38 @@ const ProductDetail = () => {
     );
   }
 
-  // 상품 판매 완료 처리 >> db 연동 필요
-  const handleCheckAsSold = () => {
-    setProductLists((prev) =>
-      prev.map((item) =>
-        item.id === product.id ? { ...item, soldout: true } : item,
-      ),
-    );
+  // 판매자 정보 찾기
+  const seller = users.find((user) => user.user_id === product.user_id);
+
+  // 로그인 유저가 상품의 작성자인지 확인
+  const isOwner = isLogin && currentUser?.user_id === product.user_id;
+
+  // 상품 판매 완료 처리
+  const handleCheckAsSold = async () => {
+    if (
+      !window.confirm(
+        '완료 처리하면 번복이 불가합니다. 상품을 판매완료 처리 하시겠습니까?',
+      )
+    )
+      return;
+
+    try {
+      const { error } = await supabase
+        .from('products')
+        .update({ soldout: true })
+        .eq('id', product.id);
+
+      if (error) throw error;
+
+      // 상태 업데이트
+      setProducts((prev) =>
+        prev.map((item) =>
+          item.id === product.id ? { ...item, soldout: true } : item,
+        ),
+      );
+    } catch (error) {
+      console.log('판매완료 처리 에러', error.message);
+    }
   };
 
   return (
@@ -204,19 +167,15 @@ const ProductDetail = () => {
             </div>
 
             {/* 판매글 작성자에게만 보이는 판매완료 버튼 */}
-            {isTestOwner && (
+            {isOwner && (
               <Button
                 type="button"
                 onClick={
-                  isTestOwner && !product.soldout
-                    ? handleCheckAsSold
-                    : undefined
+                  isOwner && !product.soldout ? handleCheckAsSold : undefined
                 }
                 size="large"
-                variant={
-                  isTestOwner && !product.soldout ? 'outline' : 'disabled'
-                }
-                disabled={!isTestOwner || product.soldout}
+                variant={isOwner && !product.soldout ? 'outline' : 'disabled'}
+                disabled={!isOwner || product.soldout}
               >
                 {product.soldout ? '거래종료' : '판매완료'}
               </Button>
