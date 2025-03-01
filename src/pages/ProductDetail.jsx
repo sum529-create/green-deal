@@ -16,6 +16,10 @@ const ProductDetail = () => {
   const isLogin = useUserStore((state) => state.isLogin);
   const { id } = useParams(); // url에서 상품 id 가져오기
 
+  // 로그 제거해야함
+  // console.log('currentUser>>>', currentUser); // {id}
+  // console.log('isLogin>>>', isLogin);
+
   // DB에서 데이터 가져오기
   useEffect(() => {
     const fetchProducts = async () => {
@@ -53,8 +57,11 @@ const ProductDetail = () => {
   // 판매자 정보 찾기
   const seller = users.find((user) => user.user_id === product.user_id);
 
+  console.log('seller>>>', seller);
   // 로그인 유저가 상품의 작성자인지 확인
-  const isOwner = isLogin && currentUser?.user_id === product.user_id;
+  const isOwner = isLogin && currentUser?.id === product.user_id;
+
+  console.log('isOwner>>>', isOwner);
 
   // 상품 판매 완료 처리
   const handleCheckAsSold = async () => {
@@ -86,7 +93,7 @@ const ProductDetail = () => {
 
   return (
     <div>
-      <div className="flex max-w-5xl gap-12 p-8 mx-auto bg-white">
+      <div className="flex gap-12 p-8 mx-auto bg-white max-w-7xl">
         {/* 상품 이미지 */}
         <div className="flex items-center justify-center p-6 w-[580px] h-[730px] bg-light-gray">
           <img
@@ -134,7 +141,7 @@ const ProductDetail = () => {
           <hr className="border-t-1 border-light-gray" />
 
           {/* 상품 상세 정보 */}
-          <div className="flex gap-8">
+          <div className="flex flex-col w-[630px]">
             <div className="p-4 space-y-2 bg-gray-100 rounded-lg">
               <h3 className="text-lg font-semibold text-gray-700">상품정보</h3>
               <p className="text-sm">
@@ -148,22 +155,26 @@ const ProductDetail = () => {
               </p>
             </div>
 
+            <hr className="border-t-1 border-light-gray" />
+
+            {/* 상품 설명 */}
+            <div>
+              <div>
+                <h3 className="text-lg font-semibold text-gray-700">
+                  상품 설명
+                </h3>
+                <p className="text-gray-600">{product.description}</p>
+              </div>
+            </div>
+
             {/* 지도 */}
             <div className="flex flex-col items-center p-4 bg-gray-200 rounded-lg">
-              <div className="w-full h-32 rounded-lg bg-deep-gray">KKO MAP</div>
-              <p className="text-sm text-gray-600">
+              <div className="w-[400px] h-[250px] rounded-lg bg-gray">
+                KKO MAP
+              </div>
+              <p className="text-sm text-deep-gray">
                 서울특별시 강남구 테헤란로 44길 8
               </p>
-            </div>
-          </div>
-
-          <hr className="border-t-1 border-light-gray" />
-
-          {/* 상품 설명 */}
-          <div>
-            <div>
-              <h3 className="text-lg font-semibold text-gray-700">상품 설명</h3>
-              <p className="text-gray-600">{product.description}</p>
             </div>
 
             {/* 판매글 작성자에게만 보이는 판매완료 버튼 */}
