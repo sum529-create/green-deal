@@ -33,6 +33,8 @@ const CommentForm = ({ productId, setComments }) => {
     }
   };
 
+  if (!currentUser) return null;
+
   return (
     <form
       onSubmit={handleAddComment}
