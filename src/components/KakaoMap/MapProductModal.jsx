@@ -1,5 +1,6 @@
 import { CustomOverlayMap } from 'react-kakao-maps-sdk';
 import { Link } from 'react-router-dom';
+import dayjs from 'dayjs';
 
 const MapProductModal = ({ product, productInfo }) => {
   return (
@@ -34,11 +35,10 @@ const MapProductModal = ({ product, productInfo }) => {
               {Number(product.price).toLocaleString()}원
             </div>
             <div style={{ fontSize: '12px', color: '#888' }}>
-              {product.users.name}{' '}
-              {new Date(product.createdAt)
-                .toISOString()
-                .slice(2, 10)
-                .replace(/-/g, '.')}
+              {[
+                product.users.name,
+                dayjs(product.createdAt).format('YY.MM.DD'),
+              ].join(' ')}
             </div>
           </Link>
         </CustomOverlayMap>
