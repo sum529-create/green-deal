@@ -1,10 +1,9 @@
 /* eslint-disable no-extra-boolean-cast */
 import { useState, useEffect } from 'react';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-import { handleUserLogin, handleUserSignUp } from '../../api/userAuthService';
+import { authSignIn, authSignUp } from '../../api/userAuthService';
 import UserInput from './UserInput';
-import useDebouncedValidation from '../../hooks/useDebouncedValidation';
 import {
   validateEmail,
   validatePassword,
@@ -16,77 +15,18 @@ import useUserStore from '../../store/userStore';
 const UserForm = () => {
   const pageParams = useLocation().pathname.split('/')[1];
   const navigate = useNavigate();
-  const [isDuplicatedName, setIsDuplicatedName] = useState(false);
   const [CheckedDuplication, setCheckedDuplication] = useState(false);
-  const userLogin = useUserStore((state) => state.userLogin);
+  const setUser = useUserStore((state) => state.setUser);
 
   const {
-    register, // onChange 등의 이벤트 객체 생성
-    handleSubmit, // form onSubmit에 들어가는 함수
-    watch, // register를 통해 받은 모든 값 확인
-    formState: { errors }, // errors: register의 에러 메세지 자동 출력
-    setError,
-    clearErrors,
-  } = useForm();
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors, isValid },
+  } = useForm({ mode: 'onChange' });
 
-  // 각 입력값 실시간 감지
-  const emailValue = watch('email');
+  // 닉네임 입력값 실시간 감지 - 중복 검사에서 사용
   const userNameValue = watch('userName');
-  const passwordValue = watch('password');
-
-  // debounce validation
-  useDebouncedValidation(
-    () => validateEmail(emailValue, setError, clearErrors),
-    [emailValue],
-  );
-  useDebouncedValidation(
-    () => validateUserName(userNameValue, setError, clearErrors),
-    [userNameValue],
-  );
-  useDebouncedValidation(
-    () => validatePassword(passwordValue, setError, clearErrors),
-    [passwordValue],
-  );
-
-  const onSubmit = async (data) => {
-    if (pageParams === 'signup') {
-      // 회원가입 로직
-      const { email, password, userName } = data;
-      const signUpData = await handleUserSignUp(
-        email,
-        password,
-        userName,
-        CheckedDuplication,
-      );
-
-      if (!!signUpData) {
-        alert('회원가입 성공! 로그인 페이지로 이동합니다.');
-        navigate('/signin');
-      }
-    } else {
-      // 로그인 로직
-      const { email, password } = data;
-      const loginData = await handleUserLogin(email, password);
-
-      if (loginData?.error) {
-        if (loginData.error === 'Invalid login credentials') {
-          setError('email', {
-            type: 'manual',
-            message: '이메일 또는 비밀번호가 올바르지 않습니다.',
-          });
-          setError('password', {
-            type: 'manual',
-            message: '이메일 또는 비밀번호가 올바르지 않습니다.',
-          });
-        }
-        return;
-      }
-
-      alert('로그인 성공!');
-      userLogin();
-      navigate('/');
-    }
-  };
 
   // 닉네임 중복 확인
   const onHandleDuplication = async () => {
@@ -105,9 +45,10 @@ const UserForm = () => {
       alert('중복 확인 중 오류가 발생했습니다.');
       return;
     }
-    setIsDuplicatedName(data.length > 0); // DB 내 중복된 이름이 있는지
 
-    if (isDuplicatedName) {
+    const duplicated = data.length > 0;
+
+    if (duplicated) {
       alert('이미 사용된 닉네임입니다.');
       setCheckedDuplication(false);
     } else {
@@ -116,10 +57,64 @@ const UserForm = () => {
     }
   };
 
+  // 닉네임 입력란에 변동이 있으면 중복 검사 상태 초기화
   useEffect(() => {
-    setIsDuplicatedName(false); // 닉네임 인풋이 수정되면 모든 중복 여부 false로 전환
     setCheckedDuplication(false);
   }, [userNameValue]);
+
+  const handleUserSignUp = async (userInputData) => {
+    try {
+      const { email, password, userName } = userInputData;
+
+      if (!CheckedDuplication) {
+        alert('닉네임 중복 확인이 필요합니다.');
+        return;
+      }
+
+      const signUpData = await authSignUp(email, password, userName);
+
+      if (!!signUpData) {
+        navigate('/signin');
+      }
+    } catch (error) {
+      if (error.message.includes('User already registered')) {
+        alert('이미 존재하는 이메일입니다.');
+      } else if (
+        error.message.includes('Password should be at least 6 characters.')
+      ) {
+        alert('비밀번호는 최소 6자 이상이어야 합니다.');
+      } else {
+        alert('회원가입 에러 : ' + error.message);
+      }
+
+      return;
+    }
+  };
+
+  const handleUserSignIn = async (userInputData) => {
+    try {
+      const { email, password } = userInputData;
+      const userData = await authSignIn(email, password);
+
+      if (userData) {
+        setUser(userData.session.user);
+        navigate('/product');
+      }
+    } catch (error) {
+      if (error.message.includes('Invalid login credentials')) {
+        alert('이메일 또는 비밀번호가 일치하지 않습니다.');
+      }
+      return;
+    }
+  };
+
+  const onSubmit = async (userInputData) => {
+    if (pageParams === 'signup') {
+      handleUserSignUp(userInputData);
+    } else {
+      handleUserSignIn(userInputData);
+    }
+  };
 
   return (
     <form
@@ -133,6 +128,7 @@ const UserForm = () => {
         inputName={'email'}
         register={register}
         errors={errors}
+        validateFn={validateEmail}
       ></UserInput>
 
       {/* 회원가입 페이지 일 경우에만 닉네임 input 노출 */}
@@ -145,6 +141,7 @@ const UserForm = () => {
           errors={errors}
           CheckedDuplication={CheckedDuplication}
           onClick={onHandleDuplication}
+          validateFn={validateUserName}
         ></UserInput>
       )}
 
@@ -154,10 +151,12 @@ const UserForm = () => {
         inputName={'password'}
         register={register}
         errors={errors}
+        validateFn={validatePassword}
       ></UserInput>
       <button
         type="submit"
-        className="py-[8px] rounded-[8px] text-lg text-white bg-deep-mint"
+        className="py-[8px] rounded-[8px] text-lg text-white bg-deep-mint disabled:bg-light-gray"
+        disabled={!isValid || (pageParams === 'signup' && !CheckedDuplication)} // 회원가입 페이지에서는 중복 확인까지 완료해야 submit 버튼 활성화
       >
         {pageParams === 'signup' ? '회원가입' : '로그인'}
       </button>
