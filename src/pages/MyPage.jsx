@@ -3,89 +3,75 @@ import { useState } from 'react';
 import Button from '../components/common/Button';
 import ProfileSection from '../components/mypage/ProfileSection';
 import useUserStore from '../store/userStore';
+import { useEffect } from 'react';
+import { supabase } from '../api/client';
 
 const MyPage = () => {
   const user = useUserStore((state) => state.user);
 
   const [currentTab, setCurrentTab] = useState('selling');
-  const [products, setProducts] = useState([
-    {
-      id: 1,
-      createdAt: '2024-02-27T12:34:56.789Z',
-      name: '아이폰11',
-      category: '디지털기기',
-      price: '10000',
-      quality: '최상',
-      refund: false,
-      location: { lat: 33.450701, lng: 126.570667 },
-      description: '싸다 싸! 신발보다 싸!',
-      img: '',
-      user_id: 1,
-      soldout: false,
-      updated_at: '',
-    },
-    {
-      id: 2,
-      createdAt: '2024-02-28T12:34:56.789Z',
-      name: '축구공',
-      category: '스포츠/레저',
-      price: '100000',
-      quality: '중상',
-      refund: false,
-      location: { lat: 33.250701, lng: 126.270667 },
-      description: '사용감 살짝 있습니다!',
-      img: '',
-      user_id: 2,
-      soldout: false,
-      updated_at: '2024-02-29T12:34:56.789Z',
-    },
-    {
-      id: 3,
-      createdAt: '2024-02-27T12:38:56.789Z',
-      name: '맥북 Aire',
-      category: '디지털기기',
-      price: '1000000',
-      quality: '최상',
-      refund: false,
-      location: { lat: 33.550701, lng: 126.670667 },
-      description: '개봉만 했습니다.',
-      img: '',
-      user_id: 1,
-      soldout: true,
-      updated_at: '',
-    },
-  ]);
+  const [products, setProducts] = useState([]);
+  const [wishlist, setWishlist] = useState([]);
 
-  const [wishlist, setWishlist] = useState([
-    {
-      id: 2,
-      created_at: '2024-03-02T00:00:00.000Z',
-      product_id: 2,
-      user_id: 1,
-    },
-  ]); // UI를 위해 임시로 만든 찜한 상품
+  // 상품 불러오기
+  const fetchProducts = async () => {
+    if (!user?.id) return;
+    const { data, error } = await supabase
+      .from('products')
+      .select('*')
+      .eq('user_id', user.id);
+    if (error) {
+      console.error('상품 데이터 가져오기 오류:', error.message);
+      return;
+    }
+    setProducts(data);
+  };
 
-  const handleTabChange = (tapType) => {
-    setCurrentTab(tapType);
+  //찜한 상품 불러오기
+  const fetchWishlist = async () => {
+    if (!user?.id) return;
+    const { data, error } = await supabase
+      .from('wishes')
+      .select('*, products(*)')
+      .eq('user_id', user.id);
+    if (error) {
+      console.error('찜한 상품 데이터 가져오기 오류:', error.message);
+      return;
+    }
+
+    if (data) {
+      // 조인된 상품 데이터 추출
+      const wishProducts = data.map((item) => item.products);
+      setWishlist(wishProducts); // 찜 목록을 상품 데이터로 직접 저장
+    }
+  };
+
+  useEffect(() => {
+    if (user) {
+      fetchProducts();
+      fetchWishlist();
+    }
+  }, [user]);
+
+  const handleTabChange = (tabType) => {
+    setCurrentTab(tabType);
   };
 
   const getFilteredItems = () => {
     switch (currentTab) {
       case 'selling':
-        return products.filter((item) => item.user_id === 1 && !item.soldout);
+        return products.filter((item) => !item.soldout);
       case 'sold':
-        return products.filter((item) => item.user_id === 1 && item.soldout);
+        return products.filter((item) => item.soldout);
       case 'wishlist':
-        return products.filter((product) =>
-          wishlist.some((wish) => wish.product_id === product.id),
-        );
+        return wishlist;
       default:
         return [];
     }
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen gap-14">
+    <div className="flex items-center justify-center h-screen gap-14">
       <section className="flex flex-col items-center justify-center gap-10 w-[400px] h-[830px] p-6 bg-light-gray rounded-md">
         <ProfileSection user={user} />
 
@@ -146,20 +132,43 @@ const MyPage = () => {
                 className="flex flex-col items-center justify-center w-[250px] h-[280px] bg-gray-100 rounded-md border-2 border-light-gray"
               >
                 <img
-                  src={item.img || null} // 이미지가 없을 경우 null로 변경!
+                  src={
+                    item.img ||
+                    'https://tzmzehldetwvzvqvprsn.supabase.co/storage/v1/object/public/profileImg/profiles/1740753032690-38589.png'
+                  } // 임시
                   alt={item.name}
-                  className="object-cover w-full h-[160px] rounded-t-md bg-light-gray"
+                  className="object-contain w-full h-[160px] rounded-t-md bg-white" // 질문!
                 />
                 <div className="w-full h-[120px] p-2">
-                  <h3 className="font-semibold text-title-sm">{item.name}</h3>
+                  <h3 className="font-semibold truncate text-title-sm">
+                    {item.name}
+                  </h3>
                   <p className="mb-2 text-md text-deep-mint">{item.price}</p>
                   <div className="flex items-center justify-center gap-4">
-                    <Button type="button" variant="outline" size="medium">
-                      삭제
-                    </Button>
-                    <Button type="button" variant="primary" size="medium">
-                      수정
-                    </Button>
+                    <div className="flex items-center justify-center gap-4">
+                      {currentTab === 'selling' && (
+                        <>
+                          <Button type="button" variant="outline" size="medium">
+                            삭제
+                          </Button>
+                          <Button type="button" variant="primary" size="medium">
+                            수정
+                          </Button>
+                        </>
+                      )}
+
+                      {currentTab === 'sold' && (
+                        <Button type="button" variant="outline" size="medium">
+                          삭제
+                        </Button>
+                      )}
+
+                      {currentTab === 'wishlist' && (
+                        <Button type="button" variant="outline" size="medium">
+                          찜해제
+                        </Button>
+                      )}
+                    </div>
                   </div>
                 </div>
               </article>
