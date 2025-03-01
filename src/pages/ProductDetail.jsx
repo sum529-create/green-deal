@@ -8,41 +8,88 @@ import ProductHeader from '../components/productdetail/ProductHeader';
 import SellerInfo from '../components/productdetail/SellerInfo';
 import ProductInfo from '../components/productdetail/ProductInfo';
 import ProductDescription from '../components/productdetail/ProductDescription';
+import {
+  QueryClient,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query';
+
+// 상품 데이터 가져오기
+const fetchProducts = async () => {
+  const { data, error } = await supabase.from('products').select('*');
+  if (error) throw new Error(error.message);
+  return data;
+};
+
+// 사용자 데이터 가져오기
+const fetchUsers = async () => {
+  const { data, error } = await supabase.from('users').select('*');
+  if (error) throw new Error(error.message);
+  return data;
+};
+
+// 상품 판매 완료 처리
+const checkAsSold = async (productId) => {
+  const { error } = await supabase
+    .from('products')
+    .update({ soldout: true })
+    .eq('id', productId);
+  if (error) throw new Error(error.message);
+};
 
 const ProductDetail = () => {
-  // State
-  const [products, setProducts] = useState([]);
-  const [users, setUsers] = useState([]);
-
+  const queryClient = useQueryClient();
   // 로그인한 유저 정보
   const currentUser = useUserStore((state) => state.user);
   const isLogin = useUserStore((state) => state.isLogin);
   const { id } = useParams(); // url에서 상품 id 가져오기
 
-  // DB에서 데이터 가져오기
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const { data, error } = await supabase.from('products').select('*');
-        if (error) throw error;
-        setProducts(data);
-      } catch (error) {
-        console.error('제품 데이터 로드 에러', error.message);
-      }
-    };
+  // 상품 데이터 가져오기
+  const {
+    data: products,
+    error: productError,
+    isLoading: isLoadingProducts,
+  } = useQuery({ queryKey: ['products'], queryFn: fetchProducts });
 
-    const fetchUsers = async () => {
-      try {
-        const { data, error } = await supabase.from('users').select('*');
-        if (error) throw error;
-        setUsers(data);
-      } catch (error) {
-        console.log('사용자 데이터 로드 에러', error);
-      }
-    };
-    fetchProducts();
-    fetchUsers();
-  }, []);
+  // 사용자 데이터 가져오기
+  const {
+    data: users,
+    error: userError,
+    isLoading: isLoadingUsers,
+  } = useQuery({ queryKey: ['users'], queryFn: fetchUsers });
+
+  // 상품 판매 완료 처리
+  const { mutate: handleCheckAsSold } = useMutation({
+    mutationFn: (productId) => checkAsSold(productId),
+    onSuccess: () => {
+      QueryClient.invalidateQueries(['products']); // 상품목록 새로고침
+    },
+    onError: (error) => {
+      console.log('판매완료 처리 에러', error.message);
+    },
+  });
+
+  // 판매완료 버튼 핸들러
+  const handleConfirmSoldout = () => {
+    if (
+      window.confirm(
+        '완료 처리하면 번복이 불가합니다. 상품을 판매완료 처리 하시겠습니까?',
+      )
+    ) {
+      handleCheckAsSold(product.id);
+    }
+  };
+
+  // 데이터 로드 중 에러발생시
+  if (productError || userError) {
+    return <p>데이터를 불러오는 중 오류가 발생했습니다.</p>;
+  }
+
+  // 데이터 로딩중이거나 빈 배열일 경우
+  if (isLoadingProducts || isLoadingUsers) {
+    return <p>데이터 로딩중...</p>;
+  }
 
   // 현재 상품 찾기
   const product = products.find((item) => item.id === +id);
@@ -55,40 +102,11 @@ const ProductDetail = () => {
 
   // 판매자 정보 찾기
   const seller = users.find((user) => user.user_id === product.user_id);
-
   console.log('seller>>>', seller);
+
   // 로그인 유저가 상품의 작성자인지 확인
   const isOwner = isLogin && currentUser?.id === product.user_id;
-
   console.log('isOwner>>>', isOwner);
-
-  // 상품 판매 완료 처리
-  const handleCheckAsSold = async () => {
-    if (
-      !window.confirm(
-        '완료 처리하면 번복이 불가합니다. 상품을 판매완료 처리 하시겠습니까?',
-      )
-    )
-      return;
-
-    try {
-      const { error } = await supabase
-        .from('products')
-        .update({ soldout: true })
-        .eq('id', product.id);
-
-      if (error) throw error;
-
-      // 상태 업데이트
-      setProducts((prev) =>
-        prev.map((item) =>
-          item.id === product.id ? { ...item, soldout: true } : item,
-        ),
-      );
-    } catch (error) {
-      console.log('판매완료 처리 에러', error.message);
-    }
-  };
 
   return (
     <div>
@@ -139,7 +157,9 @@ const ProductDetail = () => {
                 <Button
                   type="button"
                   onClick={
-                    isOwner && !product.soldout ? handleCheckAsSold : undefined
+                    isOwner && !product.soldout
+                      ? handleConfirmSoldout
+                      : undefined
                   }
                   size="large"
                   variant={isOwner && !product.soldout ? 'outline' : 'disabled'}
