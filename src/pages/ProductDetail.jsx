@@ -8,12 +8,7 @@ import ProductHeader from '../components/productdetail/ProductHeader';
 import SellerInfo from '../components/productdetail/SellerInfo';
 import ProductInfo from '../components/productdetail/ProductInfo';
 import ProductDescription from '../components/productdetail/ProductDescription';
-import {
-  QueryClient,
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 // 상품 데이터 가져오기
 const fetchProducts = async () => {
