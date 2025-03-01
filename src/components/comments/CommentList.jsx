@@ -77,14 +77,14 @@ const CommentList = ({ comments, users, setComments }) => {
               className="p-4 border rounded-lg border-light-gray"
             >
               <div className="flex justify-between gap-3">
-                <div className="flex items-start gap-3">
+                <div className="flex items-start w-full gap-3">
                   {/* 프로필이미지 */}
                   <img
                     src={user.profile_img}
                     alt={user.name}
                     className="w-12 h-12 rounded-full bg-deep-mint"
                   />
-                  <div>
+                  <div className="w-full">
                     <div className="flex gap-3">
                       {/* 작성자 닉네임 */}
                       <h3 className="text-sm font-semibold text-black">
