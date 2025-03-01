@@ -1,27 +1,11 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useState } from 'react';
 import Button from '../components/common/Button';
 import ProfileSection from '../components/mypage/ProfileSection';
-import { supabase } from '../api/client';
+import useUserStore from '../store/userStore';
 
 const MyPage = () => {
-  const [user, setUser] = useState(null);
-
-  // 없앨 부분
-  useEffect(() => {
-    const fetchUser = async () => {
-      const { data, error } = await supabase.auth.getUser();
-      if (error) {
-        console.error('fetch user 오류:', error);
-        return;
-      }
-      setUser(data.user);
-    };
-
-    fetchUser();
-  }, []);
-
-  // console.log(user);
+  const user = useUserStore((state) => state.user);
 
   const [currentTab, setCurrentTab] = useState('selling');
   const [products, setProducts] = useState([
