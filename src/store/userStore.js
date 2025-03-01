@@ -1,23 +1,21 @@
 import { create } from 'zustand';
 import { supabase } from '../api/client';
 
-const initialState = {
+const useUserStore = create((set) => ({
   user: null,
   isLogin: false,
-};
+  setUser: (user) => set({ user, isLogin: !!user }),
+  resetUser: () => set({ user: null, isLogin: false }),
+}));
 
-const useUserStore = create((set) => {
-  supabase.auth.onAuthStateChange((_, session) => {
-    if (session) {
-      set({ user: session.user, isLogin: true });
-    } else {
-      set(initialState);
+export const handleAuthStateChange = async () => {
+  supabase.auth.onAuthStateChange((event, session) => {
+    if (event === 'SIGNED_IN' && session) {
+      useUserStore.setState({ user: session.user, isLogin: true });
+    } else if (event === 'SIGNED_OUT') {
+      useUserStore.setState({ user: null, isLogin: false });
     }
   });
-
-  return {
-    ...initialState,
-  };
-});
+};
 
 export default useUserStore;
