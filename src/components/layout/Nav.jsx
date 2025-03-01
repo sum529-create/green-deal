@@ -1,26 +1,19 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { useUserData } from '../../hooks/useUserQuery';
+import { useAuthData, useUserData } from '../../hooks/useUserQuery';
+import NavAuthStatus from './NavAuthStatus';
+
 
 const Nav = () => {
-  const { data: user, isPending } = useUserData();
-
-  console.log(user);
+  const { data: authData } = useAuthData();
+  const { data: userData, isPending } = useUserData(authData?.sub);
 
   return (
-    <nav className="fixed top-0 flex items-center justify-between w-full h-[60px] bg-deep-mint px-7 text-white text-lg shadow-sm">
+    <nav className="fixed top-0 flex items-center justify-between w-full h-[60px] bg-deep-mint px-7 text-white text-base font-light shadow-sm">
       <Link to="/product">
         <img src="/public/Logo.jpeg" className="h-14" />
       </Link>
-      <div>
-        {isPending ? (
-          <span>guest</span>
-        ) : user ? (
-          <Link to="/mypage">{user.name}</Link>
-        ) : (
-          <Link to="/signin">로그인</Link>
-        )}
-      </div>
+      <NavAuthStatus isPending={isPending} userData={userData} />
     </nav>
   );
 };
