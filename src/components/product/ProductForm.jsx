@@ -11,6 +11,7 @@ import {
   PRODUCT_QUALITY,
   PRODUCT_REFUND,
 } from '../../constants/productConstants';
+import { validateProductForm } from '../../utils/validateProducts';
 
 const ProductForm = ({ product, onChangeProduct, onSubmit }) => {
   const [isLocationModalOpen, setIsLocationModalOpen] = useState(false);
@@ -44,36 +45,9 @@ const ProductForm = ({ product, onChangeProduct, onSubmit }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     // 필수 필드 검증
-    if (!name.trim()) {
-      alert('판매 물품을 입력하세요');
-      return;
-    }
-    if (!price) {
-      alert('판매 금액을 입력하세요');
-      return;
-    }
-    if (!quality) {
-      alert('물품 상태를 선택하세요');
-      return;
-    }
-    if (refund === '') {
-      alert('교환 가능 여부를 선택하세요');
-      return;
-    }
-    if (!category) {
-      alert('카테고리를 선택하세요');
-      return;
-    }
-    if (!description.trim()) {
-      alert('상품 설명을 입력하세요');
-      return;
-    }
-    if (!(location.lat || location.lng)) {
-      alert('거래 위치를 선택하세요');
-      return;
-    }
-    if (!img) {
-      alert('이미지를 업로드하세요');
+    const validationResult = validateProductForm(product);
+    if (validationResult) {
+      alert(validationResult);
       return;
     }
 
