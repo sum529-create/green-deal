@@ -63,7 +63,7 @@ const ProductDetail = () => {
   const { mutate: handleCheckAsSold } = useMutation({
     mutationFn: (productId) => checkAsSold(productId),
     onSuccess: () => {
-      QueryClient.invalidateQueries(['products']); // 상품목록 새로고침
+      queryClient.invalidateQueries(['products']); // 상품목록 새로고침
     },
     onError: (error) => {
       console.log('판매완료 처리 에러', error.message);
