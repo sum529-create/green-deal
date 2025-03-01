@@ -14,12 +14,6 @@ const ProductRegistration = () => {
     }
   };
 
-  const onError = (error) => {
-    if (error) {
-      alert(error);
-    }
-  };
-
   const {
     product,
     error,
@@ -27,7 +21,7 @@ const ProductRegistration = () => {
     handleImageChange,
     handleProductChange,
     handleSubmit,
-  } = useProductRegistration(onSuccess, onError);
+  } = useProductRegistration(onSuccess);
 
   return (
     <div className="min-h-screen">

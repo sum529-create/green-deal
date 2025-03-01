@@ -8,16 +8,14 @@ import { useMutation } from '@tanstack/react-query';
  * useProductRegistration
  * @description - 상품 등록 훅
  * @param {function} onSuccess - 성공 시 콜백 함수
- * @param {function} onError - 실패 시 콜백 함수
  * @returns {object} - 상품 등록 관련 데이터
  */
-export const useProductRegistration = (onSuccess, onError) => {
+export const useProductRegistration = (onSuccess) => {
   const [product, setProduct] = useState(INITIAL_ADD_PRODUCT_DATA);
   const user = useUserStore((state) => state.user);
   const { mutate, isLoading, error } = useMutation({
     mutationFn: () => productService(product, user.id),
     onSuccess,
-    onError,
   });
 
   const handleImageChange = (newImg) => {

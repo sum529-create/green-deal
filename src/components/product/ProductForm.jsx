@@ -1,5 +1,4 @@
 import React from 'react';
-import { useState } from 'react';
 import Button from '../common/Button';
 import ProductMapModal from './ProductMapModal';
 import Label from '../ui/Label';
@@ -11,29 +10,20 @@ import {
   PRODUCT_QUALITY,
   PRODUCT_REFUND,
 } from '../../constants/productConstants';
-import { validateProductForm } from '../../utils/validateProducts';
+import { useProductForm } from '../../hooks/useProductForm';
+import { useState } from 'react';
 
 const ProductForm = ({ product, onChangeProduct, onSubmit }) => {
+  const { name, price, quality, refund, category, description } = product;
   const [isLocationModalOpen, setIsLocationModalOpen] = useState(false);
-  const { name, price, quality, refund, category, description, location, img } =
-    product;
-  const [address, setAddress] = useState('');
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
+  const { address, handleChange, handleSubmit, handleSelectLocation } =
+    useProductForm(product, onChangeProduct);
 
-    let newValue;
-    if (name === 'price') {
-      newValue = Number(value.replace(/[^\d]/g, ''));
-    } else if (name === 'refund' && value !== '') {
-      newValue = JSON.parse(value.toLowerCase());
-    } else {
-      newValue = value;
-    }
-
-    onChangeProduct({
-      [name]: newValue,
-    });
+  // 폼 제출 핸들러
+  const sendSubmit = (e) => {
+    handleSubmit(e);
+    onSubmit();
   };
 
   // 위치 추가 모달 열기
@@ -41,29 +31,9 @@ const ProductForm = ({ product, onChangeProduct, onSubmit }) => {
     setIsLocationModalOpen(true);
   };
 
-  // 폼 제출 핸들러
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    // 필수 필드 검증
-    const validationResult = validateProductForm(product);
-    if (validationResult) {
-      alert(validationResult);
-      return;
-    }
-
-    onSubmit();
-  };
-
-  const handleSelectLocation = (location, address) => {
-    setAddress(address);
-
-    onChangeProduct({
-      location: location,
-    });
-  };
   return (
     <>
-      <form className="space-y-4" onSubmit={handleSubmit}>
+      <form className="space-y-4" onSubmit={sendSubmit}>
         {/* 판매물품 */}
         <div>
           <Label>판매 물품</Label>

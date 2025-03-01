@@ -108,6 +108,4 @@ export const validateProductForm = (product) => {
 
   const imageValidation = validateProductImage(img);
   if (imageValidation !== true) return imageValidation;
-
-  return true;
 };
