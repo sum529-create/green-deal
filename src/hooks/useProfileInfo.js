@@ -1,5 +1,9 @@
 import { useState, useEffect } from 'react';
-import { checkNicknameDuplication, updateProfile, validateNickname } from '../utils/profileUtils';
+import {
+  checkNicknameDuplication,
+  updateProfile,
+  validateNickname,
+} from '../utils/profileUtils';
 import { fetchUserData } from '../api/userInfoService';
 
 const useProfileInfo = (user) => {
@@ -43,7 +47,7 @@ const useProfileInfo = (user) => {
     const validation = validateNickname(nickname, userdata.name);
     if (!validation.valid) {
       setErrorMessage(validation.error);
-      validation.isUnchanged && setIsUpdating(false); 
+      validation.isUnchanged && setIsUpdating(false);
       return;
     }
     // 닉네임 중복 검사
@@ -57,7 +61,7 @@ const useProfileInfo = (user) => {
     const result = await updateProfile(nickname, userdata);
     if (result.success) {
       setIsUpdating(false);
-      await fetchUserData();
+      setUserdata((prev) => ({ ...prev, name: nickname }));
       alert('프로필이 성공적으로 업데이트되었습니다.');
     } else {
       setErrorMessage(result.error);

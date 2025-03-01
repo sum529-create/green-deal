@@ -40,7 +40,6 @@ const MyPage = () => {
     }
 
     if (data) {
-      // 조인된 상품 데이터 추출
       const wishProducts = data.map((item) => item.products);
       setWishlist(wishProducts); // 찜 목록을 상품 데이터로 직접 저장
     }
