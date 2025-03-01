@@ -2,8 +2,17 @@ import React, { useState } from 'react';
 import Button from '../common/Button';
 import useUserStore from '../../store/userStore';
 import { supabase } from '../../api/client';
+import { useQueryClient } from '@tanstack/react-query';
 
-const CommentList = ({ comments, users, setComments, seller }) => {
+const CommentList = ({
+  comments,
+  users,
+  seller,
+  updateCommentMutation,
+  deleteCommentMutation,
+}) => {
+  const queryClient = useQueryClient();
+
   // 현재 로그인한 사용자 정보 가져오기
   const currentUser = useUserStore((state) => state.user);
   const [editingCommentId, setEditingCommentId] = useState(null); //현재 수정 중인 댓글 id 상태
@@ -19,44 +28,18 @@ const CommentList = ({ comments, users, setComments, seller }) => {
   const handleUpdateComment = async (commentId) => {
     if (!editContent.trim()) return;
 
-    const { error } = await supabase
-      .from('comments')
-      .update({ content: editContent }) // 댓글 내용 업데이트
-      .eq('id', commentId);
-
-    if (error) {
-      console.error('댓글 수정 에러: ', error);
-    } else {
-      setComments((prev) =>
-        prev.map((comment) =>
-          comment.id === commentId
-            ? { ...comment, content: editContent }
-            : comment,
-        ),
-      );
-      setEditingCommentId(null);
-    }
+    updateCommentMutation.mutate({
+      commentId,
+      content: editContent,
+    });
+    setEditingCommentId(null);
   };
 
   // 댓글 삭제시 호출
   const handleRemoveComment = async (commentId) => {
     if (!window.confirm('댓글을 삭제하시겠습니까?')) return;
 
-    const { error } = await supabase
-      .from('comments')
-      .delete()
-      .eq('id', commentId); // 댓글 삭제 요청
-
-    if (error) {
-      console.error('댓글 삭제 에러: ', error);
-    } else {
-      setComments((prev) => {
-        const updatedComments = prev.filter(
-          (comment) => comment.id !== commentId,
-        );
-        return updatedComments;
-      });
-    }
+    deleteCommentMutation.mutate(commentId);
   };
 
   return (
