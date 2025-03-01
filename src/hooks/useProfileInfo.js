@@ -31,7 +31,7 @@ const useProfileInfo = (user) => {
     fetchUserData();
   }, [user]);
 
-  // 유효성 검사
+  // 유효성 검사 -> profileUtils로 분리하려 했지만 실패, 추후에 로직을 변경해서 분리할 예정
   const validateNickname = (nickname, userdata) => {
     if (nickname.length < 3) {
       return { valid: false, error: ERROR_MESSAGES.invalidLength };
