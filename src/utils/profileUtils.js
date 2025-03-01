@@ -2,6 +2,19 @@ import { supabase } from '../api/client';
 import { checkNickname } from '../api/userInfoService';
 import { ERROR_MESSAGES } from '../constants/mypageConstants';
 
+// 유효성 검사
+export const validateNickname = (nickname, currentName) => {
+  if (nickname.length < 3) {
+    return { valid: false, error: ERROR_MESSAGES.invalidLength };
+  }
+  if (nickname === currentName) {
+    return {
+      valid: false,
+      isUnchanged: true, // 변경 없으면 그냥 다시 원래대로 (원래는 알럿창을 띄웠음)
+    };
+  }
+  return { valid: true };
+};
 // 닉네임 중복 검사
 export const checkNicknameDuplication = async (nickname) => {
   const { data, error: checkError } = await checkNickname(nickname);

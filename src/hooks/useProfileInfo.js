@@ -1,7 +1,5 @@
 import { useState, useEffect } from 'react';
-import { supabase } from '../api/client';
-import { ERROR_MESSAGES } from '../constants/mypageConstants';
-import { checkNicknameDuplication, updateProfile } from '../utils/profileUtils';
+import { checkNicknameDuplication, updateProfile, validateNickname } from '../utils/profileUtils';
 import { fetchUserData } from '../api/userInfoService';
 
 const useProfileInfo = (user) => {
@@ -28,23 +26,6 @@ const useProfileInfo = (user) => {
     getUserData();
   }, [user]);
 
-  // 유효성 검사 -> profileUtils로 분리하려 했지만 실패, 추후에 로직을 변경해서 분리할 예정
-  const validateNickname = (nickname, userdata) => {
-    if (nickname.length < 3) {
-      return { valid: false, error: ERROR_MESSAGES.invalidLength };
-    }
-
-    if (nickname === userdata.name) {
-      const isConfirmed = window.confirm('프로필 닉네임을 수정하겠습니까?');
-      if (!isConfirmed) {
-        setIsUpdating(false);
-      }
-      return { valid: false, error: ERROR_MESSAGES.noChange };
-    }
-
-    return { valid: true };
-  };
-
   const handleProfileUpdate = async () => {
     if (!isUpdating) {
       setIsUpdating(true);
@@ -53,18 +34,18 @@ const useProfileInfo = (user) => {
     }
 
     if (!userdata?.user_id) {
-      alert(ERROR_MESSAGES.notFound);
+      alert('사용자 정보를 찾을 수 없습니다.');
       setIsUpdating(false);
       return;
     }
 
     // 유효성 검사
-    const validation = await validateNickname(nickname, userdata);
+    const validation = validateNickname(nickname, userdata.name);
     if (!validation.valid) {
       setErrorMessage(validation.error);
+      validation.isUnchanged && setIsUpdating(false); 
       return;
     }
-
     // 닉네임 중복 검사
     const duplicationCheck = await checkNicknameDuplication(nickname);
     if (!duplicationCheck.valid) {
