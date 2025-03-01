@@ -1,7 +1,6 @@
 import React from 'react';
 import { useState } from 'react';
 import Button from '../common/Button';
-import { useEffect } from 'react';
 import ProductMapModal from './ProductMapModal';
 import Label from '../ui/Label';
 import Input from '../common/Input';
@@ -15,7 +14,8 @@ import {
 
 const ProductForm = ({ product, onChangeProduct, onSubmit }) => {
   const [isLocationModalOpen, setIsLocationModalOpen] = useState(false);
-  const { name, price, quality, refund, category, description } = product;
+  const { name, price, quality, refund, category, description, location, img } =
+    product;
   const [address, setAddress] = useState('');
 
   const handleChange = (e) => {
@@ -24,7 +24,7 @@ const ProductForm = ({ product, onChangeProduct, onSubmit }) => {
     let newValue;
     if (name === 'price') {
       newValue = Number(value.replace(/[^\d]/g, ''));
-    } else if (name === 'refund') {
+    } else if (name === 'refund' && value !== '') {
       newValue = JSON.parse(value.toLowerCase());
     } else {
       newValue = value;
@@ -66,6 +66,14 @@ const ProductForm = ({ product, onChangeProduct, onSubmit }) => {
     }
     if (!description.trim()) {
       alert('상품 설명을 입력하세요');
+      return;
+    }
+    if (!(location.lat || location.lng)) {
+      alert('거래 위치를 선택하세요');
+      return;
+    }
+    if (!img) {
+      alert('이미지를 업로드하세요');
       return;
     }
 

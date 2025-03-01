@@ -48,6 +48,7 @@ const ProductMapModal = ({ isOpen, onClose, onSelectLocation }) => {
   const cancelLocation = () => {
     setSelectedLocation(null);
     setAddress('');
+    onSelectLocation({ lat: null, lng: null }, '');
     onClose();
   };
 
