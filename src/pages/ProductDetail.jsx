@@ -16,10 +16,6 @@ const ProductDetail = () => {
   const isLogin = useUserStore((state) => state.isLogin);
   const { id } = useParams(); // url에서 상품 id 가져오기
 
-  // 로그 제거해야함
-  // console.log('currentUser>>>', currentUser); // {id}
-  // console.log('isLogin>>>', isLogin);
-
   // DB에서 데이터 가져오기
   useEffect(() => {
     const fetchProducts = async () => {
