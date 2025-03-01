@@ -1,6 +1,11 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../api/client';
-import { ALLOWED_IMAGE_TYPES, BUCKET_NAME, MAX_FILE_SIZE, PROFILES_DIRECTORY } from '../constants/mypageConstants';
+import {
+  ALLOWED_IMAGE_TYPES,
+  BUCKET_NAME,
+  MAX_FILE_SIZE,
+  PROFILES_DIRECTORY,
+} from '../constants/mypageConstants';
 
 const useProfileImage = (userdata) => {
   const [imageUrl, setImageUrl] = useState('');
@@ -13,19 +18,21 @@ const useProfileImage = (userdata) => {
 
   const handleImageChange = async (e) => {
     const file = e.target.files[0];
-    if (!file) return;
-
-    if (file.size > MAX_FILE_SIZE) {
-      alert('2MB 이하의 파일을 선택해주세요.');
+    if (!file) {
       return;
     }
+
+    if (file.size > MAX_FILE_SIZE) {
+      return alert('2MB 이하의 파일을 선택해주세요.');
+    }
     if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
-      alert('JPG 또는 PNG 형식의 이미지만 업로드 가능합니다.');
-      return;
+      return alert('JPG 또는 PNG 형식의 이미지만 업로드 가능합니다.');
     }
 
     const isConfirmed = window.confirm('프로필 이미지를 수정하겠습니까?');
-    if (!isConfirmed) return;
+    if (!isConfirmed) {
+      return;
+    }
 
     const fileName = `${Date.now()}-${Math.floor(Math.random() * 100000)}.${file.name.split('.').pop()}`;
     const filePath = `${PROFILES_DIRECTORY}/${fileName}`;
