@@ -38,7 +38,11 @@ const Comments = ({ users }) => {
       </div>
 
       {/* 댓글 목록 */}
-      <CommentList comments={comments} users={users} />
+      <CommentList
+        comments={comments}
+        users={users}
+        setComments={setComments}
+      />
     </div>
   );
 };
