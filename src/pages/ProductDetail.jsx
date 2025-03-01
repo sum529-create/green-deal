@@ -174,19 +174,21 @@ const ProductDetail = () => {
             </div>
 
             {/* 판매글 작성자에게만 보이는 판매완료 버튼 */}
-            {isOwner && (
-              <Button
-                type="button"
-                onClick={
-                  isOwner && !product.soldout ? handleCheckAsSold : undefined
-                }
-                size="large"
-                variant={isOwner && !product.soldout ? 'outline' : 'disabled'}
-                disabled={!isOwner || product.soldout}
-              >
-                {product.soldout ? '거래종료' : '판매완료'}
-              </Button>
-            )}
+            <div className="flex justify-center">
+              {isOwner && (
+                <Button
+                  type="button"
+                  onClick={
+                    isOwner && !product.soldout ? handleCheckAsSold : undefined
+                  }
+                  size="large"
+                  variant={isOwner && !product.soldout ? 'outline' : 'disabled'}
+                  disabled={!isOwner || product.soldout}
+                >
+                  {product.soldout ? '거래종료' : '판매완료'}
+                </Button>
+              )}
+            </div>
           </div>
         </div>
       </div>
