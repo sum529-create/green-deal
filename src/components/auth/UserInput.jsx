@@ -8,6 +8,7 @@ const UserInput = ({
   errors,
   CheckedDuplication = false,
   onClick = () => {},
+  validateFn = () => {},
 }) => {
   return (
     <label className="flex justify-between gap-4">
@@ -17,9 +18,10 @@ const UserInput = ({
         <div className="relative flex items-end flex-1 max-w-[350px] gap-2 pb-6">
           <input
             type={type}
-            className="w-full bg-white border-b-[1px] border-deepgray focus:outline-none"
+            className="w-full bg-white border-b-[1px] border-deepgray text-deep-gray focus:outline-none"
             {...register(inputName, {
               required: true,
+              validate: (value) => validateFn(value),
             })}
           />
           {/* 중복 확인 여부에 따른 버튼 상태 변경 */}
@@ -53,9 +55,10 @@ const UserInput = ({
         <div className="relative flex-1 max-w-[350px] pb-6">
           <input
             type={type}
-            className="w-full bg-white border-b-[1px] border-deepgray focus:outline-none"
+            className="w-full bg-white border-b-[1px] border-deepgray text-deep-gray focus:outline-none"
             {...register(inputName, {
               required: true,
+              validate: (value) => validateFn(value),
             })}
           />
           {errors[inputName] && (

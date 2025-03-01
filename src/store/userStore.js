@@ -1,37 +1,21 @@
 import { create } from 'zustand';
 import { supabase } from '../api/client';
 
-const initialState = {
+const useUserStore = create((set) => ({
   user: null,
   isLogin: false,
-};
-
-const useUserStore = create((set) => ({
-  ...initialState,
-  userLogin: () => {
-    try {
-      const { error } = supabase.auth.onAuthStateChange((_, session) => {
-        if (session) {
-          set({ user: session.user, isLogin: true });
-        } else {
-          set(initialState);
-        }
-
-        if (error) throw error;
-      });
-    } catch (error) {
-      console.log('로그인 에러', error);
-    }
-  },
-  userLogOut: async () => {
-    try {
-      const { error } = await supabase.auth.signOut();
-      if (error) throw error;
-      set(initialState);
-    } catch (error) {
-      console.log('로그아웃 에러', error);
-    }
-  },
+  setUser: (user) => set({ user, isLogin: !!user }),
+  resetUser: () => set({ user: null, isLogin: false }),
 }));
+
+export const handleAuthStateChange = async () => {
+  supabase.auth.onAuthStateChange((event, session) => {
+    if (event === 'SIGNED_IN' && session) {
+      useUserStore.setState({ user: session.user, isLogin: true });
+    } else if (event === 'SIGNED_OUT') {
+      useUserStore.setState({ user: null, isLogin: false });
+    }
+  });
+};
 
 export default useUserStore;
