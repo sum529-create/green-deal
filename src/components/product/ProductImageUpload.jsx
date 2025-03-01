@@ -29,6 +29,7 @@ const ProductImageUpload = ({ image, onChangeImage }) => {
 
   // 이미지 추가 버튼 클릭 핸들러
   const handleImageAdd = () => {
+    setImageUrl(null);
     // 이미지 선택 파일 다이얼로그 열기
     document.getElementById('image-upload').click();
   };

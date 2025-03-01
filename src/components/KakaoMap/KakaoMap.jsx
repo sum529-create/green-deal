@@ -5,10 +5,26 @@ import { useRef } from 'react';
 import MyLocationMarker from './MyLocationMarker';
 import MapProductMarker from './MapProductMarker';
 
-const KakaoMap = ({ level, mode, productList, selectedProduct }) => {
+const KakaoMap = ({
+  level,
+  mode,
+  productList,
+  selectedProduct,
+  onLocationSelect,
+  sendAddress,
+}) => {
   const [location, setLocation] = useState({ lat: null, lng: null }); // 유저의 중심 위치를 위한 상태
   const [productInfo, setProductInfo] = useState(null);
   const [center, setCenter] = useState(location); // 지도의 중심 위치를 위한 상태
+
+  const geocoder = useRef(null);
+
+  // 지오코더 초기화
+  useEffect(() => {
+    if (window.kakao && window.kakao.maps) {
+      geocoder.current = new window.kakao.maps.services.Geocoder();
+    }
+  }, []);
 
   useEffect(() => {
     getUserLocation()
@@ -31,9 +47,68 @@ const KakaoMap = ({ level, mode, productList, selectedProduct }) => {
     }
   }, [selectedProduct, productList]);
 
-  // MapProductModal 닫기 기능
-  const handleClickMap = () => {
-    setProductInfo(null);
+  useEffect(() => {
+    if (!sendAddress) return;
+    geocoder.current.addressSearch(sendAddress, (result, status) => {
+      if (status === window.kakao.maps.services.Status.OK) {
+        const coords = {
+          lat: result[0].y,
+          lng: result[0].x,
+        };
+        setLocation(coords);
+        setCenter(coords);
+
+        searchDetailAddrFromCoords(coords, (result2, status2) => {
+          if (status2 === window.kakao.maps.services.Status.OK) {
+            const detailAddr = [
+              result2[0].road_address?.address_name,
+              result2[0].address?.address_name,
+            ];
+            onLocationSelect(coords, detailAddr);
+          }
+        });
+      }
+    });
+  }, [sendAddress]);
+
+  function searchDetailAddrFromCoords(coords, callback) {
+    if (coords === null) return;
+
+    // 좌표로 법정동 상세 주소 정보를 요청합니다
+    geocoder.current.coord2Address(
+      coords?.getLng?.() ?? coords.lng,
+      coords?.getLat?.() ?? coords.lat,
+      callback,
+    );
+  }
+
+  // productList: MapProductModal 닫기 기능
+  // locationPicker: 위치 선택 모드에서 지도 클릭 시 위치 선택
+  const handleClickMap = (_, mouseEvent) => {
+    if (mode === 'productList') {
+      setProductInfo(null);
+    } else if (mode === 'locationPicker') {
+      // 위치 선택 모드에서는 클릭한 위치 좌표를 상위 컴포넌트로 전달
+      const latlng = mouseEvent.latLng;
+      const newLocation = {
+        lat: latlng.getLat(),
+        lng: latlng.getLng(),
+      };
+
+      searchDetailAddrFromCoords(latlng, (result, status) => {
+        if (status === window.kakao.maps.services.Status.OK) {
+          const detailAddr = [
+            result[0].road_address?.address_name,
+            result[0].address?.address_name,
+          ];
+          if (onLocationSelect) {
+            onLocationSelect(newLocation, detailAddr);
+          }
+          setLocation(newLocation);
+          setCenter(newLocation);
+        }
+      });
+    }
   };
 
   return (
@@ -54,6 +129,7 @@ const KakaoMap = ({ level, mode, productList, selectedProduct }) => {
             />
           </>
         )}
+        {mode === 'locationPicker' && <MapMarker position={location} />}
       </Map>
     </div>
   );
