@@ -3,14 +3,14 @@ import { supabase } from '../../api/client';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import useUserStore from '../../store/userStore';
 import { FaRegStar, FaStar } from 'react-icons/fa';
+import { useState } from 'react';
 
 // 찜 상태 가져오기
-const fetchWishes = async (productId, userId) => {
+const fetchWishes = async (productId) => {
   const { data, error } = await supabase
     .from('wishes')
-    .select('*, users(*)')
-    .eq('product_id', productId)
-    .eq('user_id', userId); // 로그인한 사용자만 필터링
+    .select('*')
+    .eq('product_id', productId);
 
   if (error) throw new Error(error.message);
   return data;
@@ -40,20 +40,25 @@ const Wishes = ({ productId }) => {
 
   // 찜 상태 가져오기
   const {
-    data: wishes,
+    data: wishes = [],
     isLoading,
     error,
   } = useQuery({
-    queryKey: ['wishes', productId, currentUser.id],
-    queryFn: () => fetchWishes(productId, currentUser.id),
+    queryKey: ['wishes', productId],
+    queryFn: () => fetchWishes(productId),
   });
+
+  // 로그인한 유저가 찜한 상태인지 확인 / 로그인하지 않은경우 기본 false
+  const isWished = currentUser?.id
+    ? wishes.some((wish) => wish.user_id === currentUser.id)
+    : false;
 
   // 찜 하기
   const { mutate: addWishMutation } = useMutation({
     mutationFn: () => addWish(productId, currentUser.id),
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ['wishes', productId, currentUser.id],
+        queryKey: ['wishes', productId],
       });
     },
   });
@@ -63,17 +68,21 @@ const Wishes = ({ productId }) => {
     mutationFn: (wishId) => removeWish(wishId),
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ['wishes', productId, currentUser.id],
+        queryKey: ['wishes', productId],
       });
     },
   });
 
   // 찜하기 여부확인
   // const isWished = wishes?.some((wish) => wish.user_id === currentUser.id);
-  const isWished = wishes && wishes?.length > 0;
+  // const isWished = wishes && wishes?.length > 0;
 
   // 찜하기/해제 토글
   const handleWishToggle = () => {
+    if (!currentUser) {
+      alert('로그인 후 이용할 수 있습니다.');
+      return;
+    }
     if (isWished) {
       const wishToRemove = wishes.find(
         (wish) => wish.user_id === currentUser.id,
