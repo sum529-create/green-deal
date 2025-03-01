@@ -4,6 +4,7 @@ import { getUserLocation } from '../../utils/getUserLocation';
 import { useRef } from 'react';
 import MyLocationMarker from './MyLocationMarker';
 import MapProductMarker from './MapProductMarker';
+import { MODE } from '../../constants/constants';
 
 const KakaoMap = ({
   level,
@@ -119,7 +120,7 @@ const KakaoMap = ({
         style={{ width: '100%', height: '100%' }}
         onClick={handleClickMap}
       >
-        {mode === 'productList' && (
+        {mode === MODE.PRODUCTLIST && (
           <>
             <MyLocationMarker location={location} />
             <MapProductMarker

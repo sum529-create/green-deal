@@ -1,16 +1,6 @@
 import { supabase } from './client';
 
-export const handleUserSignUp = async (
-  email,
-  password,
-  userName,
-  CheckedDuplication,
-) => {
-  if (!CheckedDuplication) {
-    alert('닉네임 중복 확인이 필요합니다.');
-    return;
-  }
-
+export const authSignUp = async (email, password, userName) => {
   try {
     const { data, error } = await supabase.auth.signUp({
       email,
@@ -22,35 +12,32 @@ export const handleUserSignUp = async (
       },
     });
 
-    // supabase 인증 관련 에러
-    if (error) {
-      switch (error.code) {
-        case 'user_already_exists':
-          alert('이미 존재하는 이메일입니다.');
-          return;
-        case 'weak_password':
-          alert('보안에 취약한 비밀번호입니다.');
-          return;
-        default:
-          console.log(`회원가입 에러 : ${error.code}`);
-      }
-    }
-
+    if (error) throw new Error(error.message);
     return data;
-  } catch (err) {
-    console.log('회원가입 에러 =====>', err);
+  } catch (error) {
+    throw new Error(`회원가입 실패: ${error.message}`);
   }
 };
 
-export const handleUserLogin = async (email, password) => {
-  const { data, error } = await supabase.auth.signInWithPassword({
-    email,
-    password,
-  });
+export const authSignIn = async (email, password) => {
+  try {
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
 
-  if (error) {
-    return { error: error.message }; // 로그인 실패 시 error 메시지 반환
+    if (error) throw new Error(error.message);
+    return data;
+  } catch (error) {
+    throw new Error(`로그인 실패 : ${error.message}`);
   }
+};
 
-  return { data }; // 로그인 성공 시 data 반환
+export const authSignOut = async () => {
+  try {
+    const { error } = await supabase.auth.signOut();
+    if (error) throw new Error(error.message);
+  } catch (error) {
+    throw new Error(`로그아웃 실패: ${error.message}`);
+  }
 };
