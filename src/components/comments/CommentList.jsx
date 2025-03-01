@@ -3,7 +3,7 @@ import Button from '../common/Button';
 import useUserStore from '../../store/userStore';
 import { supabase } from '../../api/client';
 
-const CommentList = ({ comments, users, setComments }) => {
+const CommentList = ({ comments, users, setComments, seller }) => {
   // 현재 로그인한 사용자 정보 가져오기
   const currentUser = useUserStore((state) => state.user);
   const [editingCommentId, setEditingCommentId] = useState(null); //현재 수정 중인 댓글 id 상태
@@ -71,10 +71,16 @@ const CommentList = ({ comments, users, setComments }) => {
           // 현재 로그인한 사용자가 댓글 작성자인지 확인
           const isAuthor = currentUser?.id === comment.user_id;
 
+          // 상품 작성자와 댓글 작성자가 같은지 확인
+          const isProductOwnerComment =
+            seller && user?.user_id === seller.user_id;
+
           return (
             <li
               key={comment.id}
-              className="p-4 border rounded-lg border-light-gray"
+              className={`p-4 border rounded-lg border-light-gray ${
+                isProductOwnerComment && ' bg-light-gray'
+              }`}
             >
               <div className="flex justify-between gap-3">
                 <div className="flex items-start w-full gap-3">

@@ -4,7 +4,7 @@ import { supabase } from '../../api/client';
 import CommentForm from './CommentForm';
 import CommentList from './CommentList';
 
-const Comments = ({ users }) => {
+const Comments = ({ users, seller }) => {
   const { id } = useParams();
   const productId = id; //
   const [comments, setComments] = useState([]); // 댓글 상태
@@ -42,6 +42,7 @@ const Comments = ({ users }) => {
         comments={comments}
         users={users}
         setComments={setComments}
+        seller={seller}
       />
     </div>
   );

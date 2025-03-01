@@ -196,7 +196,7 @@ const ProductDetail = () => {
       </div>
 
       {/* 댓글 컴포넌트 영역 */}
-      <Comments users={users} />
+      <Comments users={users} seller={seller} />
     </div>
   );
 };
