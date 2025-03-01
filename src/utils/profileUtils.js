@@ -1,12 +1,10 @@
 import { supabase } from '../api/client';
+import { checkNickname } from '../api/userInfoService';
 import { ERROR_MESSAGES } from '../constants/mypageConstants';
 
 // 닉네임 중복 검사
 export const checkNicknameDuplication = async (nickname) => {
-  const { data, error: checkError } = await supabase
-    .from('users')
-    .select('name')
-    .eq('name', nickname);
+  const { data, error: checkError } = await checkNickname(nickname);
 
   if (checkError) {
     console.error('닉네임 중복 검사 오류:', checkError);

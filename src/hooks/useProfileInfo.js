@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { supabase } from '../api/client';
 import { ERROR_MESSAGES } from '../constants/mypageConstants';
 import { checkNicknameDuplication, updateProfile } from '../utils/profileUtils';
+import { fetchUserData } from '../api/userInfoService';
 
 const useProfileInfo = (user) => {
   const [userdata, setUserdata] = useState(null);
@@ -9,26 +10,22 @@ const useProfileInfo = (user) => {
   const [isUpdating, setIsUpdating] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
-  const fetchUserData = async () => {
-    if (!user?.id) return;
-
-    const { data, error } = await supabase
-      .from('users')
-      .select('*')
-      .eq('user_id', user.id)
-      .single();
-
-    if (error) {
-      console.error('유저 데이터 가져오기 오류:', error.message);
-      return;
-    }
-
-    setUserdata(data);
-    setNickname(data.name);
-  };
-
   useEffect(() => {
-    fetchUserData();
+    const getUserData = async () => {
+      if (!user?.id) return;
+
+      const { data, error } = await fetchUserData(user.id);
+
+      if (error) {
+        console.error('유저 데이터 가져오기 오류:', error);
+        return;
+      }
+
+      setUserdata(data);
+      setNickname(data.name);
+    };
+
+    getUserData();
   }, [user]);
 
   // 유효성 검사 -> profileUtils로 분리하려 했지만 실패, 추후에 로직을 변경해서 분리할 예정

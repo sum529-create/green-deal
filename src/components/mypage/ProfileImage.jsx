@@ -1,6 +1,7 @@
 import React from 'react';
 import Button from '../common/Button';
 import { useRef } from 'react';
+import { PRODUCT_DEFAULT_IMG } from '../../constants/mypageConstants';
 
 const ProfileImage = ({ imageUrl, handleImageChange }) => {
   const fileInputRef = useRef(null);
@@ -25,7 +26,7 @@ const ProfileImage = ({ imageUrl, handleImageChange }) => {
       />
 
       <img
-        src={imageUrl || '/profile_default.png'}
+        src={imageUrl || PRODUCT_DEFAULT_IMG}
         alt="프로필 이미지"
         className="object-cover w-[130px] h-[130px] bg-light-gray rounded-full"
       />

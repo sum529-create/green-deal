@@ -4,6 +4,7 @@ import {
   ALLOWED_IMAGE_TYPES,
   BUCKET_NAME,
   MAX_FILE_SIZE,
+  PRODUCT_DEFAULT_IMG,
   PROFILES_DIRECTORY,
 } from '../constants/mypageConstants';
 
@@ -12,7 +13,7 @@ const useProfileImage = (userdata) => {
 
   useEffect(() => {
     if (userdata) {
-      setImageUrl(userdata.profile_img || '/profile_default.png');
+      setImageUrl(userdata.profile_img || PRODUCT_DEFAULT_IMG);
     }
   }, [userdata]);
 
