@@ -1,19 +1,24 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { useAuthData, useUserData } from '../../hooks/useUserQuery';
+import { useUserData } from '../../hooks/useUserQuery';
 import NavAuthStatus from './NavAuthStatus';
-
+import useUserStore from '../../store/userStore';
 
 const Nav = () => {
-  const { data: authData } = useAuthData();
-  const { data: userData, isPending } = useUserData(authData?.sub);
+  const user = useUserStore((state) => state.user);
+  // user_id를 통해 user 테이블에서 user 정보 가져오기 - profile_img를 위해
+  const { data: userData, isPending } = useUserData(user?.id ?? null);
+
+  // useQuery가 실행이 되지 않더라도 isPending의 default 값이 true
+  // authData가 없을 시 강제로 false 설정
+  const isLoading = !user ? false : isPending;
 
   return (
     <nav className="fixed top-0 flex items-center justify-between w-full h-[60px] bg-deep-mint px-7 text-white text-base font-light shadow-sm">
       <Link to="/product">
         <img src="/public/Logo.jpeg" className="h-14" />
       </Link>
-      <NavAuthStatus isPending={isPending} userData={userData} />
+      <NavAuthStatus isLoading={isLoading} userData={userData} />
     </nav>
   );
 };

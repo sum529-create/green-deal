@@ -9,7 +9,7 @@ const UserProfile = ({ userData = {} }) => {
         alt="프로필 이미지"
         className="object-cover w-8 h-8 rounded-full bg-light-gray"
       />
-      <Link to="/mypage">{userData.name || 'Guest'}</Link>
+      <Link to="/mypage">{userData.name || '그린딜'}</Link>
     </div>
   );
 };

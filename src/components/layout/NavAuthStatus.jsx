@@ -1,8 +1,8 @@
 import { Link } from 'react-router-dom';
 import UserProfile from '../common/UserProfile';
 
-const NavAuthStatus = ({ isPending, userData }) => {
-  if (isPending) {
+const NavAuthStatus = ({ isLoading, userData }) => {
+  if (isLoading) {
     return (
       <UserProfile/>
     );
@@ -11,7 +11,7 @@ const NavAuthStatus = ({ isPending, userData }) => {
   return userData ? (
     <UserProfile userData={userData} />
   ) : (
-    <div>
+    <div className='flex gap-2'>
       <Link to="/signin">로그인</Link>
       <Link to="/signup">회원가입</Link>
     </div>
