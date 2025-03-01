@@ -4,6 +4,7 @@ import { getUserLocation } from '../../utils/getUserLocation';
 import { useRef } from 'react';
 import MyLocationMarker from './MyLocationMarker';
 import MapProductMarker from './MapProductMarker';
+import { MODE } from '../../constants/constants';
 
 const KakaoMap = ({ level, mode, productList, selectedProduct }) => {
   const [location, setLocation] = useState({ lat: null, lng: null }); // 유저의 중심 위치를 위한 상태
@@ -44,7 +45,7 @@ const KakaoMap = ({ level, mode, productList, selectedProduct }) => {
         style={{ width: '100%', height: '100%' }}
         onClick={handleClickMap}
       >
-        {mode === 'productList' && (
+        {mode === MODE.PRODUCTLIST && (
           <>
             <MyLocationMarker location={location} />
             <MapProductMarker
