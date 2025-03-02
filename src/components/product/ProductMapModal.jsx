@@ -10,6 +10,7 @@ import Button from '../common/Button';
 import KakaoMap from '../KakaoMap/KakaoMap';
 import Input from '../common/Input';
 import { useProductMapModal } from '../../hooks/useProductMapModal';
+import { MODE } from '../../constants/constants';
 
 const LOAD_ADDRESS_STYLES = 'text-text-sm text-deep-gray';
 
@@ -104,7 +105,7 @@ const ProductMapModal = ({ isOpen, onClose, onSelectLocation }) => {
                 <div className="w-full mb-4 border border-gray h-80 rounded-xl">
                   <KakaoMap
                     level={3}
-                    mode={'locationPicker'}
+                    mode={MODE.LOCATIONPICKER}
                     onLocationSelect={handleLocationSelect}
                     sendAddress={sendAddress}
                   />
