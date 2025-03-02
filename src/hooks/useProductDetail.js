@@ -14,5 +14,6 @@ export const useProductDetail = (productId) => {
       if (error) throw error;
       return data;
     },
+    enabled: !!productId,
   });
 };

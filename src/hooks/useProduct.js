@@ -23,7 +23,7 @@ export const useAddProduct = (product, userId, onSuccess) => {
 };
 
 /**
- * useAddProduct
+ * useUpdateProduct
  * @description 상품정보 수정 mutation 작업을 처리하는 훅
  * @param {object} product - 수정할 상품 데이터
  * @param {number} userId - 사용자 id
@@ -33,6 +33,7 @@ export const useAddProduct = (product, userId, onSuccess) => {
  */
 export const useUpdateProduct = (product, userId, productId, onSuccess) => {
   const queryClient = useQueryClient();
+
   const { mutate, isLoading, error } = useMutation({
     mutationFn: () => updateProduct(product, userId, productId),
     onSuccess: (data) => {

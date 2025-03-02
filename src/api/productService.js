@@ -30,7 +30,12 @@ export const addProduct = async (product, userId) => {
 export const updateProduct = async (product, userId, productId) => {
   // 이미지 업로드
   const file = product.img;
-  const imgUrl = await uploadProductImage(file, userId);
+  let imgUrl;
+  if (file.name) {
+    imgUrl = await uploadProductImage(file, userId);
+  } else {
+    imgUrl = file;
+  }
   // 새 product 객체 생성
   const updatedProduct = {
     ...product,
@@ -45,6 +50,7 @@ export const updateProduct = async (product, userId, productId) => {
     .update(updatedProduct)
     .eq('id', productId)
     .select();
+
   if (error) throw error;
   return { data, error };
 };

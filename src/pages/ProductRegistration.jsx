@@ -11,19 +11,6 @@ const ProductRegistration = () => {
 
   const productId = searchParams.get('productId');
 
-  const { data: productData, error: productError } =
-    useProductDetail(productId);
-
-  useEffect(() => {
-    if (productData && productId) {
-      handleProductChange(productData);
-    }
-    if (productError) {
-      alert('수정하실 상품 정보를 불러오는데 실패했습니다.');
-      return;
-    }
-  }, [productData, productError]);
-
   const onSuccess = (data) => {
     if (data) {
       if (productId) {
@@ -42,6 +29,20 @@ const ProductRegistration = () => {
     handleProductChange,
     handleSubmit,
   } = useProductRegistration(onSuccess, productId);
+
+  const { data: productData, error: productError } =
+    useProductDetail(productId);
+
+  useEffect(() => {
+    if (productData) {
+      handleProductChange(productData);
+    }
+
+    if (productError) {
+      alert('상품 정보를 불러오는 데 실패했습니다.');
+      console.error(productError);
+    }
+  }, [productData, productError]);
 
   return (
     <div className="min-h-screen">
