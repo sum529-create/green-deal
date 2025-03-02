@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { fetchUserData } from '../api/userInfoService';
+import { QUERY_KEYS } from '../constants/queryKeys';
 
 /**
  * 특정 사용자의 데이터를 가져오는 React Query 훅
@@ -12,7 +13,7 @@ import { fetchUserData } from '../api/userInfoService';
  */
 export const useUserData = (sub) => {
   return useQuery({
-    queryKey: ['user', sub],
+    queryKey: [QUERY_KEYS.USER, sub],
     queryFn: async () => {
       const response = await fetchUserData(sub);
       return response.data;
