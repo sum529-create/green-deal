@@ -1,18 +1,14 @@
 import { Link } from 'react-router-dom';
-import UserProfile from '../common/UserProfile';
-import UserArcodian from './UserArcodian';
+import UserDropDown from './UserDropDown';
 
 const NavAuthStatus = ({ isLoading, userData }) => {
   if (isLoading) {
-    return (
-      <UserProfile/>
-    );
+    return <UserDropDown />;
   }
 
   return userData ? (
-    <div className='flex items-center justify-center gap-2'>
-      <UserProfile userData={userData} />
-      <UserArcodian userData={userData} />
+    <div className="flex items-center justify-center gap-2">
+      <UserDropDown userData={userData} />
     </div>
   ) : (
     <div className="flex gap-2">
