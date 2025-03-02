@@ -11,21 +11,18 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import Comments from '../components/productdetail/Comments';
 
 // 상품 데이터 가져오기
-const fetchProducts = async () => {
-  const { data, error } = await supabase.from('products').select('*');
-  if (error) throw new Error(error.message);
-  return data;
-};
-
-// 사용자 데이터 가져오기
-const fetchUsers = async () => {
-  const { data, error } = await supabase.from('users').select('*');
+const getProductWithSeller = async (productId) => {
+  const { data, error } = await supabase
+    .from('products')
+    .select('*, users(*)')
+    .eq('id', productId)
+    .single();
   if (error) throw new Error(error.message);
   return data;
 };
 
 // 상품 판매 완료 처리
-const checkAsSold = async (productId) => {
+const checkAsSoldout = async (productId) => {
   const { error } = await supabase
     .from('products')
     .update({ soldout: true })
@@ -39,26 +36,23 @@ const ProductDetail = () => {
   const currentUser = useUserStore((state) => state.user);
   const isLogin = useUserStore((state) => state.isLogin);
   const { id } = useParams(); // url에서 상품 id 가져오기
+  const productId = +id;
 
-  // 상품 데이터 가져오기
+  // 상품 및 판매자 데이터 가져오기
   const {
-    data: products,
-    error: productError,
-    isLoading: isLoadingProducts,
-  } = useQuery({ queryKey: ['products'], queryFn: fetchProducts });
-
-  // 사용자 데이터 가져오기
-  const {
-    data: users,
-    error: userError,
-    isLoading: isLoadingUsers,
-  } = useQuery({ queryKey: ['users'], queryFn: fetchUsers });
+    data: product,
+    error,
+    isLoading,
+  } = useQuery({
+    queryKey: ['product', Number(id)],
+    queryFn: () => getProductWithSeller(productId),
+  });
 
   // 상품 판매 완료 처리
-  const { mutate: handleCheckAsSold } = useMutation({
-    mutationFn: (productId) => checkAsSold(productId),
+  const { mutate: handleCheckAsSoldout } = useMutation({
+    mutationFn: (productId) => checkAsSoldout(productId),
     onSuccess: () => {
-      queryClient.invalidateQueries(['products']); // 상품목록 새로고침
+      queryClient.invalidateQueries(['product', id]); // 상품목록 새로고침
     },
     onError: (error) => {
       console.log('판매완료 처리 에러', error.message);
@@ -69,34 +63,28 @@ const ProductDetail = () => {
   const handleConfirmSoldout = () => {
     if (
       window.confirm(
-        '완료 처리하면 번복이 불가합니다. 상품을 판매완료 처리 하시겠습니까?',
+        '완료 처리하면 번복이 불가합니다. 상품을 판매완료하시겠습니까?',
       )
     ) {
-      handleCheckAsSold(product.id);
+      handleCheckAsSoldout(product.id);
     }
   };
 
-  // 데이터 로드 중 에러발생시
-  if (productError || userError) {
-    return <p>데이터를 불러오는 중 오류가 발생했습니다.</p>;
-  }
-
   // 데이터 로딩중이거나 빈 배열일 경우
-  if (isLoadingProducts || isLoadingUsers) {
+  if (isLoading || !product) {
     return <p>데이터 로딩중...</p>;
   }
 
-  // 현재 상품 찾기
-  const product = products.find((item) => item.id === +id);
+  // 데이터 로드 중 에러발생시
+  if (error) {
+    return <p>데이터를 불러오는 중 오류가 발생했습니다.</p>;
+  }
 
   if (!product) {
     return (
       <p className="text-center text-title-sm"> 상품을 찾을 수 없습니다.</p>
     );
   }
-
-  // 판매자 정보 찾기
-  const seller = users.find((user) => user.user_id === product.user_id);
 
   // 로그인 유저가 상품의 작성자인지 확인
   const isOwner = isLogin && currentUser?.id === product.user_id;
@@ -121,7 +109,7 @@ const ProductDetail = () => {
           <hr className="border-t-1 border-light-gray" />
 
           {/* 판매자 정보 컴포넌트 */}
-          <SellerInfo seller={seller} />
+          <SellerInfo seller={product.users} />
 
           <hr className="border-t-1 border-light-gray" />
 
@@ -167,7 +155,7 @@ const ProductDetail = () => {
       </div>
 
       {/* 댓글 컴포넌트 영역 */}
-      <Comments users={users} seller={seller} />
+      <Comments seller={product.users} />
     </div>
   );
 };
