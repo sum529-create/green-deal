@@ -3,9 +3,11 @@ import { useEffect, useState } from 'react';
 export const useProductMapModal = ({ isOpen, onClose, onSelectLocation }) => {
   const [address, setAddress] = useState('');
   const [sendAddress, setSendAddress] = useState(''); // 검색할 주소
-  const [addressArr, setAddressArr] = useState([]);
+  const [addressArr, setAddressArr] = useState(['', '']);
   const [selectedLocation, setSelectedLocation] = useState(null);
-  const [roadAddress = '', lotAddress = ''] = addressArr;
+  const [roadAddress = '', lotAddress = ''] = Array.isArray(addressArr)
+    ? addressArr
+    : ['', ''];
 
   // 카카오맵 스크립트 로드 및 초기화
   useEffect(() => {
@@ -13,7 +15,7 @@ export const useProductMapModal = ({ isOpen, onClose, onSelectLocation }) => {
 
     return () => {
       // 모달이 닫힐 때 상태 초기화
-      setAddressArr([]);
+      setAddressArr(['', '']);
       setSelectedLocation(null);
       setAddress('');
       setSendAddress('');
@@ -22,7 +24,7 @@ export const useProductMapModal = ({ isOpen, onClose, onSelectLocation }) => {
 
   // 지도 클릭 이벤트 핸들러
   const handleLocationSelect = (location, address) => {
-    setAddressArr(address);
+    setAddressArr(Array.isArray(address) ? address : ['', '']);
     setSelectedLocation(location);
     onSelectLocation(location, address[0] || address[1]);
   };
