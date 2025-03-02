@@ -1,3 +1,6 @@
 export const QUERY_KEYS = {
-  PRODUCT_QUERY_KEY: ['product'],
+  // 상품 관련 쿼리 키
+  PRODUCT: {
+    LIST: ['products'],
+  },
 };
