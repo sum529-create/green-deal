@@ -41,13 +41,3 @@ export const authSignOut = async () => {
     throw new Error(`로그아웃 실패: ${error.message}`);
   }
 };
-
-export const getAuthData = async () => {
-  try {
-    const { data, error } = await supabase.auth.getSession();
-    if (error) throw new Error(error.message);
-    return data.session.user.user_metadata;
-  } catch (error) {
-    throw new Error(`유저 정보 불러오기 실패: ${error.message}`);
-  }
-};
