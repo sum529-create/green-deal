@@ -26,3 +26,25 @@ export const addProduct = async (product, userId) => {
   if (error) throw error;
   return { data, error };
 };
+
+export const updateProduct = async (product, userId, productId) => {
+  // 이미지 업로드
+  const file = product.img;
+  const imgUrl = await uploadProductImage(file, userId);
+  // 새 product 객체 생성
+  const updatedProduct = {
+    ...product,
+    img: imgUrl,
+    user_id: userId,
+    id: productId,
+    updated_at: new Date().toISOString(),
+  };
+  // 상품 업데이트
+  const { data, error } = await supabase
+    .from('products')
+    .update(updatedProduct)
+    .eq('id', productId)
+    .select();
+  if (error) throw error;
+  return { data, error };
+};

@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { QUERY_KEYS } from '../constants/queryKeys';
-import { addProduct } from '../api/productService';
+import { addProduct, updateProduct } from '../api/productService';
 
 /**
  * useAddProduct
@@ -14,6 +14,27 @@ export const useAddProduct = (product, userId, onSuccess) => {
   const queryClient = useQueryClient();
   const { mutate, isLoading, error } = useMutation({
     mutationFn: () => addProduct(product, userId),
+    onSuccess: (data) => {
+      queryClient.invalidateQueries(QUERY_KEYS.PRODUCT.LIST);
+      if (onSuccess) onSuccess(data);
+    },
+  });
+  return { mutate, isLoading, error };
+};
+
+/**
+ * useAddProduct
+ * @description 상품정보 수정 mutation 작업을 처리하는 훅
+ * @param {object} product - 수정할 상품 데이터
+ * @param {number} userId - 사용자 id
+ * @param {number} productId - 상품 id
+ * @param {function} onSuccess
+ * @returns
+ */
+export const useUpdateProduct = (product, userId, productId, onSuccess) => {
+  const queryClient = useQueryClient();
+  const { mutate, isLoading, error } = useMutation({
+    mutationFn: () => updateProduct(product, userId, productId),
     onSuccess: (data) => {
       queryClient.invalidateQueries(QUERY_KEYS.PRODUCT.LIST);
       if (onSuccess) onSuccess(data);
