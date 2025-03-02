@@ -1,6 +1,13 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { QUERY_KEYS } from '../constants/queryKeys';
-import { addProduct } from '../api/productService';
+import { addProduct, getProducts } from '../api/productService';
+
+export const useGetProducts = () => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.PRODUCT.LIST],
+    queryFn: getProducts,
+  });
+};
 
 /**
  * useAddProduct
