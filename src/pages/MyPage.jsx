@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router-dom';
 const MyPage = () => {
   const user = useUserStore((state) => state.user);
 
+
   const [currentTab, setCurrentTab] = useState('selling');
   const [products, setProducts] = useState([]);
   const [wishlist, setWishlist] = useState([]);
@@ -54,6 +55,7 @@ const MyPage = () => {
     }
   }, [user]);
 
+  //상품 삭제하기
   const removeProduct = async (productId) => {
     if (!user?.id) {
       return;
@@ -75,6 +77,7 @@ const MyPage = () => {
     );
   };
 
+
   const handleTabChange = (tabType) => {
     setCurrentTab(tabType);
   };
@@ -93,7 +96,7 @@ const MyPage = () => {
   };
 
   return (
-    <div className="flex items-center justify-center h-screen gap-14">
+    <div className="flex items-center justify-center min-h-screen gap-14">
       <section className="flex flex-col items-center justify-center gap-10 w-[400px] h-[830px] p-6 bg-light-gray rounded-md">
         <ProfileSection user={user} />
 
@@ -136,7 +139,7 @@ const MyPage = () => {
         </div>
       </section>
 
-      <section className="p-6 min-w-[800px] min-h-screen">
+      <section className="p-6 min-w-[800px] h-screen">
         <h1 className="mb-4 font-bold text-title-lg text-deep-mint">
           {currentTab === 'selling'
             ? '판매 중인 물품'
@@ -196,7 +199,12 @@ const MyPage = () => {
                       )}
 
                       {currentTab === 'wishlist' && (
-                        <Button type="button" variant="outline" size="medium">
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="medium"
+                          // onClick={() => removeWishItem(item.id)}
+                        >
                           찜해제
                         </Button>
                       )}
