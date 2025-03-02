@@ -1,15 +1,13 @@
 import React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Button from '../components/common/Button';
 import ProfileSection from '../components/mypage/ProfileSection';
 import useUserStore from '../store/userStore';
-import { useEffect } from 'react';
 import { supabase } from '../api/client';
 import { useNavigate } from 'react-router-dom';
 
 const MyPage = () => {
   const user = useUserStore((state) => state.user);
-
 
   const [currentTab, setCurrentTab] = useState('selling');
   const [products, setProducts] = useState([]);
@@ -76,7 +74,6 @@ const MyPage = () => {
       prevProducts.filter((item) => item.id !== productId),
     );
   };
-
 
   const handleTabChange = (tabType) => {
     setCurrentTab(tabType);

@@ -1,7 +1,6 @@
 import { supabase } from './client';
 
 export const fetchUserData = async (userId) => {
-
   const { data, error } = await supabase
     .from('users')
     .select('*')

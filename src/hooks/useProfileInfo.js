@@ -50,7 +50,7 @@ const useProfileInfo = (user) => {
       validation.isUnchanged && setIsUpdating(false);
       return;
     }
-    
+
     // 닉네임 중복 검사
     const duplicationCheck = await checkNicknameDuplication(nickname);
     if (!duplicationCheck.valid) {
