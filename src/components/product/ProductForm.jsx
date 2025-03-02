@@ -20,12 +20,6 @@ const ProductForm = ({ product, onChangeProduct, onSubmit }) => {
   const { address, handleChange, handleSubmit, handleSelectLocation } =
     useProductForm(product, onChangeProduct);
 
-  // 폼 제출 핸들러
-  const sendSubmit = (e) => {
-    handleSubmit(e);
-    onSubmit();
-  };
-
   // 위치 추가 모달 열기
   const openLocationModal = () => {
     setIsLocationModalOpen(true);
@@ -33,7 +27,13 @@ const ProductForm = ({ product, onChangeProduct, onSubmit }) => {
 
   return (
     <>
-      <form className="space-y-4" onSubmit={sendSubmit}>
+      <form
+        className="space-y-4"
+        onSubmit={(e) => {
+          handleSubmit(e);
+          onSubmit();
+        }}
+      >
         {/* 판매물품 */}
         <div>
           <Label>판매 물품</Label>
