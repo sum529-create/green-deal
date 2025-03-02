@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { INITIAL_ADD_PRODUCT_DATA } from '../constants/productConstants';
 import useUserStore from '../store/userStore';
-import { useAddProduct } from './useAddProduct';
+import { useAddProduct } from './useProduct';
 
 /**
  * useProductRegistration
