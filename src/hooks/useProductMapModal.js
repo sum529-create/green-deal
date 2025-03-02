@@ -1,5 +1,4 @@
-import { useCallback } from 'react';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 export const useProductMapModal = ({ isOpen, onClose, onSelectLocation }) => {
   const [address, setAddress] = useState('');
