@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import { INITIAL_ADD_PRODUCT_DATA } from '../constants/productConstants';
 import useUserStore from '../store/userStore';
-import { productService } from '../service/productService';
-import { useMutation } from '@tanstack/react-query';
+import { useProduct } from './useProduct';
 
 /**
  * useProductRegistration
@@ -13,11 +12,7 @@ import { useMutation } from '@tanstack/react-query';
 export const useProductRegistration = (onSuccess) => {
   const [product, setProduct] = useState(INITIAL_ADD_PRODUCT_DATA);
   const user = useUserStore((state) => state.user);
-  const { mutate, isLoading, error } = useMutation({
-    mutationFn: () => productService(product, user.id),
-    onSuccess,
-  });
-
+  const { mutate, isLoading, error } = useProduct(product, user.id, onSuccess);
   const handleImageChange = (newImg) => {
     setProduct((value) => ({
       ...value,
