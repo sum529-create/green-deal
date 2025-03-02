@@ -169,7 +169,13 @@ const MyPage = () => {
             getFilteredItems().map((item) => (
               <article
                 key={item.id}
-                className="flex flex-col items-center justify-center w-[250px] h-[280px] bg-gray-100 rounded-md border-2 border-light-gray"
+                onClick={(e) => {
+                  if (e.target.tagName === 'BUTTON') {
+                    return;
+                  }
+                  navigate(`/product/detail/${item.id}`);
+                }}
+                className="flex flex-col items-center justify-center w-[250px] h-[280px] bg-gray-100 rounded-md border-2 border-light-gray hover:cursor-pointer"
               >
                 <img
                   src={
