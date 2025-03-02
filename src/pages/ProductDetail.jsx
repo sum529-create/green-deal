@@ -2,36 +2,14 @@ import React from 'react';
 import { useParams } from 'react-router-dom';
 import useUserStore from '../store/userStore';
 import Button from '../components/common/Button';
-import { supabase } from '../api/client';
 import ProductHeader from '../components/productdetail/ProductHeader';
 import SellerInfo from '../components/productdetail/SellerInfo';
 import ProductInfo from '../components/productdetail/ProductInfo';
 import ProductDescription from '../components/productdetail/ProductDescription';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import Comments from '../components/productdetail/Comments';
-
-// 상품 데이터 가져오기
-const getProductWithSeller = async (productId) => {
-  const { data, error } = await supabase
-    .from('products')
-    .select('*, users(*)')
-    .eq('id', productId)
-    .single();
-  if (error) throw new Error(error.message);
-  return data;
-};
-
-// 상품 판매 완료 처리
-const checkAsSoldout = async (productId) => {
-  const { error } = await supabase
-    .from('products')
-    .update({ soldout: true })
-    .eq('id', productId);
-  if (error) throw new Error(error.message);
-};
+import { useProductWithSeller, useSoldoutProduct } from '../hooks/useProduct';
 
 const ProductDetail = () => {
-  const queryClient = useQueryClient();
   // 로그인한 유저 정보
   const currentUser = useUserStore((state) => state.user);
   const isLogin = useUserStore((state) => state.isLogin);
@@ -39,39 +17,24 @@ const ProductDetail = () => {
   const productId = +id;
 
   // 상품 및 판매자 데이터 가져오기
-  const {
-    data: product,
-    error,
-    isLoading,
-  } = useQuery({
-    queryKey: ['product', Number(id)],
-    queryFn: () => getProductWithSeller(productId),
-  });
+  const { data: product, error, isLoading } = useProductWithSeller(productId);
 
   // 상품 판매 완료 처리
-  const { mutate: handleCheckAsSoldout } = useMutation({
-    mutationFn: (productId) => checkAsSoldout(productId),
-    onSuccess: () => {
-      queryClient.invalidateQueries(['product', id]); // 상품목록 새로고침
-    },
-    onError: (error) => {
-      console.log('판매완료 처리 에러', error.message);
-    },
-  });
+  const { mutate: handleCheckAsSoldout } = useSoldoutProduct(productId);
 
   // 판매완료 버튼 핸들러
   const handleConfirmSoldout = () => {
     if (
       window.confirm(
-        '완료 처리하면 번복이 불가합니다. 상품을 판매완료하시겠습니까?',
+        '판매완료 처리하면 번복이 불가능합니다. 상품을 판매완료하시겠습니까?',
       )
     ) {
       handleCheckAsSoldout(product.id);
     }
   };
 
-  // 데이터 로딩중이거나 빈 배열일 경우
-  if (isLoading || !product) {
+  // 데이터 로딩중
+  if (isLoading) {
     return <p>데이터 로딩중...</p>;
   }
 
