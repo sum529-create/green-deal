@@ -175,7 +175,7 @@ const MyPage = () => {
                   }
                   navigate(`/product/detail/${item.id}`);
                 }}
-                className="flex flex-col items-center justify-center w-[250px] h-[280px] bg-gray-100 rounded-md border-2 border-light-gray hover:cursor-pointer"
+                className="flex flex-col items-center justify-center w-[250px] h-[280px] bg-gray-100 rounded-md border-2 border-light-gray hover:cursor-pointer hover:shadow-lg"
               >
                 <img
                   src={
@@ -183,7 +183,7 @@ const MyPage = () => {
                     'https://tzmzehldetwvzvqvprsn.supabase.co/storage/v1/object/public/profileImg/profiles/1740753032690-38589.png'
                   } // 임시
                   alt={item.name}
-                  className="object-cover w-full h-[160px] rounded-t-md bg-white" // 질문!
+                  className="object-cover w-full h-[160px] rounded-t-md bg-white"
                 />
                 <div className="w-full h-[120px] p-2">
                   <h3 className="font-semibold truncate text-title-sm">
@@ -241,7 +241,7 @@ const MyPage = () => {
           {/* 물품 등록하기 버튼 추가 */}
           {currentTab === 'selling' && (
             <article
-              className="flex flex-col items-center justify-center w-[250px] h-[280px] bg-gray-100 rounded-md border-2 border-dashed border-light-gray cursor-pointer"
+              className="flex flex-col items-center justify-center w-[250px] h-[280px] bg-gray-100 rounded-md border-2 border-dashed border-light-gray cursor-pointer hover:cursor-pointer hover:shadow-lg"
               onClick={() => {
                 navigate('/product/registration');
               }}
