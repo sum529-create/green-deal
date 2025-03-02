@@ -20,7 +20,8 @@ const MyPage = () => {
     const { data, error } = await supabase
       .from('products')
       .select('*')
-      .eq('user_id', user.id);
+      .eq('user_id', user.id)
+      .order('created_at', { ascending: false });
     if (error) {
       console.error('상품 데이터 가져오기 오류:', error.message);
       return;
@@ -34,7 +35,8 @@ const MyPage = () => {
     const { data, error } = await supabase
       .from('wishes')
       .select('*, products(*)')
-      .eq('user_id', user.id);
+      .eq('user_id', user.id)
+      .order('created_at', { ascending: false });
 
     if (error) {
       console.error('찜한 상품 데이터 가져오기 오류:', error.message);
