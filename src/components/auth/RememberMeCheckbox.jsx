@@ -47,7 +47,7 @@ const RememberMeCheckbox = ({ userEmail, setUserEmail }) => {
         <Checkbox
           checked={isRemember}
           onChange={handleCheckboxChange}
-          className="group block size-4 w-5 h-5 rounded border bg-white data-[checked]:bg-deep-mint border-deep-mint outline-none"
+          className="cursor-pointer group block size-4 w-5 h-5 rounded border bg-white data-[checked]:bg-deep-mint border-deep-mint outline-none"
         >
           <svg
             className="stroke-white opacity-0 group-data-[checked]:opacity-100"
