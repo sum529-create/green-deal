@@ -1,7 +1,7 @@
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
 import { authSignOut } from '../../api/userAuthService';
 import { Link } from 'react-router-dom';
-import { FiChevronDown } from 'react-icons/fi';
+import { FiChevronDown, FiChevronUp } from 'react-icons/fi';
 import { PRODUCT_DEFAULT_IMG } from '../../constants/mypageConstants';
 
 const UserDropDown = ({ userData = {} }) => {
@@ -16,42 +16,48 @@ const UserDropDown = ({ userData = {} }) => {
 
   return (
     <Menu as="div" className="relative">
-      <MenuButton className="flex items-center gap-2 focus:outline-none">
-        <img
-          src={userData.profile_img || PRODUCT_DEFAULT_IMG}
-          alt="프로필 이미지"
-          className="object-cover w-8 h-8 rounded-full bg-light-gray"
-        />
-        <span>{userData.name || '그린딜'}</span>
-        <FiChevronDown />
-      </MenuButton>
-      <MenuItems
-        anchor="bottom"
-        modal={false}
-        className="absolute right-0 z-50 w-32 mt-2 text-black bg-white rounded-md shadow-lg focus:outline-none"
-      >
-        <MenuItem>
-          <Link to="/mypage" className="block px-4 py-2">
-            마이페이지
-          </Link>
-        </MenuItem>
-        <MenuItem>
-          <Link
-            to="/product/registration"
-            className="block px-4 py-2"
+      {({ open }) => (
+        <>
+          <MenuButton className="flex items-center gap-2 focus:outline-none">
+            <img
+              src={userData.profile_img || PRODUCT_DEFAULT_IMG}
+              alt="프로필 이미지"
+              className="object-cover w-8 h-8 bg-white rounded-full"
+            />
+            <span className="font-semibold text-text-md">
+              {userData.name || '그린딜'}
+            </span>
+            {open ? <FiChevronUp /> : <FiChevronDown />}
+          </MenuButton>
+          <MenuItems
+            anchor="bottom"
+            modal={false}
+            className="absolute right-0 z-50 w-32 mt-2 text-sm text-center text-black bg-white rounded-md shadow-lg focus:outline-none"
           >
-            상품 등록
-          </Link>
-        </MenuItem>
-        <MenuItem>
-          <button
-            onClick={handleLogout}
-            className="block w-full px-4 py-2 text-left"
-          >
-            로그아웃
-          </button>
-        </MenuItem>
-      </MenuItems>
+            <MenuItem>
+              <Link
+                to="/mypage"
+                className="relative block px-4 py-4 after:bg-gray after:left-1/2 after:-translate-x-1/2 after:w-2/3 after:h-[1px] after:block after:absolute after:bottom-0"
+              >
+                마이페이지
+              </Link>
+            </MenuItem>
+            <MenuItem>
+              <Link
+                to="/product/registration"
+                className="relative block px-4 py-4 after:bg-gray after:left-1/2 after:-translate-x-1/2 after:w-2/3 after:h-[1px] after:block after:absolute after:bottom-0"
+              >
+                상품 등록
+              </Link>
+            </MenuItem>
+            <MenuItem>
+              <button onClick={handleLogout} className="block w-full px-4 py-4">
+                로그아웃
+              </button>
+            </MenuItem>
+          </MenuItems>
+        </>
+      )}
     </Menu>
   );
 };
