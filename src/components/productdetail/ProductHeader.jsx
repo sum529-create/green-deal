@@ -1,5 +1,6 @@
 import React from 'react';
 import { FaRegStar } from 'react-icons/fa';
+import Wishes from './Wishes';
 
 const ProductHeader = ({ product }) => {
   return (
@@ -23,7 +24,7 @@ const ProductHeader = ({ product }) => {
           </span>
         </div>
         {/* 찜하기 */}
-        <FaRegStar className="text-2xl text-gray-500 cursor-pointer hover:text-yellow-400" />
+        <Wishes productId={product.id} />
       </div>
     </div>
   );

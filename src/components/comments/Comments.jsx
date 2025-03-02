@@ -1,123 +1,123 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useParams } from 'react-router-dom';
-import Button from '../common/Button';
+import { supabase } from '../../api/client';
+import CommentForm from './CommentForm';
+import CommentList from './CommentList';
+import useUserStore from '../../store/userStore';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-const Comments = ({ users }) => {
-  //댓글테이블 더미데이터
-  const [comments, setComments] = useState([
-    {
-      id: 21,
-      created_at: '2025-02-27 08:55:57.141131+00',
-      content: '직거래 가능한 시간 알려주세요',
-      user_id: '20250227074521',
-      product_id: '1',
-      updated_at: '',
-    },
-    {
-      id: 22,
-      created_at: '2025-02-27 14:55:57.141131+00',
-      content: '오후 8시 이후로 가능합니다!',
-      user_id: '20250229084522',
-      product_id: '1',
-      updated_at: '',
-    },
-  ]);
+// 댓글 목록 가져오기
+const fetchComments = async (productId) => {
+  const { data, error } = await supabase
+    .from('comments')
+    .select('*')
+    .eq('product_id', productId)
+    .order('created_at', { ascending: false });
 
+  if (error) throw new Error(error.message);
+  return data;
+};
+
+// 댓글 추가
+const addComment = async ({ productId, content, userId }) => {
+  const { data, error } = await supabase
+    .from('comments')
+    .insert([{ content, user_id: userId, product_id: productId }])
+    .select();
+  if (error) throw new Error(error.message);
+  return data[0];
+};
+
+// 댓글 수정
+const updateComment = async ({ commentId, content }) => {
+  const { error } = await supabase
+    .from('comments')
+    .update({ content })
+    .eq('id', commentId);
+  if (error) throw new Error(error.message);
+};
+
+// 댓글 삭제
+const deleteComment = async (commentId) => {
+  const { error } = await supabase
+    .from('comments')
+    .delete()
+    .eq('id', commentId);
+  if (error) throw new Error(error.message);
+};
+
+const Comments = ({ users, seller }) => {
+  const queryClient = useQueryClient();
   const { id } = useParams();
   const productId = id; //
 
-  // 댓글 입력 상태
-  const [newComment, setNewComment] = useState('');
+  const currentUser = useUserStore((state) => state.user); // 로그인한 사용자 정보
 
-  // 현재 상품에 해당하는 댓글 필터링
-  const productComments = comments.filter(
-    (comment) => comment.product_id === productId,
-  );
+  // 댓글 목록 가져오기
+  const {
+    data: comments = [],
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ['comments', productId],
+    queryFn: () => fetchComments(productId),
+  });
 
-  //댓글 추가 로직 생성해야함
-  const handleAddComment = (e) => {
-    e.preventDefault();
+  // 댓글 추가
+  const addCommentMutation = useMutation({
+    mutationFn: ({ content }) =>
+      addComment({ productId, content, userId: currentUser.id }),
+    onSuccess: () => {
+      queryClient.invalidateQueries(['comments', productId]); // 댓글 목록 갱신
+    },
+  });
 
-    if (!newComment.trim()) return;
-    //setComments([...comments, newComment])
-  };
+  // 댓글 수정
+  const updateCommentMutation = useMutation({
+    mutationFn: ({ commentId, content }) =>
+      updateComment({ commentId, content }),
+    onSuccess: () => {
+      queryClient.invalidateQueries(['comments', productId]); // 댓글 목록 갱신
+    },
+  });
+
+  // 댓글 삭제
+  const deleteCommentMutation = useMutation({
+    mutationFn: (commentId) => deleteComment(commentId),
+    onSuccess: () => {
+      queryClient.invalidateQueries(['comments', productId]); // 댓글 목록 갱신
+    },
+  });
+
+  if (isLoading) {
+    return <div>댓글 로딩중...</div>;
+  }
+
+  if (error) {
+    return <div>데이터를 불러오는 중 오류가 발생했습니다.</div>;
+  }
 
   return (
     <div className="p-6 bg-white rounded-sm">
-      {/* comments add components */}
       <div className="mb-6">
-        <p className="font-semibold text-black">
-          댓글/문의{'  '}
-          <span className="text-deep-mint">{productComments.length}개</span>
+        <p className="mb-3 font-semibold text-black">
+          댓글/문의 <span className="text-deep-mint">{comments.length}개</span>
         </p>
-        <form className="flex items-center gap-5 p-4 border rounded-lg border-light-gray">
-          <textarea
-            placeholder="댓글을 입력하세요."
-            className="w-full p-3 mt-2 text-sm bg-white rounded-lg resize-none focus:ring-1 focus:ring-mint focus:outline-none"
-          ></textarea>
-          <Button type="submit" size="medium">
-            등록
-          </Button>
-        </form>
+        {/* 댓글 입력 폼 */}
+        <CommentForm
+          productId={productId}
+          addCommentMutation={addCommentMutation}
+        />
       </div>
 
       {/* 댓글 목록 */}
-      <ul className="space-y-6">
-        {/* map으로 뿌리기 */}
-        {productComments.length > 0 ? (
-          productComments.map((comment) => {
-            // 댓글 작성자 찾기
-            const user = users.find(
-              (user) => user.user_id.toString() === comment.user_id,
-            );
-            return (
-              <li
-                key={comment.id}
-                className="p-4 border rounded-lg border-light-gray"
-              >
-                <div className="flex justify-between gap-3">
-                  <div className="flex items-start gap-3">
-                    {/* 프로필이미지 */}
-                    <img
-                      src={user.profile_img}
-                      alt={user.name}
-                      className="w-12 h-12 rounded-full bg-deep-mint"
-                    />
-                    <div>
-                      <div className="flex gap-3">
-                        {/* 작성자 닉네임 */}
-                        <h3 className="text-sm font-semibold text-black">
-                          {user.name}
-                        </h3>
-                        {/* 작성날짜 */}
-                        <span className="text-xs text-light-gray">
-                          {new Date(comment.created_at).toLocaleDateString()}
-                        </span>
-                      </div>
-
-                      {/* 댓글 내용 */}
-                      <p className="text-sm text-deep-gray">
-                        {comment.content}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-2">
-                    <Button type="button" size="small">
-                      수정
-                    </Button>
-                    <Button type="button" size="small" variant="outline">
-                      삭제
-                    </Button>
-                  </div>
-                </div>
-              </li>
-            );
-          })
-        ) : (
-          <p>아직 댓글이 없습니다.</p>
-        )}
-      </ul>
+      <CommentList
+        comments={comments}
+        users={users}
+        seller={seller}
+        updateCommentMutation={updateCommentMutation}
+        deleteCommentMutation={deleteCommentMutation}
+      />
     </div>
   );
 };
