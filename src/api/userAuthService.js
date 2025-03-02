@@ -45,7 +45,6 @@ export const authSignOut = async () => {
 
 export const authGoogleSignIn = async () => {
   try {
-    const redirectTo = `${window.location.origin}/product`;
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
