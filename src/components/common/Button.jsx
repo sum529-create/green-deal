@@ -1,8 +1,8 @@
 import React from 'react';
 
 const Button = ({
-  children,
-  onClick,
+  children = '버튼',
+  onClick = () => {},
   type = 'button',
   variant = 'primary',
   size = 'medium',
