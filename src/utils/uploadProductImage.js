@@ -8,8 +8,6 @@ import { supabase } from '../api/client';
  * @returns string - 업로드된 이미지 URL
  */
 export const uploadProductImage = async (file, userId) => {
-  console.log(file);
-
   if (!file) throw new Error('이미지 파일이 없습니다.');
 
   const timestamp = Date.now();
