@@ -37,7 +37,6 @@ const RememberMeCheckbox = ({ userEmail, setUserEmail }) => {
       setCookie('rememberUserId', userEmail, { expires: COOKIE_EXPIRE_DATE });
     } else {
       removeCookie('rememberUserId');
-      setUserEmail('');
     }
   };
 
