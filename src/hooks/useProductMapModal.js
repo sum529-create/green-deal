@@ -26,7 +26,6 @@ export const useProductMapModal = ({ isOpen, onClose, onSelectLocation }) => {
   const handleLocationSelect = (location, address) => {
     setAddressArr(Array.isArray(address) ? address : ['', '']);
     setSelectedLocation(location);
-    onSelectLocation(location, address[0] || address[1]);
   };
 
   // 주소 검색 함수
@@ -46,6 +45,9 @@ export const useProductMapModal = ({ isOpen, onClose, onSelectLocation }) => {
 
   // 위치 선택 완료
   const confirmLocation = () => {
+    if (!selectedLocation) return;
+
+    onSelectLocation(selectedLocation, roadAddress || lotAddress);
     setSendAddress('');
     onClose();
   };
