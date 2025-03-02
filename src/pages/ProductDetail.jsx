@@ -1,5 +1,4 @@
 import React from 'react';
-import Comments from '../components/comments/Comments';
 import { useParams } from 'react-router-dom';
 import useUserStore from '../store/userStore';
 import Button from '../components/common/Button';
@@ -9,6 +8,7 @@ import SellerInfo from '../components/productdetail/SellerInfo';
 import ProductInfo from '../components/productdetail/ProductInfo';
 import ProductDescription from '../components/productdetail/ProductDescription';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import Comments from '../components/productdetail/Comments';
 
 // 상품 데이터 가져오기
 const fetchProducts = async () => {
