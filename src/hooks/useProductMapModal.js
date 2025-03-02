@@ -1,3 +1,4 @@
+import { useCallback } from 'react';
 import { useEffect, useState } from 'react';
 
 export const useProductMapModal = ({ isOpen, onClose, onSelectLocation }) => {
@@ -23,10 +24,10 @@ export const useProductMapModal = ({ isOpen, onClose, onSelectLocation }) => {
   }, [isOpen]);
 
   // 지도 클릭 이벤트 핸들러
-  const handleLocationSelect = (location, address) => {
+  const handleLocationSelect = useCallback((location, address) => {
     setAddressArr(Array.isArray(address) ? address : ['', '']);
     setSelectedLocation(location);
-  };
+  }, []);
 
   // 주소 검색 함수
   const searchAddress = () => {

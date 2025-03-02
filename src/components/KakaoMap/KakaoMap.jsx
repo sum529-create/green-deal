@@ -46,9 +46,14 @@ const KakaoMap = ({
     if (!sendAddress) return;
     const searchAddress = async (address) => {
       try {
-        const { coords } = await addressToCoords(address);
-        setLocation(coords);
-        setCenter(coords);
+        const coords = await addressToCoords(address);
+        if (coords === null) {
+          return alert('주소 검색에 실패했습니다. 다시 시도해주세요.');
+        }
+        if (location.lat !== coords.lat || location.lng !== coords.lng) {
+          setLocation(coords);
+          setCenter(coords);
+        }
 
         const detailAddr = await coordsToAddress(coords);
         if (onLocationSelect) onLocationSelect(coords, detailAddr);
