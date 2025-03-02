@@ -10,11 +10,6 @@ import { uploadProductImage } from '../utils/uploadProductImage';
  * @return {Promise} - 상품 데이터
  */
 export const productService = async (product, userId) => {
-  if (!product.location) {
-    alert('거래위치를 등록해주세요');
-    return;
-  }
-
   // 이미지 업로드
   const file = product.img;
   const imgUrl = await uploadProductImage(file, userId);
