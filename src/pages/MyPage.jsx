@@ -35,13 +35,17 @@ const MyPage = () => {
       .from('wishes')
       .select('*, products(*)')
       .eq('user_id', user.id);
+
     if (error) {
       console.error('찜한 상품 데이터 가져오기 오류:', error.message);
       return;
     }
 
     if (data) {
-      const wishProducts = data.map((item) => item.products);
+      const wishProducts = data.map((wishItem) => ({
+        ...wishItem.products,
+        wishId: wishItem.id,
+      }));
       setWishlist(wishProducts);
     }
   };
@@ -73,6 +77,18 @@ const MyPage = () => {
     setProducts((prevProducts) =>
       prevProducts.filter((item) => item.id !== productId),
     );
+  };
+
+  // 찜해제
+  const removeWishItem = async (wishId) => {
+    const { error } = await supabase.from('wishes').delete().eq('id', wishId);
+
+    if (error) {
+      console.error('찜 해제 오류:', error.message);
+      return;
+    }
+
+    setWishlist((prev) => prev.filter((item) => item.wishId !== wishId));
   };
 
   const handleTabChange = (tabType) => {
@@ -159,7 +175,7 @@ const MyPage = () => {
                     'https://tzmzehldetwvzvqvprsn.supabase.co/storage/v1/object/public/profileImg/profiles/1740753032690-38589.png'
                   } // 임시
                   alt={item.name}
-                  className="object-contain w-full h-[160px] rounded-t-md bg-white" // 질문!
+                  className="object-cover w-full h-[160px] rounded-t-md bg-white" // 질문!
                 />
                 <div className="w-full h-[120px] p-2">
                   <h3 className="font-semibold truncate text-title-sm">
@@ -200,7 +216,9 @@ const MyPage = () => {
                           type="button"
                           variant="outline"
                           size="medium"
-                          // onClick={() => removeWishItem(item.id)}
+                          onClick={() =>
+                            removeWishItem(removeWishItem(item.wishId))
+                          }
                         >
                           찜해제
                         </Button>
@@ -212,7 +230,7 @@ const MyPage = () => {
             ))
           )}
 
-          {/* 추가: 물품 등록하기 버튼 */}
+          {/* 물품 등록하기 버튼 추가 */}
           {currentTab === 'selling' && (
             <article
               className="flex flex-col items-center justify-center w-[250px] h-[280px] bg-gray-100 rounded-md border-2 border-dashed border-light-gray cursor-pointer"
