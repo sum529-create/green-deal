@@ -1,6 +1,7 @@
 import React from 'react';
 
 const Input = ({
+  ref = null,
   type = 'text',
   value = '',
   name = '',
@@ -15,6 +16,7 @@ const Input = ({
 
   return (
     <input
+      ref={ref}
       type={type}
       value={value}
       name={name}

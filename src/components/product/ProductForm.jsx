@@ -12,10 +12,15 @@ import {
 } from '../../constants/productConstants';
 import { useProductForm } from '../../hooks/useProductForm';
 import { useState } from 'react';
+import { useRef } from 'react';
 
 const ProductForm = ({ product, onChangeProduct, onSubmit }) => {
   const { name, price, quality, refund, category, description } = product;
   const [isLocationModalOpen, setIsLocationModalOpen] = useState(false);
+
+  // Input ref들
+  const nameInputRef = useRef(null);
+  const priceInputRef = useRef(null);
 
   const { address, handleChange, handleSubmit, handleSelectLocation } =
     useProductForm(product, onChangeProduct);
@@ -25,12 +30,25 @@ const ProductForm = ({ product, onChangeProduct, onSubmit }) => {
     setIsLocationModalOpen(true);
   };
 
+  // input focus 이벤트 핸들러
+  const autoFocusHandler = () => {
+    console.log(name, price);
+
+    if (!name) {
+      return nameInputRef.current.focus();
+    }
+    if (!price) {
+      return priceInputRef.current.focus();
+    }
+  };
+
   return (
     <>
       <form
         className="space-y-4"
         onSubmit={(e) => {
           handleSubmit(e);
+          autoFocusHandler();
           onSubmit();
         }}
       >
@@ -38,6 +56,7 @@ const ProductForm = ({ product, onChangeProduct, onSubmit }) => {
         <div>
           <Label>판매 물품</Label>
           <Input
+            ref={nameInputRef}
             type="text"
             value={name}
             name="name"
@@ -54,6 +73,7 @@ const ProductForm = ({ product, onChangeProduct, onSubmit }) => {
               ₩
             </span>
             <Input
+              ref={priceInputRef}
               type="text"
               value={price}
               name="price"
