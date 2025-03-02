@@ -73,10 +73,6 @@ const Wishes = ({ productId }) => {
     },
   });
 
-  // 찜하기 여부확인
-  // const isWished = wishes?.some((wish) => wish.user_id === currentUser.id);
-  // const isWished = wishes && wishes?.length > 0;
-
   // 찜하기/해제 토글
   const handleWishToggle = () => {
     if (!currentUser) {
