@@ -19,7 +19,10 @@ export const addProduct = async (product, userId) => {
     user_id: userId,
   };
   // 업데이트된 상품 데이터 업로드
-  const { data, error } = await supabase.from('products').upsert(updatedProduct).select();
+  const { data, error } = await supabase
+    .from('products')
+    .upsert(updatedProduct)
+    .select();
   if (error) throw error;
   return { data, error };
 };

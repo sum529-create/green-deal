@@ -3,9 +3,11 @@ import { useState } from 'react';
 import Button from '../components/common/Button';
 import ProfileSection from '../components/mypage/ProfileSection';
 import useUserStore from '../store/userStore';
+import { useNavigate } from 'react-router-dom';
 
 const MyPage = () => {
   const user = useUserStore((state) => state.user);
+  const navigate = useNavigate();
 
   const [currentTab, setCurrentTab] = useState('selling');
   const [products, setProducts] = useState([
@@ -84,6 +86,11 @@ const MyPage = () => {
     }
   };
 
+  const handleNavigateToEdit = (productId) => {
+    // 상품 수정 페이지로 이동하는 함수
+    navigate(`/product/registration?productId=${productId}`);
+  };
+
   return (
     <div className="flex items-center justify-center min-h-screen gap-14">
       <section className="flex flex-col items-center justify-center gap-10 w-[400px] h-[830px] p-6 bg-light-gray rounded-md">
@@ -157,7 +164,12 @@ const MyPage = () => {
                     <Button type="button" variant="outline" size="medium">
                       삭제
                     </Button>
-                    <Button type="button" variant="primary" size="medium">
+                    <Button
+                      onClick={() => handleNavigateToEdit(item.id)}
+                      type="button"
+                      variant="primary"
+                      size="medium"
+                    >
                       수정
                     </Button>
                   </div>
