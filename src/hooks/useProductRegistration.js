@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { INITIAL_ADD_PRODUCT_DATA } from '../constants/productConstants';
 import useUserStore from '../store/userStore';
-import { useProduct } from './useProduct';
+import { useAddProduct } from './useAddProduct';
 
 /**
  * useProductRegistration
@@ -12,7 +12,11 @@ import { useProduct } from './useProduct';
 export const useProductRegistration = (onSuccess) => {
   const [product, setProduct] = useState(INITIAL_ADD_PRODUCT_DATA);
   const user = useUserStore((state) => state.user);
-  const { mutate, isLoading, error } = useProduct(product, user.id, onSuccess);
+  const { mutate, isLoading, error } = useAddProduct(
+    product,
+    user.id,
+    onSuccess,
+  );
   const handleImageChange = (newImg) => {
     setProduct((value) => ({
       ...value,
