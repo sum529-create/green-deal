@@ -28,7 +28,7 @@ const RememberMeCheckbox = ({ userEmail, setUserEmail }) => {
   /**
    * 체크박스 상태 변경 시 실행되는 핸들러
    * - 체크 시: 이메일을 쿠키에 저장
-   * - 체크 해제 시: 쿠키를 삭제하고 이메일 입력 필드를 초기화
+   * - 체크 해제 시: 쿠키에 저장된 이메일 삭제
    * @param {boolean} checked - 체크박스의 현재 상태 (true: 저장, false: 미저장)
    */
   const handleCheckboxChange = (checked) => {
