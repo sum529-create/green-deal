@@ -54,6 +54,7 @@ const KakaoMap = ({
         if (onLocationSelect) onLocationSelect(coords, detailAddr);
       } catch (error) {
         console.error('주소 검색 실패', error);
+        return alert('주소 검색에 실패했습니다. 다시 시도해주세요.');
       }
     };
     searchAddress(sendAddress);
@@ -82,6 +83,7 @@ const KakaoMap = ({
         setCenter(newLocation);
       } catch (error) {
         console.error('주소 변환 실패', error);
+        return alert('주소 변환에 실패했습니다. 다시 시도해주세요.');
       }
     }
   };
