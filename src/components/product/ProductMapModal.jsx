@@ -59,6 +59,26 @@ const ProductMapModal = ({ isOpen, onClose, onSelectLocation }) => {
               leaveTo="opacity-0 scale-95"
             >
               <DialogPanel className="w-full max-w-md p-6 overflow-hidden transition-all transform bg-white shadow-xl rounded-2xl">
+                {/* X 표시 (닫기 버튼) 추가 */}
+                <button
+                  onClick={onClose}
+                  className="absolute p-1 transition-colors rounded-full top-4 right-4 hover:bg-gray-100"
+                  aria-label="닫기"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="w-5 h-5 text-gray-500"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                </button>
+
                 <DialogTitle
                   as="h3"
                   className="mb-4 font-medium text-center text-title-sm text-deep-gray"
@@ -110,7 +130,7 @@ const ProductMapModal = ({ isOpen, onClose, onSelectLocation }) => {
                 {/* 하단 버튼 */}
                 <div className="flex justify-end gap-2 mt-4">
                   <Button variant="outline" onClick={cancelLocation}>
-                    취소
+                    초기화
                   </Button>
                   <Button
                     onClick={confirmLocation}
