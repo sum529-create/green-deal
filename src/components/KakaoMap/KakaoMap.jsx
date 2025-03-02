@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Map, MapMarker } from 'react-kakao-maps-sdk';
 import { getUserLocation } from '../../utils/getUserLocation';
-import { useRef } from 'react';
 import MyLocationMarker from './MyLocationMarker';
 import MapProductMarker from './MapProductMarker';
 import { MODE } from '../../constants/constants';
+import { useKakaoGeocoder } from '../../hooks/useKakaoGeocoder';
 
 const KakaoMap = ({
   level,
@@ -18,14 +18,7 @@ const KakaoMap = ({
   const [productInfo, setProductInfo] = useState(null);
   const [center, setCenter] = useState(location); // 지도의 중심 위치를 위한 상태
 
-  const geocoder = useRef(null);
-
-  // 지오코더 초기화
-  useEffect(() => {
-    if (window.kakao && window.kakao.maps) {
-      geocoder.current = new window.kakao.maps.services.Geocoder();
-    }
-  }, []);
+  const { addressToCoords, coordsToAddress } = useKakaoGeocoder();
 
   useEffect(() => {
     getUserLocation()
@@ -48,67 +41,48 @@ const KakaoMap = ({
     }
   }, [selectedProduct, productList]);
 
+  // 주소 검색 처리
   useEffect(() => {
     if (!sendAddress) return;
-    geocoder.current.addressSearch(sendAddress, (result, status) => {
-      if (status === window.kakao.maps.services.Status.OK) {
-        const coords = {
-          lat: result[0].y,
-          lng: result[0].x,
-        };
+    const searchAddress = async (address) => {
+      try {
+        const { coords } = await addressToCoords(address);
         setLocation(coords);
         setCenter(coords);
 
-        searchDetailAddrFromCoords(coords, (result2, status2) => {
-          if (status2 === window.kakao.maps.services.Status.OK) {
-            const detailAddr = [
-              result2[0].road_address?.address_name,
-              result2[0].address?.address_name,
-            ];
-            onLocationSelect(coords, detailAddr);
-          }
-        });
+        const detailAddr = await coordsToAddress(coords);
+        if (onLocationSelect) onLocationSelect(coords, detailAddr);
+      } catch (error) {
+        console.error('주소 검색 실패', error);
       }
-    });
-  }, [sendAddress]);
+    };
+    searchAddress(sendAddress);
+  }, [sendAddress, addressToCoords, coordsToAddress, onLocationSelect]);
 
-  function searchDetailAddrFromCoords(coords, callback) {
-    if (coords === null) return;
-
-    // 좌표로 법정동 상세 주소 정보를 요청합니다
-    geocoder.current.coord2Address(
-      coords?.getLng?.() ?? coords.lng,
-      coords?.getLat?.() ?? coords.lat,
-      callback,
-    );
-  }
-
-  // productList: MapProductModal 닫기 기능
-  // locationPicker: 위치 선택 모드에서 지도 클릭 시 위치 선택
-  const handleClickMap = (_, mouseEvent) => {
-    if (mode === 'productList') {
+  // 지도 클릭 핸들러
+  // mode: PRODUCTLIST - 상품 목록 모드, LOCATIONPICKER - 위치 선택 모드
+  const handleClickMap = async (_, mouseEvent) => {
+    if (mode === MODE.PRODUCTLIST) {
       setProductInfo(null);
-    } else if (mode === 'locationPicker') {
-      // 위치 선택 모드에서는 클릭한 위치 좌표를 상위 컴포넌트로 전달
+    }
+    if (mode === MODE.LOCATIONPICKER) {
       const latlng = mouseEvent.latLng;
       const newLocation = {
         lat: latlng.getLat(),
         lng: latlng.getLng(),
       };
 
-      searchDetailAddrFromCoords(latlng, (result, status) => {
-        if (status === window.kakao.maps.services.Status.OK) {
-          const detailAddr = [
-            result[0].road_address?.address_name,
-            result[0].address?.address_name,
-          ];
-          if (onLocationSelect) {
-            onLocationSelect(newLocation, detailAddr);
-          }
-          setLocation(newLocation);
-          setCenter(newLocation);
+      try {
+        const detailAddr = await coordsToAddress(latlng);
+
+        if (onLocationSelect) {
+          onLocationSelect(newLocation, detailAddr);
         }
-      });
+        setLocation(newLocation);
+        setCenter(newLocation);
+      } catch (error) {
+        console.error('주소 변환 실패', error);
+      }
     }
   };
 
@@ -130,7 +104,7 @@ const KakaoMap = ({
             />
           </>
         )}
-        {mode === 'locationPicker' && <MapMarker position={location} />}
+        {mode === MODE.LOCATIONPICKER && <MapMarker position={location} />}
       </Map>
     </div>
   );
