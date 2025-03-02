@@ -10,6 +10,7 @@ import SignUp from '../pages/SignUp';
 import PublicRoute from './PublicRoute';
 import PrivateRoute from './PrivateRoute';
 import Layout from '../components/layout/Layout';
+import AllowedRoute from './AllowedRoute';
 
 const Router = () => {
   const router = createBrowserRouter([
@@ -26,20 +27,25 @@ const Router = () => {
           element: <ProductList />,
         },
         {
-          path: '/product/detail/:id',
-          element: <ProductDetail />,
-        },
-        // 로그인 했을 때만 접근 가능
-        {
-          element: <PrivateRoute />,
+          element: <AllowedRoute />,
           children: [
             {
-              path: '/product/registration',
-              element: <ProductRegistration />,
+              path: '/product/detail/:id',
+              element: <ProductDetail />,
             },
+            // 로그인 했을 때만 접근 가능
             {
-              path: '/mypage',
-              element: <MyPage />,
+              element: <PrivateRoute />,
+              children: [
+                {
+                  path: '/product/registration',
+                  element: <ProductRegistration />,
+                },
+                {
+                  path: '/mypage',
+                  element: <MyPage />,
+                },
+              ],
             },
           ],
         },
