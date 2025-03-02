@@ -1,3 +1,4 @@
+import { useCallback } from 'react';
 import { useRef } from 'react';
 import { useEffect } from 'react';
 
@@ -12,7 +13,7 @@ export const useKakaoGeocoder = () => {
   }, []);
 
   // 주소로 좌표 검색
-  const addressToCoords = async (address) => {
+  const addressToCoords = useCallback(async (address) => {
     return new Promise((resolve, reject) => {
       // 주소로 좌표를 검색하여 좌표를 받아옴
       geocoder.current.addressSearch(address, (result, status) => {
@@ -26,10 +27,10 @@ export const useKakaoGeocoder = () => {
         }
       });
     });
-  };
+  }, []);
 
   // 좌표로 주소 검색
-  const coordsToAddress = async (coords) => {
+  const coordsToAddress = useCallback(async (coords) => {
     if (!geocoder.current || !coords) return;
     return new Promise((resolve, reject) => {
       // 좌표로 상세 주소 정보를 요청
@@ -48,7 +49,7 @@ export const useKakaoGeocoder = () => {
         },
       );
     });
-  };
+  }, []);
 
   return { addressToCoords, coordsToAddress };
 };
