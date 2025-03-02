@@ -1,15 +1,14 @@
 import React from 'react';
 
 const Input = ({
-  type,
-  value,
-  name,
+  type = 'text',
+  value = '',
+  name = '',
   inputMode = '',
-  onChange,
-  placeholder,
-  onKeyDown,
-  className,
-  defaultValue = '',
+  onChange = () => {},
+  placeholder = '',
+  onKeyDown = () => {},
+  className = '',
 }) => {
   const INPUT_DEFAULT_STYLE =
     'w-full p-2 border rounded-[10px] border-gray focus:outline-none focus:ring-1 focus:ring-graish-green';
@@ -18,7 +17,6 @@ const Input = ({
     <input
       type={type}
       value={value}
-      defaultValue={defaultValue}
       name={name}
       inputMode={inputMode}
       onChange={onChange}
