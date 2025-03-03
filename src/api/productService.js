@@ -18,7 +18,6 @@ export const getProducts = async (search = '') => {
 
   if (error) throw new Error(error.message);
 
-  console.log(data);
   return { data };
 };
 
