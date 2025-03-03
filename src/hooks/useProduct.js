@@ -54,12 +54,12 @@ export const useUpdateProduct = (
 };
 
 /**
- * useProductDetail
+ * useGetProductDetail
  * @description 상품 상세 정보 조회 mutation 작업을 처리하는 훅
  * @param {number} productId
  * @returns
  */
-export const useProductDetail = (productId) => {
+export const useGetProductDetail = (productId) => {
   return useQuery({
     queryKey: [QUERY_KEYS.PRODUCT.DETAIL, productId],
     queryFn: () => getProductDetail(productId),

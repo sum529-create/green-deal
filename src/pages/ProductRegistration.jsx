@@ -3,7 +3,7 @@ import ProductForm from '../components/product/ProductForm';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useProductRegistration } from '../hooks/useProductRegistration';
 import { useEffect } from 'react';
-import { useProductDetail } from '../hooks/useProduct';
+import { useGetProductDetail } from '../hooks/useProduct';
 
 const ProductRegistration = () => {
   const navigate = useNavigate();
@@ -31,7 +31,7 @@ const ProductRegistration = () => {
   } = useProductRegistration(onSuccess, productId);
 
   const { data: productData, error: productError } =
-    useProductDetail(productId);
+    useGetProductDetail(productId);
 
   useEffect(() => {
     if (productData) {
