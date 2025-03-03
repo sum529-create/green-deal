@@ -34,8 +34,9 @@ const ProductForm = ({ product, onChangeProduct, onSubmit, productId }) => {
     const getUserAddress = async () => {
       try {
         const detailAddr = await coordsToAddress(location);
+        const [roadAddress, lotAddress] = detailAddr;
 
-        setAddress(detailAddr[0] || detailAddr[1]);
+        setAddress(roadAddress || lotAddress);
       } catch (error) {
         alert('주소를 찾을 수 없습니다.');
         console.error(error);
