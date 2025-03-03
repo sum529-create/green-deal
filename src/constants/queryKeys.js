@@ -9,6 +9,10 @@ export const QUERY_KEYS = {
     LIST: ['comments'],
     CONTENT: ['comment'],
   },
+  //찜하기 관련 쿼리 키
+  WISH: {
+    LIST: ['wishes'],
+  },
   // 유저 관련 쿼리 키
   USER: ['user'],
 };
