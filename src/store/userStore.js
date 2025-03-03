@@ -7,8 +7,10 @@ const useUserStore = create(
     (set) => ({
       user: null,
       isLogin: false,
+      isLocationAllowed: false,
       setUser: (user) => set({ user, isLogin: true }),
       clearUser: () => set({ user: null, isLogin: false }),
+      setLocationAllowed: (isAllowed) => set({ isLocationAllowed: isAllowed }),
     }),
     {
       name: 'user-storage',
