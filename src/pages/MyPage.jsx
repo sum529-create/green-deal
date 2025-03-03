@@ -1,57 +1,24 @@
 import React from 'react';
 import { useState } from 'react';
-import { supabase } from '../api/client';
 import ProfileSection from '../components/mypage/ProfileSection';
 import useUserStore from '../store/userStore';
 import TabNav from '../components/mypage/TabNav';
 import MypageProductList from '../components/mypage/MypageProductList';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import {
-  fetchProducts,
-  fetchWishlist,
-  removeProduct,
-  removeWishItem,
-} from '../api/userProductService';
+import useUserProduct from '../hooks/useUserProduct';
 
 const MyPage = () => {
   const user = useUserStore((state) => state.user);
   const [currentTab, setCurrentTab] = useState('selling');
-
-  const queryClient = useQueryClient();
-
   const {
-    data: products,
-    isLoading: productsLoading,
-    isError: productsError,
-  } = useQuery({
-    queryKey: ['products', user?.id],
-    queryFn: () => fetchProducts(user),
-    enabled: !!user?.id,
-  });
-
-  const {
-    data: wishlist,
-    isLoading: wishlistLoading,
-    isError: wishlistError,
-  } = useQuery({
-    queryKey: ['wishlist', user?.id],
-    queryFn: () => fetchWishlist(user),
-    enabled: !!user?.id,
-  });
-
-  const { mutate: removeProductMutation } = useMutation({
-    mutationFn: (productId) => removeProduct(user, productId),
-    onSuccess: () => {
-      queryClient.invalidateQueries(['products', user?.id]);
-    },
-  });
-
-  const { mutate: removeWishItemMutation } = useMutation({
-    mutationFn: (wishId) => removeWishItem(wishId),
-    onSuccess: () => {
-      queryClient.invalidateQueries(['wishlist', user?.id]);
-    },
-  });
+    products,
+    productsLoading,
+    productsError,
+    wishlist,
+    wishlistLoading,
+    wishlistError,
+    removeProductMutation,
+    removeWishItemMutation,
+  } = useUserProduct(user);
 
   if (productsLoading || wishlistLoading) {
     return <div>Loading...</div>;

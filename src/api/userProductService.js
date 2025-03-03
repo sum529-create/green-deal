@@ -2,7 +2,6 @@ import { supabase } from './client';
 
 // 상품 불러오기
 export const fetchProducts = async (user) => {
-  if (!user?.id) return;
   const { data, error } = await supabase
     .from('products')
     .select('*')
@@ -16,7 +15,6 @@ export const fetchProducts = async (user) => {
 
 //찜한 상품 불러오기
 export const fetchWishlist = async (user) => {
-  if (!user?.id) return;
   const { data, error } = await supabase
     .from('wishes')
     .select('*, products(*)')
@@ -38,10 +36,6 @@ export const fetchWishlist = async (user) => {
 
 //상품 삭제하기
 export const removeProduct = async (user, productId) => {
-  if (!user?.id) {
-    return;
-  }
-
   const { error } = await supabase
     .from('products')
     .delete()
