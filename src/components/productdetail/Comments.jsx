@@ -2,12 +2,7 @@ import React from 'react';
 import { useParams } from 'react-router-dom';
 import CommentForm from './CommentForm';
 import CommentList from './CommentList';
-import {
-  useAddComment,
-  useDeleteComment,
-  useGetComments,
-  useUpdateComment,
-} from '../../hooks/useComment';
+import { useGetComments } from '../../hooks/useComment';
 
 const Comments = ({ seller }) => {
   const { id } = useParams();
@@ -15,12 +10,6 @@ const Comments = ({ seller }) => {
 
   // 댓글 목록 가져오기
   const { data: comments = [], isLoading, error } = useGetComments(productId);
-
-  // 댓글 수정
-  const updateCommentMutation = useUpdateComment(productId);
-
-  // 댓글 삭제
-  const deleteCommentMutation = useDeleteComment(productId);
 
   if (isLoading) {
     return <div>댓글 로딩중...</div>;
@@ -41,12 +30,7 @@ const Comments = ({ seller }) => {
       </div>
 
       {/* 댓글 목록 */}
-      <CommentList
-        comments={comments}
-        seller={seller}
-        updateCommentMutation={updateCommentMutation}
-        deleteCommentMutation={deleteCommentMutation}
-      />
+      <CommentList comments={comments} seller={seller} productId={productId} />
     </div>
   );
 };
