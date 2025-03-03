@@ -1,9 +1,11 @@
 import ProductImageUpload from '../components/product/ProductImageUpload';
 import ProductForm from '../components/product/ProductForm';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { useProductRegistration } from '../hooks/useProductRegistration';
 import { useEffect } from 'react';
-import { useGetProductDetail } from '../hooks/useProduct';
+import {
+  useGetProductDetail,
+  useProductRegistration,
+} from '../hooks/useProduct';
 
 const ProductRegistration = () => {
   const navigate = useNavigate();
