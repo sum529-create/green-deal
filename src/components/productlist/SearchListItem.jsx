@@ -18,10 +18,10 @@ const SearchListItem = ({ product, selectedProduct, setSelectedProduct }) => {
 
         <div className="flex items-center justify-center gap-2">
           <img
-            src={product.users.profile_img}
+            src={product.profile_img}
             className="w-10 h-10 rounded-full bg-deep-mint"
           ></img>
-          <span className="text-text-lg">{product.users.name}</span>
+          <span className="text-text-lg">{product.user_name}</span>
         </div>
       </div>
       <img
@@ -34,3 +34,5 @@ const SearchListItem = ({ product, selectedProduct, setSelectedProduct }) => {
 };
 
 export default SearchListItem;
+
+
