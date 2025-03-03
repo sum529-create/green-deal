@@ -4,9 +4,23 @@ import {
   addProduct,
   getProductWithSeller,
   setSoldoutProduct,
+  getProducts,
   getProductDetail,
   updateProduct,
 } from '../api/productService';
+
+/**
+ * useGetProduct
+ * @description 상품 정보를 가져오는 query 작업을 수행하는 훅
+ * @param {String} search - 검색어
+ * @returns
+ */
+export const useGetProducts = (search = '') => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.PRODUCT.LIST, search],
+    queryFn: () => getProducts(search),
+  });
+};
 
 /**
  * useAddProduct

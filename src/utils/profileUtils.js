@@ -10,7 +10,7 @@ export const validateNickname = (nickname, currentName) => {
   if (nickname === currentName) {
     return {
       valid: false,
-      isUnchanged: true, // 변경 없으면 그냥 다시 원래대로 (원래는 알럿창을 띄웠음)
+      isUnchanged: true,
     };
   }
   return { valid: true };
