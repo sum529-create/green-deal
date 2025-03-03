@@ -39,7 +39,17 @@ export const getProductWithSeller = async (productId) => {
     .select('*, users(*)')
     .eq('id', productId)
     .single();
-  if (error) throw new Error(error.message);
+
+  if (error) {
+    console.error(`상품(${productId}) 조회 오류: `, error.message);
+    return null;
+  }
+
+  if (!data) {
+    console.warn(`상품(${productId})을 찾을 수 없습니다.`);
+    return null;
+  }
+
   return data;
 };
 
