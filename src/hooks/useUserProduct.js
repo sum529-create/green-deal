@@ -5,6 +5,7 @@ import {
   removeProduct,
   removeWishItem,
 } from '../api/userProductService';
+import { QUERY_KEYS } from '../constants/queryKeys';
 
 const useUserProduct = (sub) => {
   const queryClient = useQueryClient();
@@ -14,7 +15,7 @@ const useUserProduct = (sub) => {
     isLoading: productsLoading,
     isError: productsError,
   } = useQuery({
-    queryKey: ['products', sub],
+    queryKey: [QUERY_KEYS.PRODUCT.LIST, sub],
     queryFn: () => fetchProducts(sub),
     enabled: !!sub,
   });
@@ -32,7 +33,7 @@ const useUserProduct = (sub) => {
   const { mutate: removeProductMutation } = useMutation({
     mutationFn: (productId) => removeProduct(sub, productId),
     onSuccess: () => {
-      queryClient.invalidateQueries(['products', sub]);
+      queryClient.invalidateQueries([QUERY_KEYS.PRODUCT.LIST, sub]);
     },
   });
 

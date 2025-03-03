@@ -1,82 +1,78 @@
-import { useState, useEffect } from 'react';
 import {
   checkNicknameDuplication,
   updateProfile,
   validateNickname,
 } from '../utils/profileUtils';
 import { fetchUserData } from '../api/userInfoService';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useState } from 'react';
+import { QUERY_KEYS } from '../constants/queryKeys';
 
 const useProfileInfo = (user) => {
-  const [userdata, setUserdata] = useState(null);
-  const [nickname, setNickname] = useState('');
-  const [isUpdating, setIsUpdating] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
+  const queryClient = useQueryClient();
+  const [localError, setLocalError] = useState(null);
 
-  useEffect(() => {
-    const getUserData = async () => {
-      if (!user?.id) return;
+  // 유저 데이터 조회
+  const { data: userdata } = useQuery({
+    queryKey: ['user', user?.id], //QUERY_KEYS.USER를 하면 적용이 안됨
+    queryFn: () => fetchUserData(user.id),
+    enabled: !!user?.id,
+    select: (data) => data.data,
+  });
 
-      const { data, error } = await fetchUserData(user.id);
+  // 프로필 업데이트
+  const updateProfileMutation = useMutation({
+    mutationFn: (newNickname) => updateProfile(newNickname, userdata),
+    onSuccess: () => {
+      queryClient.invalidateQueries(['user', user?.id]);
+    },
+  });
 
-      if (error) {
-        console.error('유저 데이터 가져오기 오류:', error);
-        return;
-      }
+  // 닉네임 중복 검사
+  const checkNicknameMutation = useMutation({
+    mutationFn: checkNicknameDuplication,
+  });
 
-      setUserdata(data);
-      setNickname(data.name);
-    };
+  // 프로필 업데이트 핸들러
+  const handleProfileUpdate = async (nickname, isUpdating) => {
+    if (!isUpdating) return { isUpdating: true };
 
-    getUserData();
-  }, [user]);
-
-  const handleProfileUpdate = async () => {
-    if (!isUpdating) {
-      setIsUpdating(true);
-      setErrorMessage('');
-      return;
-    }
-
-    if (!userdata?.user_id) {
-      alert('사용자 정보를 찾을 수 없습니다.');
-      setIsUpdating(false);
-      return;
-    }
+    setLocalError(null);
 
     // 유효성 검사
-    const validation = validateNickname(nickname, userdata.name);
+    const validation = validateNickname(nickname, userdata?.name);
     if (!validation.valid) {
-      setErrorMessage(validation.error);
-      validation.isUnchanged && setIsUpdating(false);
+      if (validation.isUnchanged) {
+        return { unchanged: true };
+      }
+      setLocalError(new Error(validation.error));
       return;
     }
 
     // 닉네임 중복 검사
-    const duplicationCheck = await checkNicknameDuplication(nickname);
-    if (!duplicationCheck.valid) {
-      setErrorMessage(duplicationCheck.error);
+    try {
+      await checkNicknameMutation.mutateAsync(nickname);
+    } catch (error) {
+      setLocalError(error);
       return;
     }
 
     // 프로필 업데이트
-    const result = await updateProfile(nickname, userdata);
-    if (result.success) {
-      setIsUpdating(false);
-      setUserdata((prev) => ({ ...prev, name: nickname }));
-      alert('프로필이 성공적으로 업데이트되었습니다.');
-    } else {
-      setErrorMessage(result.error);
+    try {
+      await updateProfileMutation.mutateAsync(nickname);
+    } catch (error) {
+      setLocalError(error);
+      return;
     }
+
+    return { success: true };
   };
 
   return {
     userdata,
-    nickname,
-    setNickname,
-    isUpdating,
-    errorMessage,
     handleProfileUpdate,
-    fetchUserData,
+    error:
+      localError || checkNicknameMutation.error || updateProfileMutation.error,
   };
 };
 
