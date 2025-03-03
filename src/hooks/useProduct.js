@@ -85,7 +85,13 @@ export const useGetProductDetail = (productId) => {
   });
 };
 
-export const useUserProduct = (sub) => {
+/**
+ * useUserProducts
+ * @description 유저의 상품 목록을 가져오는 훅
+ * @param {string} sub - user.id
+ * @returns {object}
+ */
+export const useUserProducts = (sub) => {
   const queryClient = useQueryClient();
 
   const {
@@ -98,6 +104,31 @@ export const useUserProduct = (sub) => {
     enabled: !!sub,
   });
 
+  const { mutate: removeProductMutation } = useMutation({
+    mutationFn: (productId) => removeProduct(sub, productId),
+    onSuccess: () => {
+      queryClient.invalidateQueries([QUERY_KEYS.PRODUCT.LIST, sub]);
+    },
+  });
+
+  return {
+    products,
+    productsLoading,
+    productsError,
+    removeProductMutation,
+  };
+};
+
+/**
+ * useUserWishlist
+ * @description 유저의 찜 목록을 가져오는 훅
+ * @param {string} sub - user.id
+ * @returns {object}
+ */
+
+export const useUserWishlist = (sub) => {
+  const queryClient = useQueryClient();
+
   const {
     data: wishlist,
     isLoading: wishlistLoading,
@@ -108,27 +139,17 @@ export const useUserProduct = (sub) => {
     enabled: !!sub,
   });
 
-  const { mutate: removeProductMutation } = useMutation({
-    mutationFn: (productId) => removeProduct(sub, productId),
-    onSuccess: () => {
-      queryClient.invalidateQueries([QUERY_KEYS.PRODUCT.LIST, sub]);
-    },
-  });
-
   const { mutate: removeWishItemMutation } = useMutation({
     mutationFn: (wishId) => removeWishItem(wishId),
     onSuccess: () => {
       queryClient.invalidateQueries(['wishlist', sub]);
     },
   });
+
   return {
-    products,
-    productsLoading,
-    productsError,
     wishlist,
     wishlistLoading,
     wishlistError,
-    removeProductMutation,
     removeWishItemMutation,
   };
 };

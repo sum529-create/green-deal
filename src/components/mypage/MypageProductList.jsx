@@ -1,21 +1,16 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import Button from '../common/Button';
-import { useUserProduct } from '../../hooks/useProduct';
+import { useUserProducts, useUserWishlist } from '../../hooks/useProduct';
 
 const MypageProductList = ({ currentTab, user }) => {
   const navigate = useNavigate();
 
-  const {
-    products,
-    productsLoading,
-    productsError,
-    wishlist,
-    wishlistLoading,
-    wishlistError,
-    removeProductMutation,
-    removeWishItemMutation,
-  } = useUserProduct(user?.id);
+  const { products, productsLoading, productsError, removeProductMutation } =
+    useUserProducts(user?.id);
+
+  const { wishlist, wishlistLoading, wishlistError, removeWishItemMutation } =
+    useUserWishlist(user?.id);
 
   const getFilteredItems = () => {
     if (!products || !wishlist) return [];
