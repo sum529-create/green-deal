@@ -27,9 +27,9 @@ export const getAddressFromCoordinates = async (lat, lng) => {
 
 /**
  * formatAddress
- * @description Nominatim API에서 받은 주소를 사람이 읽기 좋은 형식으로 변환하는 함수
- * @param {string} rawAddress - Nominatim API에서 제공하는 원본 주소
- * @returns {string} - 포맷된 주소
+ * @description StreetMap API에서 받은 주소를 한국 주소형식으로 변경
+ * @param {string} rawAddress - StreetMap API에서 제공하는 원본 주소
+ * @returns {string} - 변환된 주소
  */
 const formatAddress = (rawAddress) => {
   let addressParts = rawAddress.split(',').map((part) => part.trim());
@@ -39,6 +39,6 @@ const formatAddress = (rawAddress) => {
     addressParts = addressParts.slice(0, -1);
   }
 
-  // 배열을 다시 조합하여 올바른 순서로 변환
-  return addressParts.reverse().join(' '); // 올바른 순서로 공백으로 결합
+  // 배열을 다시 조합하여 한국표현 순서로 변환
+  return addressParts.reverse().join(' ');
 };
