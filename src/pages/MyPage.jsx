@@ -1,5 +1,6 @@
 import React from 'react';
 import { useState } from 'react';
+import { supabase } from '../api/client';
 import ProfileSection from '../components/mypage/ProfileSection';
 import useUserStore from '../store/userStore';
 import TabNav from '../components/mypage/TabNav';
@@ -24,7 +25,7 @@ const MyPage = () => {
     isError: productsError,
   } = useQuery({
     queryKey: ['products', user?.id],
-    queryFn: fetchProducts,
+    queryFn: () => fetchProducts(user),
     enabled: !!user?.id,
   });
 
@@ -34,19 +35,19 @@ const MyPage = () => {
     isError: wishlistError,
   } = useQuery({
     queryKey: ['wishlist', user?.id],
-    queryFn: fetchWishlist,
+    queryFn: () => fetchWishlist(user),
     enabled: !!user?.id,
   });
 
   const { mutate: removeProductMutation } = useMutation({
-    mutationFn: removeProduct,
+    mutationFn: (productId) => removeProduct(user, productId),
     onSuccess: () => {
       queryClient.invalidateQueries(['products', user?.id]);
     },
   });
 
   const { mutate: removeWishItemMutation } = useMutation({
-    mutationFn: removeWishItem,
+    mutationFn: (wishId) => removeWishItem(wishId),
     onSuccess: () => {
       queryClient.invalidateQueries(['wishlist', user?.id]);
     },
