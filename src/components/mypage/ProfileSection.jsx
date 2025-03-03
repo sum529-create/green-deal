@@ -10,7 +10,6 @@ const ProfileSection = ({ user }) => {
   const { userdata, handleProfileUpdate, error, reset } = useProfileInfo(user);
   const { imageUrl, handleImageChange } = useProfileImage(userdata);
 
-  // 닉네임 초기화
   useEffect(() => {
     if (userdata?.name) {
       setNickname(userdata.name);

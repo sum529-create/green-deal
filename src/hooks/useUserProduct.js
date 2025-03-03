@@ -25,7 +25,7 @@ const useUserProduct = (sub) => {
     isLoading: wishlistLoading,
     isError: wishlistError,
   } = useQuery({
-    queryKey: ['wishlist', sub],
+    queryKey: ['wishlist', sub], //'wishlist'는 추후 변경
     queryFn: () => fetchWishlist(sub),
     enabled: !!sub,
   });
