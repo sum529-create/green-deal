@@ -1,8 +1,8 @@
 import React from 'react';
 import KakaoMap from '../components/KakaoMap/KakaoMap';
 import { useState } from 'react';
-import SearchBar from '../components/ProductList/SearchBar';
-import SearchList from '../components/ProductList/SearchList';
+import SearchBar from '../components/productList/SearchBar';
+import SearchList from '../components/productList/SearchList';
 import { useGetProducts } from '../hooks/useProduct';
 import AllowedRoute from '../routes/AllowedRoute';
 import HighlightText from '../components/common/HighlightText';
@@ -10,7 +10,6 @@ import HighlightText from '../components/common/HighlightText';
 const ProductList = () => {
   const [search, setSearch] = useState('');
   const [selectedProduct, setSelectedProduct] = useState(null);
-
   const { data: products, isLoading } = useGetProducts(search);
 
   return (
