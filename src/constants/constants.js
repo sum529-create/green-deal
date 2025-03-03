@@ -5,3 +5,5 @@ export const MODE = {
   LOCATIONPICKER: 'locationPicker',
 };
 
+// 도로명 주소변환 URL
+export const STREETMAP_API_URL = 'https://nominatim.openstreetmap.org';

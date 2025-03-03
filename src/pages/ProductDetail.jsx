@@ -8,6 +8,7 @@ import ProductInfo from '../components/productdetail/ProductInfo';
 import ProductDescription from '../components/productdetail/ProductDescription';
 import Comments from '../components/productdetail/Comments';
 import { useProductWithSeller, useSoldoutProduct } from '../hooks/useProduct';
+import { useGeocode } from '../hooks/useGeocode';
 
 const ProductDetail = () => {
   // 로그인한 유저 정보
@@ -18,6 +19,12 @@ const ProductDetail = () => {
 
   // 상품 및 판매자 데이터 가져오기
   const { data: product, error, isLoading } = useProductWithSeller(productId);
+
+  // 위도, 경도로 주소 가져오기
+  const { data: address, isLoading: isAddressLoading } = useGeocode(
+    product?.location?.lat,
+    product?.location?.lng,
+  );
 
   // 상품 판매 완료 처리
   const { mutate: handleCheckAsSoldout } = useSoldoutProduct(productId);
@@ -91,7 +98,9 @@ const ProductDetail = () => {
                 KKO MAP
               </div>
               <p className="text-sm text-deep-gray">
-                서울특별시 강남구 테헤란로 44길 8
+                {isAddressLoading
+                  ? '주소 변환 중...'
+                  : address || '주소를 찾을 수 없습니다.'}
               </p>
             </div>
 
