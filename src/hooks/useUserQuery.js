@@ -1,5 +1,9 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { fetchUserData } from '../api/userInfoService';
+import {
+  fetchUserData,
+  updateProfileImage,
+  uploadProfileImage,
+} from '../api/userInfoService';
 import { QUERY_KEYS } from '../constants/queryKeys';
 import { useState } from 'react';
 import {
@@ -9,12 +13,9 @@ import {
 } from '../utils/profileUtils';
 import {
   ALLOWED_IMAGE_TYPES,
-  BUCKET_NAME,
   MAX_FILE_SIZE,
   PRODUCT_DEFAULT_IMG,
-  PROFILES_DIRECTORY,
 } from '../constants/mypageConstants';
-import { supabase } from '../api/client';
 
 /**
  * 특정 사용자의 데이터를 가져오는 React Query 훅
@@ -108,33 +109,11 @@ export const useProfileImage = (userdata) => {
   const queryClient = useQueryClient();
 
   const uploadImageMutation = useMutation({
-    mutationFn: async (file) => {
-      const fileName = `${Date.now()}-${Math.floor(Math.random() * 100000)}.${file.name.split('.').pop()}`;
-      const filePath = `${PROFILES_DIRECTORY}/${fileName}`;
-
-      const { error } = await supabase.storage
-        .from(BUCKET_NAME)
-        .upload(filePath, file, { upsert: false });
-
-      if (error) throw error;
-
-      const { data: urlData } = await supabase.storage
-        .from(BUCKET_NAME)
-        .getPublicUrl(filePath);
-
-      return urlData.publicUrl;
-    },
+    mutationFn: uploadProfileImage,
   });
 
   const updateProfileImageMutation = useMutation({
-    mutationFn: async (imageUrl) => {
-      const { error } = await supabase
-        .from('users')
-        .update({ profile_img: imageUrl })
-        .eq('user_id', userdata.user_id);
-
-      if (error) throw error;
-    },
+    mutationFn: (imageUrl) => updateProfileImage(imageUrl, userdata.user_id),
     onSuccess: () => {
       queryClient.invalidateQueries(['user', userdata?.user_id]);
     },

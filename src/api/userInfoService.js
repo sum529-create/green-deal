@@ -1,3 +1,4 @@
+import { BUCKET_NAME, PROFILES_DIRECTORY } from '../constants/mypageConstants';
 import { supabase } from './client';
 
 /**
@@ -29,4 +30,54 @@ export const checkNickname = async (nickname) => {
     .eq('name', nickname);
 
   return { data, error };
+};
+
+/**
+ * 프로필 닉네임 업데이트
+ * @param {string} newNickname
+ * @param {string} userId - 사용자 ID
+ * @returns
+ */
+export const updateProfileNickname = async (newNickname, userId) => {
+  const { error } = await supabase
+    .from('users')
+    .update({ name: newNickname })
+    .eq('user_id', userId);
+
+  return { error };
+};
+
+/**
+ * 프로필 이미지 업로드
+ * @param {File} file - 업로드할 이미지 파일
+ * @returns
+ */
+export const uploadProfileImage = async (file) => {
+  const fileName = `${Date.now()}-${Math.floor(Math.random() * 100000)}.${file.name.split('.').pop()}`;
+  const filePath = `${PROFILES_DIRECTORY}/${fileName}`;
+
+  const { error } = await supabase.storage
+    .from(BUCKET_NAME)
+    .upload(filePath, file, { upsert: false });
+
+  const { data: urlData } = await supabase.storage
+    .from(BUCKET_NAME)
+    .getPublicUrl(filePath);
+
+  return urlData.publicUrl;
+};
+
+/**
+ * 프로필 이미지 업데이트
+ * @param {string} imageUrl - 업로드된 이미지 URL
+ * @param {string} userId - 유저 ID
+ * @returns
+ */
+export const updateProfileImage = async (imageUrl, userId) => {
+  const { error } = await supabase
+    .from('users')
+    .update({ profile_img: imageUrl })
+    .eq('user_id', userId);
+
+  return { error };
 };

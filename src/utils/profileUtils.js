@@ -1,5 +1,5 @@
 import { supabase } from '../api/client';
-import { checkNickname } from '../api/userInfoService';
+import { checkNickname, updateProfileNickname } from '../api/userInfoService';
 import { ERROR_MESSAGES } from '../constants/mypageConstants';
 
 // 유효성 검사
@@ -31,10 +31,7 @@ export const checkNicknameDuplication = async (nickname) => {
 
 // 프로필 업데이트
 export const updateProfile = async (nickname, userdata) => {
-  const { error } = await supabase
-    .from('users')
-    .update({ name: nickname })
-    .eq('user_id', userdata.user_id);
+  const { error } = await updateProfileNickname(nickname, userdata.user_id);
 
   if (error) {
     console.error('프로필 업데이트 오류:', error.message);
