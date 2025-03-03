@@ -1,9 +1,9 @@
 import {
-  fetchProducts,
-  fetchWishlist,
+  getMyProducts,
+  getMyWishlist,
   removeProduct,
   removeWishItem,
-} from '../api/userProductService';
+} from '../api/productService';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { QUERY_KEYS } from '../constants/queryKeys';
 
@@ -16,7 +16,7 @@ const useUserProduct = (sub) => {
     isError: productsError,
   } = useQuery({
     queryKey: [QUERY_KEYS.PRODUCT.LIST, sub],
-    queryFn: () => fetchProducts(sub),
+    queryFn: () => getMyProducts(sub),
     enabled: !!sub,
   });
 
@@ -26,7 +26,7 @@ const useUserProduct = (sub) => {
     isError: wishlistError,
   } = useQuery({
     queryKey: ['wishlist', sub], //'wishlist'는 추후 변경
-    queryFn: () => fetchWishlist(sub),
+    queryFn: () => getMyWishlist(sub),
     enabled: !!sub,
   });
 
