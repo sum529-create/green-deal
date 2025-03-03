@@ -42,6 +42,7 @@ export const useProductForm = (product, onChangeProduct) => {
 
   return {
     address,
+    setAddress,
     handleChange,
     handleSubmit,
     handleSelectLocation,

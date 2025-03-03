@@ -2,7 +2,7 @@ import { uploadProductImage } from '../utils/uploadProductImage';
 import { supabase } from './client';
 
 /**
- * productService
+ * addProduct
  * @description 상품 등록 서비스
  * @param {object} product - 상품 데이터
  * @param {string} userId - 사용자 ID
@@ -28,41 +28,54 @@ export const addProduct = async (product, userId) => {
 };
 
 /**
- * getProduct
- * @description 특정 상품의 상세 정보를 가져오는 서비스
- * @param {string} productId - 조회할 상품 ID
- * @returns {Promise<object>} - 상품 데이터 반환
+ * updateProduct
+ * @description 상품 등록 서비스
+ * @param {object} product
+ * @param {string} userId
+ * @param {number} productId
+ * @returns
  */
-export const getProductWithSeller = async (productId) => {
+export const updateProduct = async (product, userId, productId) => {
+  // 이미지 업로드
+  const file = product.img;
+  let imgUrl;
+  if (file.name) {
+    imgUrl = await uploadProductImage(file, userId);
+  } else {
+    imgUrl = file;
+  }
+  // 새 product 객체 생성
+  const updatedProduct = {
+    ...product,
+    img: imgUrl,
+    user_id: userId,
+    id: productId,
+    updated_at: new Date().toISOString(),
+  };
+  // 상품 업데이트
   const { data, error } = await supabase
     .from('products')
-    .select('*, users(*)')
+    .update(updatedProduct)
     .eq('id', productId)
-    .single();
+    .select();
 
-  if (error) {
-    console.error(`상품(${productId}) 조회 오류: `, error.message);
-    return null;
-  }
-
-  if (!data) {
-    console.warn(`상품(${productId})을 찾을 수 없습니다.`);
-    return null;
-  }
-
-  return data;
+  if (error) throw error;
+  return { data, error };
 };
 
 /**
- * setSoldoutProduct
- * @description 특정 상품을 '판매 완료' 상태로 변경하는 서비스
- * @param {string} product_id - 판매 완료 처리할 상품 ID
- * @return {Promise<object>} - 업데이트 결과
+ * getProductDetail
+ * @description 상품 상세 데이터 조회
+ * @param {number} productId
+ * @returns
  */
-export const setSoldoutProduct = async (productId) => {
+export const getProductDetail = async (productId) => {
   const { data, error } = await supabase
     .from('products')
-    .update({ soldout: true })
-    .eq('id', productId);
-  if (error) throw new Error(error.message);
+    .select('*')
+    .eq('id', productId)
+    .single();
+
+  if (error) throw error;
+  return data;
 };
