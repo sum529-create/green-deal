@@ -2,6 +2,8 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { QUERY_KEYS } from '../constants/queryKeys';
 import {
   addProduct,
+  getProductWithSeller,
+  setSoldoutProduct,
   getProducts,
   getProductDetail,
   updateProduct,
