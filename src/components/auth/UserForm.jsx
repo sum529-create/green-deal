@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
+import { useCookies } from 'react-cookie';
 import { authSignIn, authSignUp } from '../../api/userAuthService';
 import UserInput from './UserInput';
 import {
@@ -9,36 +10,46 @@ import {
   validatePassword,
   validateUserName,
 } from '../../utils/validateUserInputs';
-import { supabase } from '../../api/client';
 import useUserStore from '../../store/userStore';
+import RememberMeCheckbox from './RememberMeCheckbox';
+import { checkNickname } from '../../api/userInfoService';
 
+/**
+ * @component UserForm
+ * @description 로그인 및 회원가입을 위한 사용자 입력 폼 컴포넌트
+ * @returns {JSX.Element} 이메일, 닉네임(회원가입 시), 비밀번호 입력 필드를 포함한 폼을 렌더링
+ */
 const UserForm = () => {
   const pageParams = useLocation().pathname.split('/')[1];
   const navigate = useNavigate();
-  const [CheckedDuplication, setCheckedDuplication] = useState(false);
   const setUser = useUserStore((state) => state.setUser);
+  const [CheckedDuplication, setCheckedDuplication] = useState(false);
+  const [cookies] = useCookies(['rememberUserId']);
 
   const {
     register,
     handleSubmit,
     watch,
+    setValue,
     formState: { errors, isValid },
-  } = useForm({ mode: 'onChange' });
+  } = useForm({
+    mode: 'onChange',
+    defaultValues: { email: cookies.rememberUserId || '' },
+  });
 
-  // 닉네임 입력값 실시간 감지 - 중복 검사에서 사용
+  const userEmailValue = watch('email');
   const userNameValue = watch('userName');
 
-  // 닉네임 중복 확인
+  /**
+   * 닉네임 중복 확인
+   * @async
+   */
   const onHandleDuplication = async () => {
     if (!userNameValue || userNameValue.length < 3) {
       alert('닉네임은 3글자 이상이어야 합니다.');
       return;
     }
-
-    const { data, error } = await supabase
-      .from('users')
-      .select('name')
-      .eq('name', userNameValue); // 특정 닉네임이 존재하는지 확인
+    const { data, error } = await checkNickname(userNameValue);
 
     if (error) {
       console.error('닉네임 확인 오류:', error);
@@ -57,11 +68,18 @@ const UserForm = () => {
     }
   };
 
-  // 닉네임 입력란에 변동이 있으면 중복 검사 상태 초기화
+  /**
+   * 닉네임 입력값이 변경될 때 중복 검사 상태 초기화
+   */
   useEffect(() => {
     setCheckedDuplication(false);
   }, [userNameValue]);
 
+  /**
+   * 회원가입 처리
+   * @async
+   * @param {Object} userInputData - 사용자 입력 데이터
+   */
   const handleUserSignUp = async (userInputData) => {
     try {
       const { email, password, userName } = userInputData;
@@ -86,11 +104,15 @@ const UserForm = () => {
       } else {
         alert('회원가입 에러 : ' + error.message);
       }
-
       return;
     }
   };
 
+  /**
+   * 로그인 처리
+   * @async
+   * @param {Object} userInputData - 사용자 입력 데이터
+   */
   const handleUserSignIn = async (userInputData) => {
     try {
       const { email, password } = userInputData;
@@ -108,6 +130,11 @@ const UserForm = () => {
     }
   };
 
+  /**
+   * 폼 제출 핸들러
+   * @async
+   * @param {Object} userInputData - 사용자 입력 데이터
+   */
   const onSubmit = async (userInputData) => {
     if (pageParams === 'signup') {
       handleUserSignUp(userInputData);
@@ -153,6 +180,14 @@ const UserForm = () => {
         errors={errors}
         validateFn={validatePassword}
       ></UserInput>
+
+      {/* 로그인 페이지 일 경우에만 이메일 저장 체크박스 노출 */}
+      {pageParams === 'signin' && (
+        <RememberMeCheckbox
+          userEmail={userEmailValue}
+          setUserEmail={(email) => setValue('email', email)}
+        />
+      )}
       <button
         type="submit"
         className="py-[8px] rounded-[8px] text-lg text-white bg-deep-mint disabled:bg-light-gray"

@@ -4,6 +4,7 @@ import { useState } from 'react';
 import SearchBar from '../components/ProductList/SearchBar';
 import SearchList from '../components/ProductList/SearchList';
 import { useGetProducts } from '../hooks/useProduct';
+import AllowedRoute from '../routes/AllowedRoute';
 
 const ProductList = () => {
   const [search, setSearch] = useState('');
@@ -13,7 +14,7 @@ const ProductList = () => {
 
   if (isLoading) return <div>로딩 중...</div>;
   if (isError) return <div>에러 발생</div>;
-
+  
   const filteredProducts = products.data.filter((product) =>
     product.name.includes(search),
   );
@@ -26,19 +27,18 @@ const ProductList = () => {
           filteredProducts={filteredProducts || []}
           selectedProduct={selectedProduct}
           setSelectedProduct={setSelectedProduct}
-          setSearch={setSelectedProduct}
         />
       </div>
       <div className="flex flex-col w-full md:w-3/4">
         <span className="p-4 text-2xl">지금 우리 동네 인기 매물 TOP 20</span>
-        <div className="flex-grow full min-h-[400px]">
+        <AllowedRoute>
           <KakaoMap
             level={5}
             mode={'productList'}
             productList={products.data}
             selectedProduct={selectedProduct}
           />
-        </div>
+        </AllowedRoute>
       </div>
     </div>
   );
