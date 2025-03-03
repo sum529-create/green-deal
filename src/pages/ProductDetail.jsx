@@ -9,7 +9,6 @@ import ProductDescription from '../components/productdetail/ProductDescription';
 import Comments from '../components/productdetail/Comments';
 import { useProductWithSeller, useSoldoutProduct } from '../hooks/useProduct';
 import { useGeocode } from '../hooks/useGeocode';
-import KakaoMap from '../components/KakaoMap/KakaoMap';
 import ProductLocation from '../components/productdetail/ProductLocation';
 
 const ProductDetail = () => {
@@ -61,6 +60,9 @@ const ProductDetail = () => {
   // 로그인 유저가 상품의 작성자인지 확인
   const isOwner = isLogin && currentUser?.id === product.user_id;
 
+  // hr 태그 css
+  const HR_BORDER_CSS = 'border-t-1 border-light-gray';
+
   return (
     <div className="w-7xl">
       <div className="flex gap-12 p-8 mx-auto bg-white h-[860px]">
@@ -78,18 +80,18 @@ const ProductDetail = () => {
           {/* 상품 정보 헤더 컴포넌트 */}
           <ProductHeader product={product} />
 
-          <hr className="border-t-1 border-light-gray" />
+          <hr className={HR_BORDER_CSS} />
 
           {/* 판매자 정보 컴포넌트 */}
           <SellerInfo seller={product.users} />
 
-          <hr className="border-t-1 border-light-gray" />
+          <hr className={HR_BORDER_CSS} />
 
           <div className="flex flex-col w-[600px]">
             {/* 상품 상세 정보 컴포넌트 */}
             <ProductInfo product={product} />
 
-            <hr className="border-t-1 border-light-gray" />
+            <hr className={HR_BORDER_CSS} />
 
             {/* 상품 설명 컴포넌트 */}
             <ProductDescription product={product} />
