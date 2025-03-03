@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
 import Button from '../common/Button';
 import useUserStore from '../../store/userStore';
-import { supabase } from '../../api/client';
 import { useQueryClient } from '@tanstack/react-query';
 
 const CommentList = ({
   comments,
-  users,
   seller,
   updateCommentMutation,
   deleteCommentMutation,
@@ -48,9 +46,8 @@ const CommentList = ({
       {comments.length > 0 ? (
         comments.map((comment) => {
           // 댓글 작성자 찾기
-          const user = users.find(
-            (user) => user.user_id.toString() === comment.user_id,
-          );
+          const user = comment.users;
+
           // 현재 로그인한 사용자가 댓글 작성자인지 확인
           const isAuthor = currentUser?.id === comment.user_id;
 

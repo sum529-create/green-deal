@@ -11,3 +11,6 @@ export const MODE = {
  */
 export const COOKIE_EXPIRE_DATE = new Date();
 COOKIE_EXPIRE_DATE.setDate(COOKIE_EXPIRE_DATE.getDate() + 7);
+
+// 도로명 주소변환 URL
+export const STREETMAP_API_URL = 'https://nominatim.openstreetmap.org';

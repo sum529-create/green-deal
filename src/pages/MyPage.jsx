@@ -1,4 +1,3 @@
-import React from 'react';
 import { useState } from 'react';
 import ProfileSection from '../components/mypage/ProfileSection';
 import useUserStore from '../store/userStore';
