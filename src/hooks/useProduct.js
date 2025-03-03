@@ -2,9 +2,24 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { QUERY_KEYS } from '../constants/queryKeys';
 import {
   addProduct,
+  getProducts
   getProductDetail,
   updateProduct,
 } from '../api/productService';
+
+
+/**
+ * useGetProduct
+ * @description 상품 정보를 가져오는 query 작업을 수행하는 훅
+ * @param {String} search - 검색어
+ * @returns
+ */
+export const useGetProducts = (search = '') => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.PRODUCT.LIST, search],
+    queryFn: () => getProducts(search),
+  });
+};
 
 /**
  * useAddProduct

@@ -21,7 +21,7 @@ const MapProductModal = ({ product, productInfo }) => {
             </div>
             <div className="text-xs text-gray-500">
               {[
-                product.users.name,
+                product.user_name,
                 dayjs(product.createdAt).format('YY.MM.DD'),
               ].join(' ')}
             </div>

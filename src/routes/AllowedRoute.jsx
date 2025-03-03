@@ -10,12 +10,10 @@ const AllowedRoute = ({ children }) => {
   const setLocationAllowed = useUserStore((state) => state.setLocationAllowed);
   useEffect(() => {
     getUserLocation()
-      .then((data) => {
-        console.log(data);
+      .then(() => {
         setLocationAllowed(true);
       })
-      .catch((error) => {
-        console.log(error);
+      .catch(() => {
         setLocationAllowed(false);
       });
   }, [isLocationAllowed]);
@@ -28,7 +26,7 @@ const AllowedRoute = ({ children }) => {
         </h1>
       </div>
     ) : (
-      <div className="flex-grow full min-h-[400px]">{children}</div>
+      <div className="flex-grow full min-h-[400px] rounded-lg overflow-hidden border border-light-gray m-10">{children}</div>
     );
   }
   return isLocationAllowed ? <Outlet /> : <Navigate to="/product" />;

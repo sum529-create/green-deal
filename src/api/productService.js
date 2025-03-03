@@ -1,6 +1,26 @@
 import { uploadProductImage } from '../utils/uploadProductImage';
 import { supabase } from './client';
 
+export const getProducts = async (search = '') => {
+  let data, error;
+
+  if (search) {
+    // 검색어가 있을 때: ilike로 검색
+    ({ data, error } = await supabase
+      .from('products_with_users')
+      .select('*')
+      .ilike('name', `%${search}%`)
+      .limit(10));
+  } else {
+    // 검색어가 없을 때: 찜 개수 기준 정렬된 데이터 가져오기
+    ({ data, error } = await supabase.rpc('get_products_with_wishes'));
+  }
+
+  if (error) throw new Error(error.message);
+
+  return { data };
+};
+
 /**
  * addProduct
  * @description 상품 등록 서비스
