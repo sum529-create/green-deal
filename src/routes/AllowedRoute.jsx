@@ -10,12 +10,10 @@ const AllowedRoute = ({ children }) => {
   const setLocationAllowed = useUserStore((state) => state.setLocationAllowed);
   useEffect(() => {
     getUserLocation()
-      .then((data) => {
-        console.log(data);
+      .then(() => {
         setLocationAllowed(true);
       })
-      .catch((error) => {
-        console.log(error);
+      .catch(() => {
         setLocationAllowed(false);
       });
   }, [isLocationAllowed]);
