@@ -6,9 +6,8 @@ import {
   removeWishItem,
 } from '../api/userProductService';
 
-const useUserProduct = (user) => {
+const useUserProduct = (sub) => {
   const queryClient = useQueryClient();
-  const sub = user?.id;
 
   const {
     data: products,
@@ -16,7 +15,7 @@ const useUserProduct = (user) => {
     isError: productsError,
   } = useQuery({
     queryKey: ['products', sub],
-    queryFn: () => fetchProducts(user),
+    queryFn: () => fetchProducts(sub),
     enabled: !!sub,
   });
 
@@ -26,12 +25,12 @@ const useUserProduct = (user) => {
     isError: wishlistError,
   } = useQuery({
     queryKey: ['wishlist', sub],
-    queryFn: () => fetchWishlist(user),
+    queryFn: () => fetchWishlist(sub),
     enabled: !!sub,
   });
 
   const { mutate: removeProductMutation } = useMutation({
-    mutationFn: (productId) => removeProduct(user, productId),
+    mutationFn: (productId) => removeProduct(sub, productId),
     onSuccess: () => {
       queryClient.invalidateQueries(['products', sub]);
     },

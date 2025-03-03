@@ -1,11 +1,11 @@
 import { supabase } from './client';
 
 // 상품 불러오기
-export const fetchProducts = async (user) => {
+export const fetchProducts = async (sub) => {
   const { data, error } = await supabase
     .from('products')
     .select('*')
-    .eq('user_id', user.id)
+    .eq('user_id', sub)
     .order('created_at', { ascending: false });
   if (error) {
     throw new Error('상품 데이터 가져오기 오류:', error.message);
@@ -14,11 +14,11 @@ export const fetchProducts = async (user) => {
 };
 
 //찜한 상품 불러오기
-export const fetchWishlist = async (user) => {
+export const fetchWishlist = async (sub) => {
   const { data, error } = await supabase
     .from('wishes')
     .select('*, products(*)')
-    .eq('user_id', user.id)
+    .eq('user_id', sub)
     .order('created_at', { ascending: false });
 
   if (error) {
@@ -35,12 +35,12 @@ export const fetchWishlist = async (user) => {
 };
 
 //상품 삭제하기
-export const removeProduct = async (user, productId) => {
+export const removeProduct = async (sub, productId) => {
   const { error } = await supabase
     .from('products')
     .delete()
     .eq('id', productId)
-    .eq('user_id', user.id);
+    .eq('user_id', sub);
 
   if (error) {
     throw new Error('상품 삭제 오류:', error.message);

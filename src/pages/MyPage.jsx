@@ -18,7 +18,7 @@ const MyPage = () => {
     wishlistError,
     removeProductMutation,
     removeWishItemMutation,
-  } = useUserProduct(user);
+  } = useUserProduct(user?.id);
 
   if (productsLoading || wishlistLoading) {
     return <div>Loading...</div>;

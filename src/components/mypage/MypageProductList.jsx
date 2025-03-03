@@ -45,16 +45,15 @@ const MypageProductList = ({
         <article
           key={item.id}
           onClick={(e) => {
-            if (e.target.tagName === 'BUTTON') return;
+            if (e.target.tagName === 'BUTTON') {
+              return;
+            }
             navigate(`/product/detail/${item.id}`);
           }}
           className="flex flex-col items-center justify-center w-[250px] h-[280px] bg-gray-100 rounded-md border-2 border-light-gray hover:cursor-pointer hover:shadow-lg"
         >
           <img
-            src={
-              item.img ||
-              'https://tzmzehldetwvzvqvprsn.supabase.co/storage/v1/object/public/profileImg/profiles/1740753032690-38589.png'
-            }
+            src={item.img}
             alt={item.name}
             className="object-cover w-full h-[160px] rounded-t-md bg-white"
           />
