@@ -5,6 +5,8 @@ import ProfileSection from '../components/mypage/ProfileSection';
 import useUserStore from '../store/userStore';
 import { supabase } from '../api/client';
 import { useNavigate } from 'react-router-dom';
+import TabNav from '../components/mypage/TabNav';
+import { current } from 'immer';
 
 const MyPage = () => {
   const user = useUserStore((state) => state.user);
@@ -114,44 +116,7 @@ const MyPage = () => {
     <div className="flex items-center justify-center min-h-screen gap-14">
       <section className="flex flex-col items-center justify-center gap-10 w-[400px] h-[830px] p-6 bg-light-gray rounded-md">
         <ProfileSection user={user} />
-
-        <div className="w-[300px] h-[210px] rounded-md">
-          <button
-            onClick={() => handleTabChange('selling')}
-            className={`w-full h-[70px] rounded-t-md transition-colors text-title-sm hover:opacity-80
-      ${
-        currentTab === 'selling'
-          ? 'bg-graish-green text-white'
-          : 'bg-white text-black'
-      }`}
-          >
-            판매 중인 물품
-          </button>
-
-          <button
-            onClick={() => handleTabChange('sold')}
-            className={`w-full h-[70px] transition-colors text-title-sm hover:opacity-80
-      ${
-        currentTab === 'sold'
-          ? 'bg-graish-green text-white'
-          : 'bg-white text-black'
-      }`}
-          >
-            판매 완료
-          </button>
-
-          <button
-            onClick={() => handleTabChange('wishlist')}
-            className={`w-full h-[70px] rounded-b-md transition-colors text-title-sm hover:opacity-80
-      ${
-        currentTab === 'wishlist'
-          ? 'bg-graish-green text-white'
-          : 'bg-white text-black'
-      }`}
-          >
-            찜한 상품
-          </button>
-        </div>
+        <TabNav currentTab={currentTab} handleTabChange={handleTabChange} />
       </section>
 
       <section className="p-6 min-w-[800px] h-screen">
