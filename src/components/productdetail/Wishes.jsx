@@ -31,10 +31,8 @@ const Wishes = ({ productId }) => {
       const wishToRemove = wishes.find(
         (wish) => wish.user_id === currentUser.id,
       );
-
       removeWishMutation.mutate(wishToRemove.id);
     } else {
-      console.log('찜 추가 요청:', { productId, userId: currentUser?.id });
       addWishMutation.mutate({ productId, userId: currentUser.id });
     }
   };
