@@ -9,6 +9,8 @@ import ProductDescription from '../components/productdetail/ProductDescription';
 import Comments from '../components/productdetail/Comments';
 import { useProductWithSeller, useSoldoutProduct } from '../hooks/useProduct';
 import { useGeocode } from '../hooks/useGeocode';
+import KakaoMap from '../components/KakaoMap/KakaoMap';
+import ProductLocation from '../components/productdetail/ProductLocation';
 
 const ProductDetail = () => {
   // 로그인한 유저 정보
@@ -60,19 +62,19 @@ const ProductDetail = () => {
   const isOwner = isLogin && currentUser?.id === product.user_id;
 
   return (
-    <div>
-      <div className="flex gap-12 p-8 mx-auto bg-white max-w-7xl">
+    <div className="w-7xl">
+      <div className="flex gap-12 p-8 mx-auto bg-white">
         {/* 상품 이미지 */}
         <div className="flex items-center justify-center p-6 w-[580px] h-[730px] bg-light-gray">
           <img
             src={product.img}
             alt={product.name}
-            className="object-cover w-full bg-gray-200 rounded-lg"
+            className="object-cover w-full bg-white rounded-lg"
           />
         </div>
 
         {/* 상품 정보 */}
-        <div className="w-[630]">
+        <div className="w-[600]">
           {/* 상품 정보 헤더 컴포넌트 */}
           <ProductHeader product={product} />
 
@@ -93,16 +95,10 @@ const ProductDetail = () => {
             <ProductDescription product={product} />
 
             {/* 지도 영역 */}
-            <div className="flex flex-col items-center p-4 bg-gray-200 rounded-lg">
-              <div className="w-[400px] h-[250px] rounded-lg bg-gray">
-                KKO MAP
-              </div>
-              <p className="text-sm text-deep-gray">
-                {isAddressLoading
-                  ? '주소 변환 중...'
-                  : address || '주소를 찾을 수 없습니다.'}
-              </p>
-            </div>
+            <ProductLocation
+              address={address}
+              isAddressLoading={isAddressLoading}
+            />
 
             {/* 판매글 작성자에게만 보이는 판매완료 버튼 */}
             <div className="flex justify-center">

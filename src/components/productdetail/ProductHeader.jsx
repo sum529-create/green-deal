@@ -4,13 +4,13 @@ import Wishes from './Wishes';
 
 const ProductHeader = ({ product }) => {
   return (
-    <div className="flex flex-col pace-y-6">
+    <div className="flex flex-col px-4">
       {/* 상품명 */}
-      <div className="flex">
-        <h2 className="text-2xl font-bold">{product.name}</h2>
+      <div className="flex mb-3">
+        <h2 className="font-bold text-title-md">{product.name}</h2>
       </div>
 
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between mb-4">
         {/* 상품 가격*/}
         <div className="flex">
           <p className="text-lg font-semibold text-deep-mint">
