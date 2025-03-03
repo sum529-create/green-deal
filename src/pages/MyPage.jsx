@@ -1,83 +1,22 @@
 import React from 'react';
 import { useState } from 'react';
-import { supabase } from '../api/client';
 import ProfileSection from '../components/mypage/ProfileSection';
 import useUserStore from '../store/userStore';
 import TabNav from '../components/mypage/TabNav';
 import MypageProductList from '../components/mypage/MypageProductList';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+  fetchProducts,
+  fetchWishlist,
+  removeProduct,
+  removeWishItem,
+} from '../api/userProductService';
 
 const MyPage = () => {
   const user = useUserStore((state) => state.user);
   const [currentTab, setCurrentTab] = useState('selling');
 
   const queryClient = useQueryClient();
-
-  // 상품 불러오기
-  const fetchProducts = async () => {
-    if (!user?.id) return;
-    const { data, error } = await supabase
-      .from('products')
-      .select('*')
-      .eq('user_id', user.id)
-      .order('created_at', { ascending: false });
-    if (error) {
-      console.error('상품 데이터 가져오기 오류:', error.message);
-      return;
-    }
-    return data;
-  };
-
-  //찜한 상품 불러오기
-  const fetchWishlist = async () => {
-    if (!user?.id) return;
-    const { data, error } = await supabase
-      .from('wishes')
-      .select('*, products(*)')
-      .eq('user_id', user.id)
-      .order('created_at', { ascending: false });
-
-    if (error) {
-      console.error('찜한 상품 데이터 가져오기 오류:', error.message);
-      return;
-    }
-
-    if (data) {
-      const wishProducts = data.map((wishItem) => ({
-        ...wishItem.products,
-        wishId: wishItem.id,
-      }));
-      return wishProducts;
-    }
-  };
-
-  //상품 삭제하기
-  const removeProduct = async (productId) => {
-    if (!user?.id) {
-      return;
-    }
-
-    const { error } = await supabase
-      .from('products')
-      .delete()
-      .eq('id', productId)
-      .eq('user_id', user.id);
-
-    if (error) {
-      console.error('상품 삭제 오류:', error.message);
-      return;
-    }
-  };
-
-  // 찜해제
-  const removeWishItem = async (wishId) => {
-    const { error } = await supabase.from('wishes').delete().eq('id', wishId);
-
-    if (error) {
-      console.error('찜 해제 오류:', error.message);
-      return;
-    }
-  };
 
   const {
     data: products,
