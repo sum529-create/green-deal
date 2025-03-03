@@ -15,6 +15,7 @@ const KakaoMap = ({
   sendAddress,
 }) => {
   const [location, setLocation] = useState({ lat: null, lng: null }); // 유저의 중심 위치를 위한 상태
+
   const [productInfo, setProductInfo] = useState(null);
   const [center, setCenter] = useState(location); // 지도의 중심 위치를 위한 상태
 
