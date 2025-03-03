@@ -1,4 +1,3 @@
-import React from 'react';
 import { useState, useEffect } from 'react';
 import { supabase } from '../api/client';
 import ProfileSection from '../components/mypage/ProfileSection';
