@@ -1,12 +1,10 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
-import Button from '../components/common/Button';
+import { supabase } from '../api/client';
 import ProfileSection from '../components/mypage/ProfileSection';
 import useUserStore from '../store/userStore';
-import { supabase } from '../api/client';
-import { useNavigate } from 'react-router-dom';
 import TabNav from '../components/mypage/TabNav';
-import { current } from 'immer';
+import MypageProductList from '../components/mypage/MypageProductList';
 
 const MyPage = () => {
   const user = useUserStore((state) => state.user);
@@ -14,7 +12,6 @@ const MyPage = () => {
   const [currentTab, setCurrentTab] = useState('selling');
   const [products, setProducts] = useState([]);
   const [wishlist, setWishlist] = useState([]);
-  const navigate = useNavigate();
 
   // 상품 불러오기
   const fetchProducts = async () => {
@@ -99,19 +96,6 @@ const MyPage = () => {
     setCurrentTab(tabType);
   };
 
-  const getFilteredItems = () => {
-    switch (currentTab) {
-      case 'selling':
-        return products.filter((item) => !item.soldout);
-      case 'sold':
-        return products.filter((item) => item.soldout);
-      case 'wishlist':
-        return wishlist;
-      default:
-        return [];
-    }
-  };
-
   return (
     <div className="flex items-center justify-center min-h-screen gap-14">
       <section className="flex flex-col items-center justify-center gap-10 w-[400px] h-[830px] p-6 bg-light-gray rounded-md">
@@ -127,97 +111,13 @@ const MyPage = () => {
               ? '판매 완료'
               : '찜한 상품'}
         </h1>
-        <div className="grid grid-cols-3 gap-10 overflow-hidden">
-          {getFilteredItems().length === 0 ? (
-            <div className="text-lg">아직 아무런 상품도 없습니다. </div>
-          ) : (
-            getFilteredItems().map((item) => (
-              <article
-                key={item.id}
-                onClick={(e) => {
-                  if (e.target.tagName === 'BUTTON') {
-                    return;
-                  }
-                  navigate(`/product/detail/${item.id}`);
-                }}
-                className="flex flex-col items-center justify-center w-[250px] h-[280px] bg-gray-100 rounded-md border-2 border-light-gray hover:cursor-pointer hover:shadow-lg"
-              >
-                <img
-                  src={
-                    item.img ||
-                    'https://tzmzehldetwvzvqvprsn.supabase.co/storage/v1/object/public/profileImg/profiles/1740753032690-38589.png'
-                  } // 임시
-                  alt={item.name}
-                  className="object-cover w-full h-[160px] rounded-t-md bg-white"
-                />
-                <div className="w-full h-[120px] p-2">
-                  <h3 className="font-semibold truncate text-title-sm">
-                    {item.name}
-                  </h3>
-                  <p className="mb-2 text-md text-deep-mint">{item.price}</p>
-                  <div className="flex items-center justify-center gap-4">
-                    <div className="flex items-center justify-center gap-4">
-                      {currentTab === 'selling' && (
-                        <>
-                          <Button
-                            type="button"
-                            variant="outline"
-                            size="medium"
-                            onClick={() => removeProduct(item.id)}
-                          >
-                            삭제
-                          </Button>
-                          <Button type="button" variant="primary" size="medium">
-                            수정
-                          </Button>
-                        </>
-                      )}
-
-                      {currentTab === 'sold' && (
-                        <Button
-                          type="button"
-                          variant="outline"
-                          size="medium"
-                          onClick={() => removeProduct(item.id)}
-                        >
-                          삭제
-                        </Button>
-                      )}
-
-                      {currentTab === 'wishlist' && (
-                        <Button
-                          type="button"
-                          variant="outline"
-                          size="medium"
-                          onClick={() =>
-                            removeWishItem(removeWishItem(item.wishId))
-                          }
-                        >
-                          찜해제
-                        </Button>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </article>
-            ))
-          )}
-
-          {/* 물품 등록하기 버튼 추가 */}
-          {currentTab === 'selling' && (
-            <article
-              className="flex flex-col items-center justify-center w-[250px] h-[280px] bg-gray-100 rounded-md border-2 border-dashed border-light-gray cursor-pointer hover:cursor-pointer hover:shadow-lg"
-              onClick={() => {
-                navigate('/product/registration');
-              }}
-            >
-              <div className="flex flex-col items-center justify-center w-full h-full text-deep-mint">
-                <span className="text-title-md">+</span>
-                <p className="mt-2 text-title-sm">물품 등록하기</p>
-              </div>
-            </article>
-          )}
-        </div>
+        <MypageProductList
+          products={products}
+          wishlist={wishlist}
+          currentTab={currentTab}
+          removeProduct={removeProduct}
+          removeWishItem={removeWishItem}
+        />
       </section>
     </div>
   );
