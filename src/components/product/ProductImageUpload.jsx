@@ -22,7 +22,7 @@ const ProductImageUpload = ({ onChangeImage, productImg }) => {
 
   return (
     <div className="flex flex-col items-center mb-4">
-      <div className="flex items-center justify-center w-full mb-4 bg-white border border-gray-300 rounded-lg h-[25rem]">
+      <div className="flex items-center justify-center w-[18.75rem] mb-[42px] bg-white rounded-lg h-[25rem]">
         {imageUrl || productImg ? (
           <img
             src={imageUrl || productImg}
