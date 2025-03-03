@@ -34,5 +34,3 @@ const SearchListItem = ({ product, selectedProduct, setSelectedProduct }) => {
 };
 
 export default SearchListItem;
-
-
