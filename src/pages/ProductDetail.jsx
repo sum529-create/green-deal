@@ -41,27 +41,29 @@ const ProductDetail = () => {
     }
   };
 
+  // 반복되는 css
+  const HR_BORDER_CSS = 'border-t-1 border-light-gray';
+  const UX_TEXT_CSS = 'text-center text-title-sm';
+
   // 데이터 로딩중
   if (isLoading) {
-    return <p>데이터 로딩중...</p>;
+    return <p className={UX_TEXT_CSS}>데이터 로딩중...</p>;
   }
 
   // 데이터 로드 중 에러발생시
   if (error) {
-    return <p>데이터를 불러오는 중 오류가 발생했습니다.</p>;
+    return (
+      <p className={UX_TEXT_CSS}>데이터를 불러오는 중 오류가 발생했습니다.</p>
+    );
   }
 
+  // 제품이 없는 경우
   if (!product) {
-    return (
-      <p className="text-center text-title-sm"> 상품을 찾을 수 없습니다.</p>
-    );
+    return <p className={UX_TEXT_CSS}> 상품을 찾을 수 없습니다.</p>;
   }
 
   // 로그인 유저가 상품의 작성자인지 확인
   const isOwner = isLogin && currentUser?.id === product.user_id;
-
-  // hr 태그 css
-  const HR_BORDER_CSS = 'border-t-1 border-light-gray';
 
   return (
     <div className="w-7xl">
