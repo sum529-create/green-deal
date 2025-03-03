@@ -1,7 +1,7 @@
 import React from 'react';
 import Button from '../common/Button';
 import ProductMapModal from './ProductMapModal';
-import Label from '../ui/Label';
+import Label from '../common/Label';
 import Input from '../common/Input';
 import Select from '../common/Select';
 import TextArea from '../common/TextArea';
@@ -13,17 +13,43 @@ import {
 import { useProductForm } from '../../hooks/useProductForm';
 import { useState } from 'react';
 import { useRef } from 'react';
+import { useEffect } from 'react';
+import { useKakaoGeocoder } from '../../hooks/useKakaoGeocoder';
 
-const ProductForm = ({ product, onChangeProduct, onSubmit }) => {
-  const { name, price, quality, refund, category, description } = product;
+const ProductForm = ({ product, onChangeProduct, onSubmit, productId }) => {
+  const { name, price, quality, refund, category, description, location } =
+    product;
   const [isLocationModalOpen, setIsLocationModalOpen] = useState(false);
+  const { coordsToAddress } = useKakaoGeocoder();
+  const {
+    address,
+    handleChange,
+    handleSubmit,
+    setAddress,
+    handleSelectLocation,
+  } = useProductForm(product, onChangeProduct);
+
+  // 상품 수정 시, 위도경도를 받아 주소로 변환
+  useEffect(() => {
+    const getUserAddress = async () => {
+      try {
+        const detailAddr = await coordsToAddress(location);
+        const [roadAddress, lotAddress] = detailAddr;
+
+        setAddress(roadAddress || lotAddress);
+      } catch (error) {
+        alert('주소를 찾을 수 없습니다.');
+        console.error(error);
+      }
+    };
+    if (productId && location.lat && location.lng) {
+      getUserAddress();
+    }
+  }, [productId, location]);
 
   // Input ref들
   const nameInputRef = useRef(null);
   const priceInputRef = useRef(null);
-
-  const { address, handleChange, handleSubmit, handleSelectLocation } =
-    useProductForm(product, onChangeProduct);
 
   // 위치 추가 모달 열기
   const openLocationModal = () => {
@@ -147,7 +173,7 @@ const ProductForm = ({ product, onChangeProduct, onSubmit }) => {
         {/* 등록 버튼 */}
         <div className="flex justify-center pt-4">
           <Button type="submit" size="large">
-            상품 등록
+            상품 {productId ? '수정' : '등록'}
           </Button>
         </div>
       </form>

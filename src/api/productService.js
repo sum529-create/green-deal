@@ -1,8 +1,28 @@
 import { uploadProductImage } from '../utils/uploadProductImage';
 import { supabase } from './client';
 
+export const getProducts = async (search = '') => {
+  let data, error;
+
+  if (search) {
+    // 검색어가 있을 때: ilike로 검색
+    ({ data, error } = await supabase
+      .from('products_with_users')
+      .select('*')
+      .ilike('name', `%${search}%`)
+      .limit(10));
+  } else {
+    // 검색어가 없을 때: 찜 개수 기준 정렬된 데이터 가져오기
+    ({ data, error } = await supabase.rpc('get_products_with_wishes'));
+  }
+
+  if (error) throw new Error(error.message);
+
+  return { data };
+};
+
 /**
- * productService
+ * addProduct
  * @description 상품 등록 서비스
  * @param {object} product - 상품 데이터
  * @param {string} userId - 사용자 ID
@@ -27,22 +47,55 @@ export const addProduct = async (product, userId) => {
   return { data, error };
 };
 
-export const getProducts = async (search = '') => {
-  let data, error;
-
-  if (search) {
-    // 검색어가 있을 때: ilike로 검색
-    ({ data, error } = await supabase
-      .from('products_with_users')
-      .select('*')
-      .ilike('name', `%${search}%`)
-      .limit(10));
+/**
+ * updateProduct
+ * @description 상품 등록 서비스
+ * @param {object} product
+ * @param {string} userId
+ * @param {number} productId
+ * @returns
+ */
+export const updateProduct = async (product, userId, productId) => {
+  // 이미지 업로드
+  const file = product.img;
+  let imgUrl;
+  if (file.name) {
+    imgUrl = await uploadProductImage(file, userId);
   } else {
-    // 검색어가 없을 때: 찜 개수 기준 정렬된 데이터 가져오기
-    ({ data, error } = await supabase.rpc('get_products_with_wishes'));
+    imgUrl = file;
   }
+  // 새 product 객체 생성
+  const updatedProduct = {
+    ...product,
+    img: imgUrl,
+    user_id: userId,
+    id: productId,
+    updated_at: new Date().toISOString(),
+  };
+  // 상품 업데이트
+  const { data, error } = await supabase
+    .from('products')
+    .update(updatedProduct)
+    .eq('id', productId)
+    .select();
 
-  if (error) throw new Error(error.message);
+  if (error) throw error;
+  return { data, error };
+};
 
-  return { data };
+/**
+ * getProductDetail
+ * @description 상품 상세 데이터 조회
+ * @param {number} productId
+ * @returns
+ */
+export const getProductDetail = async (productId) => {
+  const { data, error } = await supabase
+    .from('products')
+    .select('*')
+    .eq('id', productId)
+    .single();
+
+  if (error) throw error;
+  return data;
 };
