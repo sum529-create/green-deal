@@ -9,8 +9,7 @@ export const fetchProducts = async (user) => {
     .eq('user_id', user.id)
     .order('created_at', { ascending: false });
   if (error) {
-    console.error('상품 데이터 가져오기 오류:', error.message);
-    return;
+    throw new Error('상품 데이터 가져오기 오류:', error.message);
   }
   return data;
 };
@@ -25,8 +24,7 @@ export const fetchWishlist = async (user) => {
     .order('created_at', { ascending: false });
 
   if (error) {
-    console.error('찜한 상품 데이터 가져오기 오류:', error.message);
-    return;
+    throw new Error('찜한 상품 데이터 가져오기 오류:', error.message);
   }
 
   if (data) {
@@ -51,8 +49,7 @@ export const removeProduct = async (user, productId) => {
     .eq('user_id', user.id);
 
   if (error) {
-    console.error('상품 삭제 오류:', error.message);
-    return;
+    throw new Error('상품 삭제 오류:', error.message);
   }
 };
 
@@ -61,7 +58,6 @@ export const removeWishItem = async (wishId) => {
   const { error } = await supabase.from('wishes').delete().eq('id', wishId);
 
   if (error) {
-    console.error('찜 해제 오류:', error.message);
-    return;
+    throw new Error('찜 해제 오류:', error.message);
   }
 };
