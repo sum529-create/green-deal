@@ -3,7 +3,7 @@ import Button from '../common/Button';
 import { useRef } from 'react';
 import { useImageUpload } from '../../hooks/useImageUpload';
 
-const ProductImageUpload = ({ onChangeImage }) => {
+const ProductImageUpload = ({ onChangeImage, productImg }) => {
   const fileInputRef = useRef();
   const { imageUrl, setChangeImage, resetImage } = useImageUpload({
     onChangeImage,
@@ -23,9 +23,9 @@ const ProductImageUpload = ({ onChangeImage }) => {
   return (
     <div className="flex flex-col items-center mb-4">
       <div className="flex items-center justify-center w-full mb-4 bg-white border border-gray-300 rounded-lg h-[25rem]">
-        {imageUrl ? (
+        {imageUrl || productImg ? (
           <img
-            src={imageUrl}
+            src={imageUrl || productImg}
             alt="업로드된 이미지"
             className="object-contain max-w-full max-h-full"
           />
