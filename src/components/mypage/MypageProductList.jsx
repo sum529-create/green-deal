@@ -24,6 +24,17 @@ const MypageProductList = ({
     }
   };
 
+  const buttons = {
+    selling: [
+      { buttonName: '삭제', variant: 'outline', onClick: removeProduct },
+      { buttonName: '수정', variant: 'primary', onClick: () => {} },
+    ],
+    sold: [{ buttonName: '삭제', variant: 'outline', onClick: removeProduct }],
+    wishlist: [
+      { buttonName: '찜해제', variant: 'outline', onClick: removeWishItem },
+    ],
+  };
+
   if (getFilteredItems().length === 0) {
     return <div className="text-lg">아직 아무런 상품도 없습니다.</div>;
   }
@@ -53,43 +64,17 @@ const MypageProductList = ({
             </h3>
             <p className="mb-2 text-md text-deep-mint">{item.price}</p>
             <div className="flex items-center justify-center gap-4">
-              {currentTab === 'selling' && (
-                <>
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="medium"
-                    onClick={() => removeProduct(item.id)}
-                  >
-                    삭제
-                  </Button>
-                  <Button type="button" variant="primary" size="medium">
-                    수정
-                  </Button>
-                </>
-              )}
-
-              {currentTab === 'sold' && (
+              {buttons[currentTab].map(({ buttonName, variant, onClick }) => (
                 <Button
+                  key={buttonName}
                   type="button"
-                  variant="outline"
+                  variant={variant}
                   size="medium"
-                  onClick={() => removeProduct(item.id)}
+                  onClick={() => onClick(item.id)}
                 >
-                  삭제
+                  {buttonName}
                 </Button>
-              )}
-
-              {currentTab === 'wishlist' && (
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="medium"
-                  onClick={() => removeWishItem(item.wishId)}
-                >
-                  찜해제
-                </Button>
-              )}
+              ))}
             </div>
           </div>
         </article>
