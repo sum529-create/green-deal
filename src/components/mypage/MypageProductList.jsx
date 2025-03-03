@@ -71,6 +71,11 @@ const MypageProductList = ({
                   variant={variant}
                   size="medium"
                   onClick={() => onClick(item.id)}
+                  className={
+                    currentTab === 'sold' || currentTab === 'wishlist'
+                      ? 'w-full'
+                      : ''
+                  }
                 >
                   {buttonName}
                 </Button>
