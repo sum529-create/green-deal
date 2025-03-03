@@ -13,7 +13,7 @@ const ProductList = () => {
   const { data: products, isLoading } = useGetProducts(search);
 
   return (
-    <div className="flex flex-col w-full h-screen overflow-hidden md:flex-row">
+    <div className="flex flex-col w-full h-[calc(100vh-60px)] overflow-hidden md:flex-row">
       {/* 검색바는 항상 유지 */}
       <div className="w-full mr-4 border-r border-light-gray h-full bg-white md:w-[360px]">
         <SearchBar setSearch={setSearch} />
@@ -29,7 +29,7 @@ const ProductList = () => {
       </div>
 
       {/* 지도 부분도 데이터 로딩 여부에 따라 변경 */}
-      <div className="flex flex-col w-full md:w-3/4">
+      <div className="flex flex-col flex-grow w-full md:w-3/4">
         <span className="p-4 text-2xl">
           {search
             ? `"${search}"에 대한 검색 결과`
