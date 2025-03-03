@@ -3,6 +3,8 @@ import KakaoMap from '../components/KakaoMap/KakaoMap';
 import { useState } from 'react';
 import SearchBar from '../components/ProductList/SearchBar';
 import SearchList from '../components/ProductList/SearchList';
+import useUserStore from '../store/userStore';
+import AllowedRoute from '../routes/AllowedRoute';
 
 const productList = [
   {
@@ -80,7 +82,7 @@ const productList = [
     soldout: true,
     updated_at: '',
     users: {
-      name: '최수진',
+      name: '최수진111111111111111',
       profile_img:
         'https://cdn-static.zep.us/static/assets/baked-avartar-images/8-36-63-636.png',
     },
@@ -88,7 +90,7 @@ const productList = [
   {
     id: 5,
     createdAt: '2024-02-27T12:34:56.789Z',
-    name: '아이폰11',
+    name: '아이폰12131231231',
     category: '디지털기기',
     price: '10000',
     quality: '최상',
@@ -108,7 +110,7 @@ const productList = [
   {
     id: 6,
     createdAt: '2024-02-27T12:34:56.789Z',
-    name: '아이폰11',
+    name: '아이폰11234141',
     category: '디지털기기',
     price: '10000',
     quality: '최상',
@@ -120,7 +122,7 @@ const productList = [
     soldout: true,
     updated_at: '',
     users: {
-      name: '노수민',
+      name: '노수14124민',
       profile_img:
         'https://cdn-static.zep.us/static/assets/baked-avartar-images/10-35-3-253.png',
     },
@@ -130,7 +132,8 @@ const productList = [
 const ProductList = () => {
   const [search, setSearch] = useState('');
   const [selectedProduct, setSelectedProduct] = useState(null);
-
+  const isLocationAllowed = useUserStore((state) => state.isLocationAllowed);
+  const setLocationAllowed = useUserStore((state) => state.setLocationAllowed);
   const filteredProducts = productList.filter((product) =>
     product.name.includes(search),
   );
@@ -148,14 +151,14 @@ const ProductList = () => {
       </div>
       <div className="flex flex-col w-full md:w-3/4">
         <span className="p-4 text-2xl">지금 우리 동네 인기 매물 TOP 20</span>
-        <div className="flex-grow full min-h-[400px]">
+        <AllowedRoute>
           <KakaoMap
             level={5}
             mode={'productList'}
             productList={productList}
             selectedProduct={selectedProduct}
           />
-        </div>
+        </AllowedRoute>
       </div>
     </div>
   );
