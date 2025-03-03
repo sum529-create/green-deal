@@ -25,6 +25,7 @@ const ProfileSection = ({ user }) => {
 
     const result = await handleProfileUpdate(nickname, isUpdating);
 
+    // 닉네임이 변경되지 않는 경우를 처리하기 위해
     if (result?.unchanged) {
       setIsUpdating(false);
       return;

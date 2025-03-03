@@ -1,10 +1,10 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   fetchProducts,
   fetchWishlist,
   removeProduct,
   removeWishItem,
 } from '../api/userProductService';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { QUERY_KEYS } from '../constants/queryKeys';
 
 const useUserProduct = (sub) => {
