@@ -105,7 +105,7 @@ const ProductDetail = () => {
             />
 
             {/* 판매글 작성자에게만 보이는 판매완료 버튼 */}
-            <div className="flex justify-center mt-4">
+            <div className="flex justify-center mt-7">
               {isOwner && (
                 <Button
                   type="button"
