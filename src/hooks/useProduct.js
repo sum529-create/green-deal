@@ -76,7 +76,7 @@ export const useGetProductDetail = (productId) => {
  */
 export const useProductWithSeller = (productId) => {
   return useQuery({
-    queryKey: [QUERY_KEYS.PRODUCT.LIST, productId],
+    queryKey: [QUERY_KEYS.PRODUCT.DETAIL, productId],
     queryFn: () => getProductWithSeller(productId),
   });
 };
@@ -93,7 +93,7 @@ export const useSoldoutProduct = (productId) => {
     // 상품을 '판매완료' 상태로 업데이트 하는 API 호출
     mutationFn: () => setSoldoutProduct(productId),
     onSuccess: () => {
-      queryClient.invalidateQueries(QUERY_KEYS.PRODUCT.LIST, productId);
+      queryClient.invalidateQueries(QUERY_KEYS.PRODUCT.DETAIL, productId);
     },
     onError: (error) => {
       console.log('판매완료 처리 에러', error.message);
