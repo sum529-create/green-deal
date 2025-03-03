@@ -8,7 +8,7 @@ import {
   getMyProducts,
   removeProduct,
 } from '../api/productService';
-import { getMyWishlist, removeWishItem } from '../api/wishService';
+
 /**
  * useGetProduct
  * @description 상품 정보를 가져오는 query 작업을 수행하는 훅
@@ -114,40 +114,5 @@ export const useUserProducts = (sub) => {
     productsLoading,
     productsError,
     removeProductMutation,
-  };
-};
-
-/**
- * useUserWishlist
- * @description 유저의 찜 목록을 가져오는 훅
- * @param {string} sub - user.id
- * @returns {object}
- */
-
-export const useUserWishlist = (sub) => {
-  const queryClient = useQueryClient();
-
-  const {
-    data: wishlist,
-    isLoading: wishlistLoading,
-    isError: wishlistError,
-  } = useQuery({
-    queryKey: ['wishlist', sub], //'wishlist'는 추후 변경
-    queryFn: () => getMyWishlist(sub),
-    enabled: !!sub,
-  });
-
-  const { mutate: removeWishItemMutation } = useMutation({
-    mutationFn: (wishId) => removeWishItem(wishId),
-    onSuccess: () => {
-      queryClient.invalidateQueries(['wishlist', sub]);
-    },
-  });
-
-  return {
-    wishlist,
-    wishlistLoading,
-    wishlistError,
-    removeWishItemMutation,
   };
 };
