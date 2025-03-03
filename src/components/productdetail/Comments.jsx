@@ -20,7 +20,7 @@ const Comments = ({ seller }) => {
   }
 
   return (
-    <div className="p-6 bg-white rounded-sm">
+    <div className="p-6 bg-white rounded-sm max-w-1280">
       <div className="mb-6">
         <p className="mb-3 font-semibold text-black">
           댓글/문의 <span className="text-deep-mint">{comments.length}개</span>
