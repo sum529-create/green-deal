@@ -12,7 +12,7 @@ const SearchListItem = ({ product, selectedProduct, setSelectedProduct }) => {
     >
       <div className="flex flex-col justify-between w-full pr-24">
         <span
-          className={`font-bold text-lg truncate max-w-[200px] ${selectedProduct === product.id ? 'text-light-mint' : 'group-hover:text-mint'}`}
+          className={`mb-4 font-bold text-lg truncate max-w-[200px] ${selectedProduct === product.id ? 'text-light-mint' : 'group-hover:text-mint'}`}
         >
           {product.name}
         </span>
@@ -20,7 +20,7 @@ const SearchListItem = ({ product, selectedProduct, setSelectedProduct }) => {
         <div className="flex items-center gap-2">
           <img
             src={product.profile_img}
-            className="w-10 h-10 rounded-full bg-deep-mint"
+            className="w-6 h-6 rounded-full bg-deep-mint"
             alt="프로필 이미지"
           />
           <span className="text-text-lg">{product.user_name}</span>
