@@ -86,7 +86,7 @@ const CommentList = ({ comments, seller, productId }) => {
                       <textarea
                         value={editContent}
                         onChange={(e) => setEditContent(e.target.value)}
-                        className="w-full p-2 text-sm border rounded-md"
+                        className="w-full p-2 text-sm rounded-md focus:ring-1 focus:ring-mint focus:outline-none"
                       />
                     ) : (
                       <p className="text-sm text-deep-gray">
