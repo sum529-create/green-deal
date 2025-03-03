@@ -2,52 +2,28 @@ import React from 'react';
 import { useParams } from 'react-router-dom';
 import CommentForm from './CommentForm';
 import CommentList from './CommentList';
-import useUserStore from '../../store/userStore';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
-  addComment,
-  deleteComment,
-  getComments,
-  updateComment,
-} from '../../api/commentService';
-import { QUERY_KEYS } from '../../constants/queryKeys';
-import { useGetComments } from '../../hooks/useComment';
+  useAddComment,
+  useDeleteComment,
+  useGetComments,
+  useUpdateComment,
+} from '../../hooks/useComment';
 
 const Comments = ({ seller }) => {
-  const queryClient = useQueryClient();
   const { id } = useParams();
   const productId = +id;
-
-  const currentUser = useUserStore((state) => state.user); // 로그인한 사용자 정보
 
   // 댓글 목록 가져오기
   const { data: comments = [], isLoading, error } = useGetComments(productId);
 
   // 댓글 추가
-  const addCommentMutation = useMutation({
-    mutationFn: ({ content }) =>
-      addComment({ productId, content, userId: currentUser.id }),
-    onSuccess: () => {
-      queryClient.invalidateQueries([QUERY_KEYS.COMMENT.CONTENT, productId]); // 댓글 목록 갱신
-    },
-  });
+  const addCommentMutation = useAddComment(productId);
 
   // 댓글 수정
-  const updateCommentMutation = useMutation({
-    mutationFn: ({ commentId, content }) =>
-      updateComment({ commentId, content }),
-    onSuccess: () => {
-      queryClient.invalidateQueries([QUERY_KEYS.COMMENT.CONTENT, productId]); // 댓글 목록 갱신
-    },
-  });
+  const updateCommentMutation = useUpdateComment(productId);
 
   // 댓글 삭제
-  const deleteCommentMutation = useMutation({
-    mutationFn: (commentId) => deleteComment(commentId),
-    onSuccess: () => {
-      queryClient.invalidateQueries([QUERY_KEYS.COMMENT.CONTENT, productId]); // 댓글 목록 갱신
-    },
-  });
+  const deleteCommentMutation = useDeleteComment(productId);
 
   if (isLoading) {
     return <div>댓글 로딩중...</div>;

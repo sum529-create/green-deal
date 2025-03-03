@@ -6,6 +6,7 @@ import {
   getComments,
   updateComment,
 } from '../api/commentService';
+import useUserStore from '../store/userStore';
 
 /**
  * useGetComments
@@ -29,9 +30,11 @@ export const useGetComments = (productId) => {
  */
 export const useAddComment = (productId) => {
   const queryClient = useQueryClient();
+  const currentUser = useUserStore((state) => state.user);
+
   return useMutation({
-    mutationFn: ({ content, userId }) =>
-      addComment({ productId, content, userId }),
+    mutationFn: ({ content }) =>
+      addComment({ productId, content, userId: currentUser.id }),
     onSuccess: () => {
       queryClient.invalidateQueries([QUERY_KEYS.COMMENT.CONTENT, productId]); // 댓글 목록 갱신
     },
@@ -59,7 +62,7 @@ export const useUpdateComment = (productId) => {
  * @description 특정 댓글을 삭제하는 훅
  * @returns {object} - 댓글 삭제 Mutation 객체
  */
-export const useDeleteCommnet = (productId) => {
+export const useDeleteComment = (productId) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (commentId) => deleteComment(commentId),
