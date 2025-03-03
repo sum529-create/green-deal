@@ -1,6 +1,9 @@
 import React from 'react';
 
-const TabNav = ({ currentTab, handleTabChange }) => {
+const TabNav = ({ currentTab, setCurrentTab }) => {
+  const handleTabChange = (tabType) => {
+    setCurrentTab(tabType);
+  };
   return (
     <div className="w-[300px] h-[210px] rounded-md">
       <button

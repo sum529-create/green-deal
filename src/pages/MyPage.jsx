@@ -92,15 +92,11 @@ const MyPage = () => {
     setWishlist((prev) => prev.filter((item) => item.wishId !== wishId));
   };
 
-  const handleTabChange = (tabType) => {
-    setCurrentTab(tabType);
-  };
-
   return (
     <div className="flex items-center justify-center min-h-screen gap-14">
       <section className="flex flex-col items-center justify-center gap-10 w-[400px] h-[830px] p-6 bg-light-gray rounded-md">
         <ProfileSection user={user} />
-        <TabNav currentTab={currentTab} handleTabChange={handleTabChange} />
+        <TabNav currentTab={currentTab} setCurrentTab={setCurrentTab} />
       </section>
 
       <section className="p-6 min-w-[800px] h-screen">
