@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { QUERY_KEYS } from '../constants/queryKeys';
 import {
   addProduct,
-  getProducts
+  getProducts,
   getProductDetail,
   updateProduct,
 } from '../api/productService';
