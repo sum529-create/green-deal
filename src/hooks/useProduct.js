@@ -7,8 +7,6 @@ import {
   getProducts,
   getProductDetail,
   updateProduct,
-  setSoldoutProduct,
-  getProductWithSeller,
 } from '../api/productService';
 
 /**
