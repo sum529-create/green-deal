@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import Button from '../common/Button';
-import useUserProduct from '../../hooks/useUserProduct';
+import { useUserProduct } from '../../hooks/useProduct';
 
 const MypageProductList = ({ currentTab, user }) => {
   const navigate = useNavigate();

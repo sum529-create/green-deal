@@ -99,7 +99,6 @@ export const getProductDetail = async (productId) => {
   if (error) throw error;
   return data;
 };
-
 /**
  * 로그인한 유저의 상품 목록 조회
  * @description 유저의 ID에 해당하는 상품 목록을 가져오며 최신순 정렬

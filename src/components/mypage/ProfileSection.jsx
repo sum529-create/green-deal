@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import Button from '../common/Button';
 import ProfileImage from './ProfileImage';
-import useProfileInfo from '../../hooks/useProfileInfo';
-import useProfileImage from '../../hooks/useProfileImage';
+import { useProfileInfo, useProfileImage } from '../../hooks/useUserQuery';
 
 const ProfileSection = ({ user }) => {
   const [nickname, setNickname] = useState('');
   const [isUpdating, setIsUpdating] = useState(false);
-  const { userdata, handleProfileUpdate, error, reset } = useProfileInfo(user);
+  const { userdata, handleProfileUpdate, error } = useProfileInfo(user);
   const { imageUrl, handleImageChange } = useProfileImage(userdata);
 
   useEffect(() => {
@@ -19,7 +18,6 @@ const ProfileSection = ({ user }) => {
   const handleUpdateClick = async () => {
     if (!isUpdating) {
       setIsUpdating(true);
-      reset();
       return;
     }
 
@@ -48,7 +46,6 @@ const ProfileSection = ({ user }) => {
             value={nickname}
             onChange={(e) => {
               setNickname(e.target.value.trim());
-              reset();
             }}
             className="w-[210px] h-[32px] border border-dark rounded-md text-center"
           />
