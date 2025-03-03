@@ -1,51 +1,17 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import { supabase } from '../../api/client';
 import CommentForm from './CommentForm';
 import CommentList from './CommentList';
 import useUserStore from '../../store/userStore';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-
-// 댓글 목록 가져오기
-const fetchComments = async (productId) => {
-  const { data, error } = await supabase
-    .from('comments')
-    .select('*, users(*)')
-    .eq('product_id', productId)
-    .order('created_at', { ascending: false });
-
-  if (error) throw new Error(error.message);
-  return data;
-};
-
-// 댓글 추가
-const addComment = async ({ productId, content, userId }) => {
-  const { data, error } = await supabase
-    .from('comments')
-    .insert([{ content, user_id: userId, product_id: productId }])
-    .select()
-    .single();
-  if (error) throw new Error(error.message);
-  return data;
-};
-
-// 댓글 수정
-const updateComment = async ({ commentId, content }) => {
-  const { error } = await supabase
-    .from('comments')
-    .update({ content })
-    .eq('id', commentId);
-  if (error) throw new Error(error.message);
-};
-
-// 댓글 삭제
-const deleteComment = async (commentId) => {
-  const { error } = await supabase
-    .from('comments')
-    .delete()
-    .eq('id', commentId);
-  if (error) throw new Error(error.message);
-};
+import {
+  addComment,
+  deleteComment,
+  getComments,
+  updateComment,
+} from '../../api/commentService';
+import { QUERY_KEYS } from '../../constants/queryKeys';
+import { useGetComments } from '../../hooks/useComment';
 
 const Comments = ({ seller }) => {
   const queryClient = useQueryClient();
@@ -55,21 +21,14 @@ const Comments = ({ seller }) => {
   const currentUser = useUserStore((state) => state.user); // 로그인한 사용자 정보
 
   // 댓글 목록 가져오기
-  const {
-    data: comments = [],
-    isLoading,
-    error,
-  } = useQuery({
-    queryKey: ['comments', productId],
-    queryFn: () => fetchComments(productId),
-  });
+  const { data: comments = [], isLoading, error } = useGetComments(productId);
 
   // 댓글 추가
   const addCommentMutation = useMutation({
     mutationFn: ({ content }) =>
       addComment({ productId, content, userId: currentUser.id }),
     onSuccess: () => {
-      queryClient.invalidateQueries(['comments', productId]); // 댓글 목록 갱신
+      queryClient.invalidateQueries([QUERY_KEYS.COMMENT.CONTENT, productId]); // 댓글 목록 갱신
     },
   });
 
@@ -78,7 +37,7 @@ const Comments = ({ seller }) => {
     mutationFn: ({ commentId, content }) =>
       updateComment({ commentId, content }),
     onSuccess: () => {
-      queryClient.invalidateQueries(['comments', productId]); // 댓글 목록 갱신
+      queryClient.invalidateQueries([QUERY_KEYS.COMMENT.CONTENT, productId]); // 댓글 목록 갱신
     },
   });
 
@@ -86,7 +45,7 @@ const Comments = ({ seller }) => {
   const deleteCommentMutation = useMutation({
     mutationFn: (commentId) => deleteComment(commentId),
     onSuccess: () => {
-      queryClient.invalidateQueries(['comments', productId]); // 댓글 목록 갱신
+      queryClient.invalidateQueries([QUERY_KEYS.COMMENT.CONTENT, productId]); // 댓글 목록 갱신
     },
   });
 
