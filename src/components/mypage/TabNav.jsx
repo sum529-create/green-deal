@@ -4,43 +4,28 @@ const TabNav = ({ currentTab, setCurrentTab }) => {
   const handleTabChange = (tabType) => {
     setCurrentTab(tabType);
   };
+
+  const tabs = [
+    { value: 'selling', tabName: '판매 중인 물품', rounded: 'rounded-t-md' },
+    { value: 'sold', tabName: '판매 완료', rounded: '' },
+    { value: 'wishlist', tabName: '찜한 상품', rounded: 'rounded-b-md' },
+  ];
+
   return (
     <div className="w-[300px] h-[210px] rounded-md">
-      <button
-        onClick={() => handleTabChange('selling')}
-        className={`w-full h-[70px] rounded-t-md transition-colors text-title-sm hover:opacity-80
-      ${
-        currentTab === 'selling'
-          ? 'bg-graish-green text-white'
-          : 'bg-white text-black'
-      }`}
-      >
-        판매 중인 물품
-      </button>
-
-      <button
-        onClick={() => handleTabChange('sold')}
-        className={`w-full h-[70px] transition-colors text-title-sm hover:opacity-80
-      ${
-        currentTab === 'sold'
-          ? 'bg-graish-green text-white'
-          : 'bg-white text-black'
-      }`}
-      >
-        판매 완료
-      </button>
-
-      <button
-        onClick={() => handleTabChange('wishlist')}
-        className={`w-full h-[70px] rounded-b-md transition-colors text-title-sm hover:opacity-80
-      ${
-        currentTab === 'wishlist'
-          ? 'bg-graish-green text-white'
-          : 'bg-white text-black'
-      }`}
-      >
-        찜한 상품
-      </button>
+      {tabs.map((tab) => (
+        <button
+          key={tab.value}
+          onClick={() => handleTabChange(tab.value)}
+          className={`w-full h-[70px] transition-colors text-title-sm hover:opacity-80 ${tab.rounded} ${
+            currentTab === tab.value
+              ? 'bg-graish-green text-white'
+              : 'bg-white text-black'
+          }`}
+        >
+          {tab.tabName}
+        </button>
+      ))}
     </div>
   );
 };
