@@ -4,29 +4,10 @@ import ProfileSection from '../components/mypage/ProfileSection';
 import useUserStore from '../store/userStore';
 import TabNav from '../components/mypage/TabNav';
 import MypageProductList from '../components/mypage/MypageProductList';
-import useUserProduct from '../hooks/useUserProduct';
 
 const MyPage = () => {
   const user = useUserStore((state) => state.user);
   const [currentTab, setCurrentTab] = useState('selling');
-  const {
-    products,
-    productsLoading,
-    productsError,
-    wishlist,
-    wishlistLoading,
-    wishlistError,
-    removeProductMutation,
-    removeWishItemMutation,
-  } = useUserProduct(user?.id);
-
-  if (productsLoading || wishlistLoading) {
-    return <div>Loading...</div>;
-  }
-
-  if (productsError || wishlistError) {
-    return <div>Error: {productsError?.message || wishlistError?.message}</div>;
-  }
 
   return (
     <div className="flex items-center justify-center min-h-screen gap-14">
@@ -43,13 +24,7 @@ const MyPage = () => {
               ? '판매 완료'
               : '찜한 상품'}
         </h1>
-        <MypageProductList
-          products={products}
-          wishlist={wishlist}
-          currentTab={currentTab}
-          removeProduct={removeProductMutation}
-          removeWishItem={removeWishItemMutation}
-        />
+        <MypageProductList currentTab={currentTab} user={user} />
       </section>
     </div>
   );

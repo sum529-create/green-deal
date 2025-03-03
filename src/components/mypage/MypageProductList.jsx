@@ -1,17 +1,24 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import Button from '../common/Button';
+import useUserProduct from '../../hooks/useUserProduct';
 
-const MypageProductList = ({
-  products,
-  wishlist,
-  currentTab,
-  removeProduct,
-  removeWishItem,
-}) => {
+const MypageProductList = ({ currentTab, user }) => {
   const navigate = useNavigate();
 
+  const {
+    products,
+    productsLoading,
+    productsError,
+    wishlist,
+    wishlistLoading,
+    wishlistError,
+    removeProductMutation,
+    removeWishItemMutation,
+  } = useUserProduct(user?.id);
+
   const getFilteredItems = () => {
+    if (!products || !wishlist) return [];
     switch (currentTab) {
       case 'selling':
         return products.filter((item) => !item.soldout);
@@ -26,27 +33,39 @@ const MypageProductList = ({
 
   const buttons = {
     selling: [
-      { buttonName: '삭제', variant: 'outline', onClick: removeProduct },
+      {
+        buttonName: '삭제',
+        variant: 'outline',
+        onClick: removeProductMutation,
+      },
       { buttonName: '수정', variant: 'primary', onClick: () => {} },
     ],
     sold: [
       {
         buttonName: '삭제',
         variant: 'outline',
-        onClick: removeProduct,
+        onClick: removeProductMutation,
       },
     ],
     wishlist: [
       {
         buttonName: '찜해제',
         variant: 'outline',
-        onClick: removeWishItem,
+        onClick: removeWishItemMutation,
       },
     ],
   };
 
   if (getFilteredItems().length === 0) {
     return <div className="text-lg">아직 아무런 상품도 없습니다.</div>;
+  }
+
+  if (productsLoading || wishlistLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (productsError || wishlistError) {
+    return <div>Error: {productsError?.message || wishlistError?.message}</div>;
   }
 
   return (
