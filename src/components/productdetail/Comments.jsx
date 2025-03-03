@@ -16,9 +16,6 @@ const Comments = ({ seller }) => {
   // 댓글 목록 가져오기
   const { data: comments = [], isLoading, error } = useGetComments(productId);
 
-  // 댓글 추가
-  const addCommentMutation = useAddComment(productId);
-
   // 댓글 수정
   const updateCommentMutation = useUpdateComment(productId);
 
@@ -40,10 +37,7 @@ const Comments = ({ seller }) => {
           댓글/문의 <span className="text-deep-mint">{comments.length}개</span>
         </p>
         {/* 댓글 입력 폼 */}
-        <CommentForm
-          productId={productId}
-          addCommentMutation={addCommentMutation}
-        />
+        <CommentForm productId={productId} />
       </div>
 
       {/* 댓글 목록 */}
