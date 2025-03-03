@@ -29,9 +29,19 @@ const MypageProductList = ({
       { buttonName: '삭제', variant: 'outline', onClick: removeProduct },
       { buttonName: '수정', variant: 'primary', onClick: () => {} },
     ],
-    sold: [{ buttonName: '삭제', variant: 'outline', onClick: removeProduct }],
+    sold: [
+      {
+        buttonName: '삭제',
+        variant: 'outline',
+        onClick: removeProduct,
+      },
+    ],
     wishlist: [
-      { buttonName: '찜해제', variant: 'outline', onClick: removeWishItem },
+      {
+        buttonName: '찜해제',
+        variant: 'outline',
+        onClick: removeWishItem,
+      },
     ],
   };
 
@@ -69,7 +79,9 @@ const MypageProductList = ({
                   type="button"
                   variant={variant}
                   size="medium"
-                  onClick={() => onClick(item.id)}
+                  onClick={() =>
+                    onClick(currentTab === 'wishlist' ? item.wishId : item.id)
+                  }
                   className={
                     currentTab === 'sold' || currentTab === 'wishlist'
                       ? 'w-full'
