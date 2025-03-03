@@ -10,7 +10,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 const fetchComments = async (productId) => {
   const { data, error } = await supabase
     .from('comments')
-    .select('*')
+    .select('*, users(*)')
     .eq('product_id', productId)
     .order('created_at', { ascending: false });
 
@@ -23,9 +23,10 @@ const addComment = async ({ productId, content, userId }) => {
   const { data, error } = await supabase
     .from('comments')
     .insert([{ content, user_id: userId, product_id: productId }])
-    .select();
+    .select()
+    .single();
   if (error) throw new Error(error.message);
-  return data[0];
+  return data;
 };
 
 // 댓글 수정
@@ -46,10 +47,10 @@ const deleteComment = async (commentId) => {
   if (error) throw new Error(error.message);
 };
 
-const Comments = ({ users, seller }) => {
+const Comments = ({ seller }) => {
   const queryClient = useQueryClient();
   const { id } = useParams();
-  const productId = id; //
+  const productId = +id;
 
   const currentUser = useUserStore((state) => state.user); // 로그인한 사용자 정보
 
@@ -113,7 +114,6 @@ const Comments = ({ users, seller }) => {
       {/* 댓글 목록 */}
       <CommentList
         comments={comments}
-        users={users}
         seller={seller}
         updateCommentMutation={updateCommentMutation}
         deleteCommentMutation={deleteCommentMutation}
