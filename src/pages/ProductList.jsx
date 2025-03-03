@@ -1,8 +1,8 @@
 import React from 'react';
 import KakaoMap from '../components/KakaoMap/KakaoMap';
 import { useState } from 'react';
-import SearchBar from '../components/productList/SearchBar';
-import SearchList from '../components/productList/SearchList';
+import SearchBar from '../components/productlist/SearchBar';
+import SearchList from '../components/productlist/SearchList';
 import { useGetProducts } from '../hooks/useProduct';
 import AllowedRoute from '../routes/AllowedRoute';
 import HighlightText from '../components/common/HighlightText';
