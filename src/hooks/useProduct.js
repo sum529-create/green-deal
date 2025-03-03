@@ -6,11 +6,9 @@ import {
   getProductDetail,
   updateProduct,
   getMyProducts,
-  getMyWishlist,
   removeProduct,
-  removeWishItem,
 } from '../api/productService';
-
+import { getMyWishlist, removeWishItem } from '../api/wishService';
 /**
  * useGetProduct
  * @description 상품 정보를 가져오는 query 작업을 수행하는 훅
