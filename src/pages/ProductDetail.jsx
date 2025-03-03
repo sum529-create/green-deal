@@ -65,7 +65,7 @@ const ProductDetail = () => {
     <div className="w-7xl">
       <div className="flex gap-12 p-8 mx-auto bg-white">
         {/* 상품 이미지 */}
-        <div className="flex items-center justify-center p-6 w-[580px] h-[730px] bg-light-gray">
+        <div className="flex items-center justify-center p-6 w-[580px] h-[860px] bg-light-gray">
           <img
             src={product.img}
             alt={product.name}
@@ -85,7 +85,7 @@ const ProductDetail = () => {
 
           <hr className="border-t-1 border-light-gray" />
 
-          <div className="flex flex-col w-[630px]">
+          <div className="flex flex-col w-[600px]">
             {/* 상품 상세 정보 컴포넌트 */}
             <ProductInfo product={product} />
 
@@ -101,7 +101,7 @@ const ProductDetail = () => {
             />
 
             {/* 판매글 작성자에게만 보이는 판매완료 버튼 */}
-            <div className="flex justify-center">
+            <div className="flex justify-center mt-4">
               {isOwner && (
                 <Button
                   type="button"
