@@ -26,13 +26,13 @@ const CommentForm = ({ productId }) => {
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex items-center gap-5 p-4 border rounded-lg border-light-gray"
+      className="flex items-center gap-5 px-[10px] py-[10px] mb-[20px] rounded-[5px] lg:px-[22px] lg:py-[18px] border lg:rounded-[12px] border-light-gray lg:mb-[36px]"
     >
       <textarea
         value={content}
         onChange={(e) => setContent(e.target.value)}
         placeholder="댓글을 입력하세요."
-        className="w-full p-3 mt-2 text-sm bg-white rounded-lg resize-none focus:ring-1 focus:ring-mint focus:outline-none"
+        className="w-full text-sm bg-white resize-none focus:outline-none"
       ></textarea>
       <Button type="submit" size="medium">
         등록

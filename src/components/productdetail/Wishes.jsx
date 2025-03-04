@@ -92,7 +92,12 @@ const Wishes = ({ productId }) => {
   return (
     <button onClick={handleWishToggle}>
       {!isWished ? (
-        <FaRegStar className="text-2xl text-gray-500 cursor-pointer hover:text-mint" />
+        <FaRegStar
+          style={{
+            fill: '#55CCC9',
+          }}
+          className="text-2xl cursor-pointer hover:scale-125"
+        />
       ) : (
         <FaStar className="text-2xl cursor-pointer text-mint hover:scale-125" />
       )}

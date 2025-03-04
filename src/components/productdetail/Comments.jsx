@@ -20,17 +20,20 @@ const Comments = ({ seller }) => {
   }
 
   return (
-    <div className="p-6 bg-white rounded-sm max-w-1280">
-      <div className="mb-6">
-        <p className="mb-3 font-semibold text-black">
-          댓글/문의 <span className="text-deep-mint">{comments.length}개</span>
-        </p>
+    <div className="rounded-[8px] px-[16px] py-[20px] lg:px-[30px] border-[1px] border-light-gray lg:rounded-[15px] mt-10">
+      <p className="mb-[20px] font-semibold text-black text-title-sm">
+        댓글/문의
+        <span className="text-deep-mint text-text-md ml-[10px]">
+          {comments.length}개
+        </span>
+      </p>
+      <div className="lg:pl-[8px]">
         {/* 댓글 입력 폼 */}
         <CommentForm productId={productId} />
-      </div>
 
-      {/* 댓글 목록 */}
-      <CommentList comments={comments} seller={seller} productId={productId} />
+        {/* 댓글 목록 */}
+        <CommentList comments={comments} seller={seller} />
+      </div>
     </div>
   );
 };
