@@ -23,8 +23,8 @@ const AllowedRoute = ({ children }) => {
     return isLocationAllowed === false ? (
       <div className="flex-grow full min-h-[300px]">
         <h1 className="flex flex-col items-center justify-center h-full text-2xl ">
-          <span>위치 정보가 필요한 서비스입니다.</span>
           <Loading />
+          <span className='mt-2 text-mint'>위치 정보가 필요한 서비스입니다.</span>
         </h1>
       </div>
     ) : (
