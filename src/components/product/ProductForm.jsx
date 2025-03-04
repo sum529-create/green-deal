@@ -175,7 +175,7 @@ const ProductForm = ({ product, onChangeProduct, onSubmit, productId }) => {
         </div>
 
         {/* 등록 버튼 */}
-        <div className="flex justify-center pt-4">
+        <div className="flex justify-center pt-11">
           <Button type="submit" size="large">
             상품 {productId ? '수정' : '등록'}
           </Button>

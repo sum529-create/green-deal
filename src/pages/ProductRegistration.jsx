@@ -47,26 +47,28 @@ const ProductRegistration = () => {
   }, [productData, productError]);
 
   return (
-    <div className="flex flex-wrap items-center content-start justify-center h-screen">
-      <div className="flex flex-row items-center justify-around w-full h-full max-w-screen-xl p-8 mx-auto my-0">
-        {/* 좌측 - 이미지 등록 영역 */}
-        <div className="w-[25rem] h-[36.25rem] ml-5 p-[3.125rem] bg-light-gray">
-          {/* 이미지 영역 */}
-          <ProductImageUpload
-            onChangeImage={handleImageChange}
-            productId={productId}
-            productImg={product?.img}
-          />
-        </div>
+    <div className="flex flex-wrap items-center content-start justify-center h-screen max-h-[calc(100vh_-_60px)] relative mt-[60px]">
+      <div className="flex items-center justify-around w-full h-full max-w-screen-xl p-8 mx-auto my-0 ">
+        <div className="flex gap-[138px] sm:gap-4 md:gap-8 lg:gap-12">
+          {/* 좌측 - 이미지 등록 영역 */}
+          <div className="w-[25rem] h-[36.25rem] ml-5 p-[3.125rem] bg-light-gray mt-[30px]">
+            {/* 이미지 영역 */}
+            <ProductImageUpload
+              onChangeImage={handleImageChange}
+              productId={productId}
+              productImg={product?.img}
+            />
+          </div>
 
-        {/* 우측 - 폼 영역 */}
-        <div className="mr-5">
-          <ProductForm
-            product={product}
-            onChangeProduct={handleProductChange}
-            onSubmit={handleSubmit}
-            productId={productId}
-          />
+          {/* 우측 - 폼 영역 */}
+          <div className="mr-5">
+            <ProductForm
+              product={product}
+              onChangeProduct={handleProductChange}
+              onSubmit={handleSubmit}
+              productId={productId}
+            />
+          </div>
         </div>
       </div>
     </div>
