@@ -13,6 +13,7 @@ const KakaoMap = ({
   selectedProduct,
   onLocationSelect,
   sendAddress,
+  productLocation,
 }) => {
   const [location, setLocation] = useState({ lat: null, lng: null }); // 유저의 중심 위치를 위한 상태
 
@@ -22,6 +23,9 @@ const KakaoMap = ({
   const { addressToCoords, coordsToAddress } = useKakaoGeocoder();
 
   useEffect(() => {
+    if (productLocation) {
+      return;
+    }
     getUserLocation()
       .then((coords) => {
         setLocation(coords);
@@ -94,6 +98,14 @@ const KakaoMap = ({
     }
   };
 
+  useEffect(() => {
+    if (!productLocation) {
+      return;
+    }
+    setLocation(productLocation);
+    setCenter(productLocation);
+  }, [productLocation]);
+
   return (
     <div className="w-full h-full">
       <Map
@@ -113,6 +125,7 @@ const KakaoMap = ({
           </>
         )}
         {mode === MODE.LOCATIONPICKER && <MapMarker position={location} />}
+        {mode === MODE.DETAILLOCATION && <MapMarker position={location} />}
       </Map>
     </div>
   );

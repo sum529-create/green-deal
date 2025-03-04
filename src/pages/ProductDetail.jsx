@@ -91,7 +91,8 @@ const ProductDetail = () => {
 
           {/* 지도 영역 */}
           <ProductLocation
-            address={address}
+            address={address?.replace(/^\d+\s*/, '')}
+            location={product?.location}
             isAddressLoading={isAddressLoading}
           />
 
