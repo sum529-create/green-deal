@@ -6,7 +6,7 @@ export const getComments = async (productId) => {
     .from('comments')
     .select('*, users(*)')
     .eq('product_id', productId)
-    .order('created_at', { ascending: false });
+    .order('created_at', { ascending: true });
 
   if (error) throw new Error(error.message);
   return data;
