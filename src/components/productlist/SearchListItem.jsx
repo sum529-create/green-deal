@@ -4,27 +4,34 @@ const SearchListItem = ({ product, selectedProduct, setSelectedProduct }) => {
   const handleClick = (id) => {
     setSelectedProduct(id);
   };
+
   return (
     <li
-      className={`flex justify-between py-5 cursor-pointer group px-9 h-auto items-stretch ${selectedProduct === product.id ? 'bg-light-gray' : 'border-b border-light-gray'}`}
+      className={`relative flex px-6 py-4 cursor-pointer group h-auto items-center border-b border-light-gray ${selectedProduct === product.id ? 'bg-light-gray' : ''}`}
       onClick={() => handleClick(product.id)}
     >
-      <div className="flex flex-col gap-2 pr-2">
+      <div className="flex flex-col justify-between w-full pr-24">
         <span
-          className={`font-bold text-lg ${selectedProduct === product.id ? 'text-light-mint' : 'group-hover:text-mint'}`}
+          className={`mb-4 font-bold text-lg truncate max-w-[200px] ${selectedProduct === product.id ? 'text-light-mint' : 'group-hover:text-mint'}`}
         >
           {product.name}
         </span>
 
-        <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
           <img
             src={product.profile_img}
-            className="w-10 h-10 rounded-full bg-deep-mint"
-          ></img>
+            className="w-6 h-6 rounded-full bg-deep-mint"
+            alt="프로필 이미지"
+          />
           <span className="text-text-lg">{product.user_name}</span>
         </div>
       </div>
-      <img src={product.img} alt="사진 없음" className="w-20 h-20 rounded-sm" />
+
+      <img
+        src={product.img}
+        alt="사진 없음"
+        className="absolute w-20 h-20 rounded-sm right-6"
+      />
     </li>
   );
 };

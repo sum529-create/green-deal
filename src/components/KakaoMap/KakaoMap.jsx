@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Map, MapMarker } from 'react-kakao-maps-sdk';
+import { Map, MapMarker, useKakaoLoader } from 'react-kakao-maps-sdk';
 import { getUserLocation } from '../../utils/getUserLocation';
 import MyLocationMarker from './MyLocationMarker';
 import MapProductMarker from './MapProductMarker';
@@ -14,6 +14,9 @@ const KakaoMap = ({
   onLocationSelect,
   sendAddress,
 }) => {
+  const [loading, error] = useKakaoLoader({
+    appkey: import.meta.env.VITE_KAKAO_APP_KEY,
+  });
   const [location, setLocation] = useState({ lat: null, lng: null }); // 유저의 중심 위치를 위한 상태
 
   const [productInfo, setProductInfo] = useState(null);
