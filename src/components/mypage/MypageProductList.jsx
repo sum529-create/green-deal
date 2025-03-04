@@ -27,7 +27,13 @@ const MypageProductList = ({
   const buttons = {
     selling: [
       { buttonName: '삭제', variant: 'outline', onClick: removeProduct },
-      { buttonName: '수정', variant: 'primary', onClick: () => {} },
+      {
+        buttonName: '수정',
+        variant: 'primary',
+        onClick: (id) => {
+          navigate(`/product/registration?productId=${id}`);
+        },
+      },
     ],
     sold: [{ buttonName: '삭제', variant: 'outline', onClick: removeProduct }],
     wishlist: [

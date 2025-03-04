@@ -47,10 +47,10 @@ const ProductRegistration = () => {
   }, [productData, productError]);
 
   return (
-    <div className="flex flex-wrap content-start min-h-screen">
-      <div className="flex flex-row w-full h-full max-w-screen-xl p-8 mx-auto my-0 items-center gap-[1rem]">
+    <div className="flex flex-wrap items-center content-start justify-center h-screen">
+      <div className="flex flex-row items-center justify-around w-full h-full max-w-screen-xl p-8 mx-auto my-0">
         {/* 좌측 - 이미지 등록 영역 */}
-        <div className="w-[25rem] h-[36.25rem] p-[3.125rem] bg-light-gray">
+        <div className="w-[25rem] h-[36.25rem] ml-5 p-[3.125rem] bg-light-gray">
           {/* 이미지 영역 */}
           <ProductImageUpload
             onChangeImage={handleImageChange}
@@ -60,7 +60,7 @@ const ProductRegistration = () => {
         </div>
 
         {/* 우측 - 폼 영역 */}
-        <div className="flex-1 p-6">
+        <div className="mr-5">
           <ProductForm
             product={product}
             onChangeProduct={handleProductChange}
