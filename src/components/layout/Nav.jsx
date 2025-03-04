@@ -16,7 +16,7 @@ const Nav = () => {
   return (
     <nav className="z-[9999] fixed top-0 flex items-center justify-between w-full h-[60px] bg-deep-mint px-7 text-white text-base font-light shadow-sm">
       <h1>
-        <Link to="/products">
+        <Link to="/">
           <img src="/Logo.jpeg" className="h-14" />
         </Link>
       </h1>
