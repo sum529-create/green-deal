@@ -28,19 +28,6 @@ export const getMyWishlist = async (sub) => {
 };
 
 /**
- * 찜 해제
- * @description wish ID로 찜 해제
- * @param {number} wishId - 찜한 상품의 ID
- */
-export const removeWishItem = async (wishId) => {
-  const { error } = await supabase.from('wishes').delete().eq('id', wishId);
-
-  if (error) {
-    throw new Error('찜 해제 오류:', error.message);
-  }
-};
-
-/**
  * 찜 상태 가져오기
  * @param {number} productId - 조회할 상품 ID
  * @returns {Promise<Array>} - 찜한 목록 데이터

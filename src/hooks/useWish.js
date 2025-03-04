@@ -1,5 +1,10 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { addWish, getWishes, removeWish } from '../api/wishService';
+import {
+  addWish,
+  getMyWishlist,
+  getWishes,
+  removeWish,
+} from '../api/wishService';
 import { QUERY_KEYS } from '../constants/queryKeys';
 
 /**
@@ -46,4 +51,30 @@ export const useRemoveWish = (productId) => {
       queryClient.invalidateQueries([QUERY_KEYS.WISH.LIST, productId]);
     },
   });
+};
+
+/**
+ * useUserWishlist
+ * @description 유저의 찜 목록을 가져오는 훅
+ * @param {string} sub - user.id
+ * @returns {object}
+ */
+export const useUserWishlist = (sub) => {
+  const queryClient = useQueryClient();
+
+  const {
+    data: wishlist,
+    isLoading: wishlistLoading,
+    isError: wishlistError,
+  } = useQuery({
+    queryKey: [QUERY_KEYS.WISH.LIST, sub],
+    queryFn: () => getMyWishlist(sub),
+    enabled: !!sub,
+  });
+
+  return {
+    wishlist,
+    wishlistLoading,
+    wishlistError,
+  };
 };
