@@ -10,7 +10,11 @@ import HighlightText from '../components/common/HighlightText';
 const ProductList = () => {
   const [search, setSearch] = useState('');
   const [selectedProduct, setSelectedProduct] = useState(null);
-  const { data: products, isLoading } = useGetProducts(search);
+  const { data, fetchNextPage, hasNextPage, isLoading } =
+    useGetProducts(search);
+
+  // 이중 배열로 되어 있어 flatMap을 통해 한 단계를 풀어줍니다.
+  const products = data?.pages.flatMap((page) => page.data) || [];
 
   return (
     <div className="flex flex-col w-full h-[100vh] pt-[60px] overflow-hidden md:flex-row">
@@ -21,9 +25,11 @@ const ProductList = () => {
           <div>물품을 불러오는 중...</div>
         ) : (
           <SearchList
-            filteredProducts={products.data || []}
+            filteredProducts={products || []}
             selectedProduct={selectedProduct}
             setSelectedProduct={setSelectedProduct}
+            fetchNextPage={fetchNextPage}
+            hasNextPage={hasNextPage}
           />
         )}
       </div>
@@ -50,7 +56,7 @@ const ProductList = () => {
             <KakaoMap
               level={selectedProduct ? 5 : 10}
               mode={'productList'}
-              productList={products.data}
+              productList={products}
               selectedProduct={selectedProduct}
             />
           )}

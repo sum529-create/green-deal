@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { QUERY_KEYS } from '../constants/queryKeys';
 import {
   addProduct,
@@ -21,9 +21,10 @@ import useUserStore from '../store/userStore';
  * @returns
  */
 export const useGetProducts = (search = '') => {
-  return useQuery({
+  return useInfiniteQuery({
     queryKey: [QUERY_KEYS.PRODUCT.LIST, search],
-    queryFn: () => getProducts(search),
+    queryFn: ({ pageParam = 0 }) => getProducts({ pageParam, search }),
+    getNextPageParam: (lastPage) => lastPage.nextPage,
   });
 };
 

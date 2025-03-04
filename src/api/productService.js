@@ -1,24 +1,35 @@
 import { uploadProductImage } from '../utils/uploadProductImage';
 import { supabase } from './client';
 
-export const getProducts = async (search = '') => {
+/**
+ * getProducts
+ * @description 상품 목록을 가져오는 서비스 (검색 포함)
+ * @param {number} pageParam - 현재 페이지 번호
+ * @param {string} search - 검색어
+ * @return {Promise} - 상품 데이터 및 다음 페이지 번호
+ */
+export const getProducts = async ({ pageParam = 0, search = '' }) => {
+  const limit = 8;
+  const startIndex = pageParam * limit;
+  const endIndex = startIndex + limit - 1;
+
   let data, error;
 
   if (search) {
-    // 검색어가 있을 때: ilike로 검색
     ({ data, error } = await supabase
       .from('products_with_users')
       .select('*')
       .ilike('name', `%${search}%`)
-      .limit(10));
+      .range(startIndex, endIndex));
   } else {
-    // 검색어가 없을 때: 찜 개수 기준 정렬된 데이터 가져오기
-    ({ data, error } = await supabase.rpc('get_products_with_wishes'));
+    ({ data, error } = await supabase
+      .rpc('get_products_with_wishes')
+      .range(startIndex, endIndex));
   }
 
   if (error) throw new Error(error.message);
 
-  return { data };
+  return { data, nextPage: data.length === limit ? pageParam + 1 : null };
 };
 
 /**
