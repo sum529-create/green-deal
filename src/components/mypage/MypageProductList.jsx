@@ -13,7 +13,7 @@ const MypageProductList = ({ currentTab, user }) => {
     user?.id,
   );
 
-  const { mutate: removeWishMutation } = useRemoveWish();
+  const { mutate: removeWishMutation } = useRemoveWish(user?.id);
 
   const getFilteredItems = () => {
     if (!products || !wishlist) return [];
