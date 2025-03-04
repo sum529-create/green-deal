@@ -5,6 +5,7 @@ import SearchList from '../components/productlist/SearchList';
 import { useGetProducts } from '../hooks/useProduct';
 import AllowedRoute from '../routes/AllowedRoute';
 import HighlightText from '../components/common/HighlightText';
+import Loading from '../components/common/Loading';
 
 const ProductList = () => {
   const [search, setSearch] = useState('');
@@ -24,8 +25,8 @@ const ProductList = () => {
         <div className="relative flex flex-col flex-grow md:hidden">
           <AllowedRoute>
             {isLoading ? (
-              <div className="flex items-center justify-center h-64">
-                지도를 불러오는 중...
+              <div className="flex items-center justify-center h-full">
+                <Loading />
               </div>
             ) : (
               <div className="w-full h-full">
@@ -42,13 +43,19 @@ const ProductList = () => {
 
         {/* 검색 리스트는 항상 표시 */}
         <div className="flex-grow overflow-hidden">
-          <SearchList
-            filteredProducts={products}
-            selectedProduct={selectedProduct}
-            setSelectedProduct={setSelectedProduct}
-            fetchNextPage={fetchNextPage}
-            hasNextPage={hasNextPage}
-          />
+          {isLoading ? (
+            <div className="flex items-center justify-center h-full">
+              <Loading />
+            </div>
+          ) : (
+            <SearchList
+              filteredProducts={products}
+              selectedProduct={selectedProduct}
+              setSelectedProduct={setSelectedProduct}
+              fetchNextPage={fetchNextPage}
+              hasNextPage={hasNextPage}
+            />
+          )}
         </div>
       </div>
 
@@ -72,8 +79,8 @@ const ProductList = () => {
 
         <AllowedRoute>
           {isLoading ? (
-            <div className="flex items-center justify-center h-64">
-              지도를 불러오는 중...
+            <div className="flex items-center justify-center h-full">
+              <Loading />
             </div>
           ) : (
             <KakaoMap
