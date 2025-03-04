@@ -51,8 +51,8 @@ const ProductRegistration = () => {
   }, [productId, productData, productError]);
 
   return (
-    <div className="flex flex-wrap items-center content-start justify-center min-h-screen max-h-[calc(100vh_-_60px)] relative mt-[60px] overflow-x-hidden">
-      <div className="flex items-start justify-center w-full max-w-screen-xl p-4 mx-auto my-0 sm:p-6 lg:p-8">
+    <div className="flex flex-wrap items-center content-start justify-center max-h-[calc(100vh_-_60px)] relative mt-[60px] overflow-x-hidden">
+      <div className="flex items-start justify-center w-full max-w-screen-xl p-4 mx-auto my-0 xl:pt-[140px] sm:p-6 lg:p-8">
         <div className="flex flex-col w-full gap-8 lg:gap-[138px] xl:flex-row">
           {/* 좌측 - 이미지 등록 영역 */}
           <div className="w-full xl:w-[25rem] h-auto xl:h-[36.25rem] p-4 sm:p-[3.125rem] bg-light-gray mt-4 sm:mt-[30px] mx-auto">
