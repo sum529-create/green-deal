@@ -28,8 +28,9 @@ export const useProductForm = (product, onChangeProduct) => {
     const validationResult = validateProductForm(product);
     if (validationResult) {
       alert(validationResult);
-      return;
+      return false;
     }
+    return true;
   };
 
   const handleSelectLocation = (location, address) => {

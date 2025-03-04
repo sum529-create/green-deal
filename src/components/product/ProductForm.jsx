@@ -80,8 +80,11 @@ const ProductForm = ({ product, onChangeProduct, onSubmit, productId }) => {
       <form
         className="space-y-[24px] w-full mx-auto my-0"
         onSubmit={(e) => {
-          handleSubmit(e);
-          autoFocusHandler();
+          const isValid = handleSubmit(e);
+          if (!isValid) {
+            autoFocusHandler();
+            return;
+          }
           onSubmit();
         }}
       >
