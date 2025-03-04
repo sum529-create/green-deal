@@ -21,21 +21,6 @@ export const useGetWishes = (productId) => {
   });
 };
 
-// /**
-//  * useAddWish
-//  * @description 특정 상품을 찜하는 훅
-//  * @param {number} productId - 찜할 상품 ID
-//  * @returns {object} - 찜 추가 Mutation 객체
-//  */
-// export const useAddWish = (productId) => {
-//   const queryClient = useQueryClient();
-//   return useMutation({
-//     mutationFn: ({ userId }) => addWish({ productId, userId }),
-//     onSuccess: () => {
-//       queryClient.invalidateQueries([QUERY_KEYS.WISH.LIST, productId]);
-//     },
-//   });
-// };
 /**
  * useAddWish Optimistic-Update
  * @description 특정 상품을 찜하는 훅
@@ -45,8 +30,9 @@ export const useGetWishes = (productId) => {
 export const useAddWish = (productId) => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ productId, userId }) => addWish({ productId, userId }),
-    onMutate: async ({ productId, userId }) => {
+    mutationFn: ({ userId }) => addWish({ productId, userId }),
+
+    onMutate: async (variables) => {
       // 기존 쿼리 취소
       await queryClient.cancelQueries([QUERY_KEYS.WISH.LIST, productId]);
       // 현재 상태 저장 (Snapshot)
@@ -56,19 +42,21 @@ export const useAddWish = (productId) => {
       ]);
       // UI 즉시 반영
       queryClient.setQueryData([QUERY_KEYS.WISH.LIST, productId], (old) => [
-        ...(old || []), // 기존 찜 목록 유지
-        { product_id: productId, user_id: userId }, // 새로운 찜 데이터
+        ...old,
+        {
+          id: Date.now(), // 임시 ID, 실제 서버에서 반환되는 값으로 대체됨
+          product_id: productId,
+          user_id: variables.userId,
+        },
       ]);
       return { prevWish };
     },
     // 에러시 롤백
-    onError: (err, newWish, context) => {
-      if (context.prevWish) {
-        queryClient.setQueryData(
-          [QUERY_KEYS.WISH.LIST, productId],
-          context.prevWish,
-        );
-      }
+    onError: (err, variables, context) => {
+      queryClient.setQueryData(
+        [QUERY_KEYS.WISH.LIST, productId],
+        context.prevWish,
+      );
     },
     // 최종 서버 데이터 동기화
     onSettled: () => {
@@ -78,7 +66,7 @@ export const useAddWish = (productId) => {
 };
 
 /**
- * useRemoveWish
+ * useRemoveWish Optimistic-Update
  * @description 특정 찜을 삭제하는 훅
  * @param {number} productId - 찜할 상품 ID
  * @returns {object} - 찜 삭제 Mutation 객체
@@ -87,7 +75,28 @@ export const useRemoveWish = (productId) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (wishId) => removeWish(wishId),
-    onSuccess: () => {
+    onMutate: async (wishId) => {
+      // 기존 쿼리 취소
+      await queryClient.cancelQueries([QUERY_KEYS.WISH.LIST, productId]);
+      // 현재 상태 저장 (Snapshot)
+      const prevWish = queryClient.getQueryData([
+        QUERY_KEYS.WISH.LIST,
+        productId,
+      ]);
+      // 취소 UI 즉시 반영
+      queryClient.setQueryData([QUERY_KEYS.WISH.LIST, productId], (old) =>
+        old.filter((wish) => wish.id !== wishId),
+      );
+      return { prevWish };
+    },
+    // 에러시 롤백
+    onError: (err, wishId, context) => {
+      queryClient.setQueryData(
+        [QUERY_KEYS.WISH.LIST, productId],
+        context.prevWish,
+      );
+    },
+    onSettled: () => {
       queryClient.invalidateQueries([QUERY_KEYS.WISH.LIST, productId]);
     },
   });
