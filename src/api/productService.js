@@ -9,7 +9,7 @@ import { supabase } from './client';
  * @return {Promise} - 상품 데이터 및 다음 페이지 번호
  */
 export const getProducts = async ({ pageParam = 0, search = '' }) => {
-  const limit = 8;
+  const limit = 15;
   const startIndex = pageParam * limit;
   const endIndex = startIndex + limit - 1;
 

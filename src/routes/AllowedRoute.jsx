@@ -20,13 +20,13 @@ const AllowedRoute = ({ children }) => {
 
   if (pathname === '/product') {
     return isLocationAllowed === false ? (
-      <div className="flex-grow full min-h-[400px]">
+      <div className="flex-grow full min-h-[300px]">
         <h1 className="flex items-center justify-center h-full text-2xl ">
           위치 정보가 필요한 서비스입니다.
         </h1>
       </div>
     ) : (
-      <div className="flex-grow full min-h-[400px] rounded-[65px] overflow-hidden border border-light-gray">
+      <div className="flex-grow full min-h-[300px] rounded-5 md:rounded-[65px] overflow-hidden border border-light-gray">
         {children}
       </div>
     );

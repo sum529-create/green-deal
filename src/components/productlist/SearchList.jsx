@@ -23,7 +23,7 @@ const SearchList = ({
   }, [hasNextPage, fetchNextPage]);
 
   return (
-    <ul className="flex flex-col overflow-auto text-black bg-white border-t border-light-gray h-[calc(100vh-166px)] ">
+    <ul className="flex flex-col h-full overflow-auto text-black bg-white border-t border-light-gray">
       {filteredProducts?.map((product) => {
         return (
           <SearchListItem
