@@ -1,20 +1,20 @@
-import { supabase } from './api/client';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import Router from './routes/Router';
+import { useEffect } from 'react';
+import { handleAuthStateChange } from './store/userStore';
+
+const queryClient = new QueryClient();
 
 function App() {
-  /**
-   * 'test' 테이블의 데이터를 가져옴
-   * @async
-   * @function getData
-   * @returns {Promise<object[]>} 가져온 데이터 배열
-   */
-  const getData = async () => {
-    const { data } = await supabase.from('test').select('*');
-    console.log(data);
-  };
+  useEffect(() => {
+    handleAuthStateChange();
+  }, []);
 
-  getData();
-
-  return <div className="text-blue-600">Hot Six~</div>;
+  return (
+    <QueryClientProvider client={queryClient}>
+      <Router />
+    </QueryClientProvider>
+  );
 }
 
 export default App;
