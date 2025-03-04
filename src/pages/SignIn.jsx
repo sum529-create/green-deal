@@ -1,7 +1,7 @@
 import React from 'react';
 import UserForm from '../components/auth/UserForm';
-import { Link, useNavigate } from 'react-router-dom';
-import SocialLoginArea from '../components/auth/socialLoginArea';
+import { Link } from 'react-router-dom';
+import SocialLoginArea from '../components/auth/SocialLoginArea';
 
 /**
  * @component SignIn

@@ -141,3 +141,40 @@ export const setSoldoutProduct = async (productId) => {
   if (error) throw new Error(error.message);
   return data;
 };
+
+/**
+ * 로그인한 유저의 상품 목록 조회
+ * @description 유저의 ID에 해당하는 상품 목록을 가져오며 최신순 정렬
+ * @param {string} sub - user.id
+ * @returns {Promise} - 해당 유저의 상품 목록
+ */
+export const getMyProducts = async (sub) => {
+  //getMyProducts로 변경
+  const { data, error } = await supabase
+    .from('products')
+    .select('*')
+    .eq('user_id', sub)
+    .order('created_at', { ascending: false });
+  if (error) {
+    throw new Error('상품 데이터 가져오기 오류:', error.message);
+  }
+  return data;
+};
+
+/**
+ * 상품 삭제
+ * @description 상품 ID와 유저 ID로 상품 삭제
+ * @param {string} sub - user.id
+ * @param {number} productId - 삭제할 상품의 ID
+ */
+export const removeProduct = async (sub, productId) => {
+  const { error } = await supabase
+    .from('products')
+    .delete()
+    .eq('id', productId)
+    .eq('user_id', sub);
+
+  if (error) {
+    throw new Error('상품 삭제 오류:', error.message);
+  }
+};

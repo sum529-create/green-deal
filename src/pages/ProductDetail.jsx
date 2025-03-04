@@ -1,4 +1,3 @@
-import React from 'react';
 import { useParams } from 'react-router-dom';
 import useUserStore from '../store/userStore';
 import Button from '../components/common/Button';
