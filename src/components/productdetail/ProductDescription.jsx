@@ -2,9 +2,9 @@ import React from 'react';
 
 const ProductDescription = ({ product }) => {
   return (
-    <div className="p-4 space-y-2">
-      <h3 className="font-semibold text-title-sm text-deep-gray">상품 설명</h3>
-      <p className="mx-4 text-deep-gray text-text-md">{product.description}</p>
+    <div className="px-[20px] lg:px-[30px] py-[20px] border-b-[1px] border-light-gray text-deep-gray">
+      <h3 className="font-semibold text-title-sm mb-[20px]">상품 설명</h3>
+      <p className="text-text-md">{product.description}</p>
     </div>
   );
 };

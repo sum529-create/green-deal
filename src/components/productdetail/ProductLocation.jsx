@@ -3,19 +3,20 @@ import KakaoMap from '../KakaoMap/KakaoMap';
 
 const ProductLocation = ({ address, isAddressLoading }) => {
   return (
-    <div className="flex flex-col items-center rounded-lg">
-      <div className="flex flex-col space-y-2">
-        <div className="w-[400px] h-[250px] rounded-lg">
-          {/* ??? 수정 전 ??? */}
-          <KakaoMap />
-        </div>
-        <p className="text-text-md-sm text-deep-gray">
+    <>
+      <div className="px-[20px] lg:px-[30px] py-[20px]  text-deep-gray">
+        <h3 className="font-semibold text-title-sm mb-[20px]">거래 위치</h3>
+        <p className="text-text-md mb-[20px]">
           {isAddressLoading
             ? '주소 변환 중...'
             : address || '주소를 찾을 수 없습니다.'}
         </p>
+        <div className="w-full h-[300px] rounded-lg overflow-hidden border-[1px] border-light-gray">
+          {/* ??? 수정 전 ??? */}
+          <KakaoMap />
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

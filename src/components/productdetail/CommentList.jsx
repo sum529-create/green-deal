@@ -39,7 +39,7 @@ const CommentList = ({ comments, seller, productId }) => {
   };
 
   return (
-    <ul className="space-y-6">
+    <ul className="flex flex-col gap-[20px]">
       {/* map으로 뿌리기 */}
       {comments.length > 0 ? (
         comments.map((comment) => {
@@ -56,11 +56,9 @@ const CommentList = ({ comments, seller, productId }) => {
           return (
             <li
               key={comment.id}
-              className={`p-4 border rounded-lg border-light-gray ${
-                isProductOwnerComment && ' bg-light-gray'
-              }`}
+              className={`py-[16px] px-[12px] lg:px-[22px] border rounded-[12px] border-light-gray`}
             >
-              <div className="flex justify-between gap-3">
+              <div className="flex flex-col justify-between gap-3 lg:flex-row">
                 <div className="flex items-start w-full gap-3">
                   {/* 프로필이미지 */}
                   <img
@@ -68,17 +66,21 @@ const CommentList = ({ comments, seller, productId }) => {
                     alt={user.name}
                     className="w-12 h-12 rounded-full bg-deep-mint"
                   />
-                  <div className="w-full">
-                    <div className="flex items-center gap-3">
+                  <div className="w-full text-black ">
+                    <div className="flex flex-wrap items-center gap-3 lg:flex-nowrap">
                       {/* 작성자 닉네임 */}
-                      <h3 className="text-sm font-semibold text-black">
-                        {user.name}
-                      </h3>
+                      <h3 className="text-text-md">{user.name}</h3>
 
                       {/* 작성날짜 */}
-                      <span className="text-xs text-deep-gray">
+                      <span className="text-text-sm text-gray">
                         {new Date(comment.created_at).toLocaleDateString()}
                       </span>
+
+                      {isProductOwnerComment && (
+                        <span className="px-2 text-white text-caption bg-deep-mint">
+                          작성자
+                        </span>
+                      )}
                     </div>
 
                     {/* 댓글 내용 (수정중 ? textarea : p) */}
@@ -86,10 +88,10 @@ const CommentList = ({ comments, seller, productId }) => {
                       <textarea
                         value={editContent}
                         onChange={(e) => setEditContent(e.target.value)}
-                        className="w-full p-2 text-sm rounded-md focus:ring-1 focus:ring-mint focus:outline-none"
+                        className="w-full p-2 text-sm rounded-md resize-none ring-1 ring-mint focus:outline-none"
                       />
                     ) : (
-                      <p className="text-sm text-deep-gray">
+                      <p className="mt-2 text-sm text-deep-gray">
                         {comment.content}
                       </p>
                     )}
@@ -98,7 +100,7 @@ const CommentList = ({ comments, seller, productId }) => {
 
                 {/* 댓글 작성자만 수정/삭제 버튼 표시 */}
                 {isAuthor && (
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center justify-end gap-2">
                     {editingCommentId === comment.id ? (
                       <Button
                         type="button"
@@ -131,7 +133,9 @@ const CommentList = ({ comments, seller, productId }) => {
           );
         })
       ) : (
-        <p>아직 댓글이 없습니다.</p>
+        <p className="pt-4 pb-10 text-center text-gray">
+          작성된 댓글이 없습니다.
+        </p>
       )}
     </ul>
   );
