@@ -71,8 +71,7 @@ const ProductList = () => {
             </>
           ) : (
             <>
-              <HighlightText>국내 인기 있는 매물</HighlightText>
-              TOP 20
+              <HighlightText>인기 있는 물품</HighlightText> 찾아보기
             </>
           )}
         </span>

@@ -34,8 +34,11 @@ const SearchList = ({
           />
         );
       })}
-      <div ref={loadRef} className='w-2 h-2' >
-      </div>
+      {hasNextPage && (
+        <div ref={loadRef} className="w-full h-5 text-center">
+          더보기
+        </div>
+      )}
     </ul>
   );
 };
