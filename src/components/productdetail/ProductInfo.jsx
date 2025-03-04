@@ -1,8 +1,6 @@
 import React from 'react';
 
 const ProductInfo = ({ product }) => {
-  const PRODUCT_INFO_CSS = 'ml-4 text-text-md text-deep-gray';
-
   return (
     <div className="px-[20px] lg:px-[30px] py-[20px] border-b-[1px] border-light-gray">
       <h3 className="font-semibold text-title-sm text-deep-gray mb-[20px]">

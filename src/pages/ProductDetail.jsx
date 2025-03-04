@@ -67,7 +67,7 @@ const ProductDetail = () => {
     <div className="pt-[120px] pb-[60px] px-[7%]">
       <div className="lg:flex-row lg:items-start flex-col items-center flex gap-[7%] min-h-[860px] ">
         {/* 상품 이미지 */}
-        <div className="w-[34%] min-w-[350px] max-w-[660px] mb-10">
+        <div className="w-[34%] min-w-[250px] max-w-[660px] mb-10">
           <img
             src={product.img}
             alt={product.name}
