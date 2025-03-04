@@ -11,7 +11,7 @@ const NavAuthStatus = ({ isLoading, userData }) => {
       <UserDropDown userData={userData} />
     </div>
   ) : (
-    <div className="flex gap-2">
+    <div className="flex gap-7">
       <Link to="/signin">로그인</Link>
       <Link to="/signup">회원가입</Link>
     </div>
