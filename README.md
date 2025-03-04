@@ -47,6 +47,22 @@
         </a>
         <br />
       </td>
+    </tr>
+    <tr>
+      <td width="300px" align="center">
+        로그인/회원가입
+        <br>전역 상태 관리
+      </td>
+      <td width="300px" align="center">
+        물품 등록 및
+        <br>수정 구현
+      </td>
+      <td width="300px" align="center">
+        지도 API 구현
+        <br>홈 화면 스타일링
+      </td>       
+    </tr>
+    <tr>
       <td align="center">
         <a href="https://github.com/ImJaeOne">
         <img src="https://github.com/ImJaeOne.png" width="80" alt="ImJaeOne"/>
@@ -71,34 +87,22 @@
         </a>
         <br />
       </td>        
-    </tr>
+    </tr>    
     <tr>
-      <td width="200px" align="center">
-        로그인/회원가입
-        <br>전역 상태 관리
-      </td>
-      <td width="200px" align="center">
-        물품 등록 및
-        <br>수정 구현
-      </td>
-      <td width="200px" align="center">
-        지도 API 구현
-        <br>홈 화면 스타일링
-      </td>
-      <td width="200px" align="center">
+      <td width="300px" align="center">
         PM
         <br>물품 리스트 구현
         <br>레이아웃 구현
         <br>무한 스크롤 구현
       </td>
-      <td width="200px" align="center">
-        물품 상세페이지
-        <br>및 댓글 구현
+      <td width="300px" align="center">
+        물품 상세페이지 및
+        <br>댓글 구현
       </td> 
-      <td width="200px" align="center">
+      <td width="300px" align="center">
         마이페이지 및
         <br>프로필 수정 구현
-      </td>        
+      </td>       
     </tr>
   </tbody>
 </table>
@@ -144,7 +148,7 @@
 │  ├─ api // 🚧 API 통신 관련 서비스 로직
 │  ├─ App.jsx
 │  ├─ components
-│  │  ├─ ...    // ⚙ 페이지 단위로 분할된 컴포넌트
+│  │  ├─ ...    // 💾 페이지 단위로 분할된 컴포넌트
 │  │  ├─ common // 🧩 공통 컴포넌트
 │  ├─ constants // 📌 상수 값 관리
 │  ├─ hooks     // 🔧 커스텀 훅
