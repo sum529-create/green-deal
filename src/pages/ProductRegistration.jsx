@@ -30,28 +30,32 @@ const ProductRegistration = () => {
     handleImageChange,
     handleProductChange,
     handleSubmit,
+    resetProduct,
   } = useProductRegistration(onSuccess, productId);
 
   const { data: productData, error: productError } =
     useGetProductDetail(productId);
 
   useEffect(() => {
-    if (productData) {
-      handleProductChange(productData);
-    }
+    if (!productId) resetProduct();
+    else if (productId) {
+      if (productData) {
+        handleProductChange(productData);
+      }
 
-    if (productError) {
-      alert('상품 정보를 불러오는 데 실패했습니다.');
-      console.error(productError);
+      if (productError) {
+        alert('상품 정보를 불러오는 데 실패했습니다.');
+        console.error(productError);
+      }
     }
-  }, [productData, productError]);
+  }, [productId, productData, productError]);
 
   return (
-    <div className="flex flex-wrap items-center content-start justify-center h-screen max-h-[calc(100vh_-_60px)] relative mt-[60px]">
-      <div className="flex items-center justify-around w-full h-full max-w-screen-xl p-8 mx-auto my-0 ">
-        <div className="flex sm:gap-4 md:gap-8 lg:gap-[138px]">
+    <div className="flex flex-wrap items-center content-start justify-center max-h-[calc(100vh_-_60px)] relative mt-[60px] overflow-x-hidden">
+      <div className="flex items-start justify-center w-full max-w-screen-xl p-4 mx-auto my-0 xl:pt-[140px] sm:p-6 lg:p-8">
+        <div className="flex flex-col w-full gap-8 lg:gap-[138px] xl:flex-row">
           {/* 좌측 - 이미지 등록 영역 */}
-          <div className="w-[25rem] h-[36.25rem] p-[3.125rem] bg-light-gray mt-[30px]">
+          <div className="w-full xl:w-[25rem] h-auto xl:h-[36.25rem] p-4 sm:p-[3.125rem] bg-light-gray mt-4 sm:mt-[30px] mx-auto">
             {/* 이미지 영역 */}
             <ProductImageUpload
               onChangeImage={handleImageChange}
@@ -61,7 +65,7 @@ const ProductRegistration = () => {
           </div>
 
           {/* 우측 - 폼 영역 */}
-          <div>
+          <div className="w-full mt-8 xl:flex-1 xl:mt-0">
             <ProductForm
               product={product}
               onChangeProduct={handleProductChange}
