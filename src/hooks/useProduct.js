@@ -7,6 +7,8 @@ import {
   getProducts,
   getProductDetail,
   updateProduct,
+  getMyProducts,
+  removeProduct,
 } from '../api/productService';
 import { useState } from 'react';
 import { INITIAL_ADD_PRODUCT_DATA } from '../constants/productConstants';
@@ -172,4 +174,38 @@ export const useSoldoutProduct = (productId) => {
     },
   });
   return { mutate, isLoading, error };
+};
+
+/**
+ * useUserProducts
+ * @description 유저의 상품 목록을 가져오는 훅
+ * @param {string} sub - user.id
+ * @returns {object}
+ */
+export const useUserProducts = (sub) => {
+  const queryClient = useQueryClient();
+
+  const {
+    data: products,
+    isLoading: productsLoading,
+    isError: productsError,
+  } = useQuery({
+    queryKey: [QUERY_KEYS.PRODUCT.LIST, sub],
+    queryFn: () => getMyProducts(sub),
+    enabled: !!sub,
+  });
+
+  const { mutate: removeProductMutation } = useMutation({
+    mutationFn: (productId) => removeProduct(sub, productId),
+    onSuccess: () => {
+      queryClient.invalidateQueries([QUERY_KEYS.PRODUCT.LIST, sub]);
+    },
+  });
+
+  return {
+    products,
+    productsLoading,
+    productsError,
+    removeProductMutation,
+  };
 };

@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { supabase } from '../api/client';
 import { persist } from 'zustand/middleware';
+import { updateUserProfile } from '../api/userAuthService';
 
 const useUserStore = create(
   persist(
@@ -25,6 +26,7 @@ export const handleAuthStateChange = async () => {
     (event, session) => {
       if (event === 'SIGNED_IN' && session) {
         setUser(session.user);
+        updateUserProfile(session); // 구글 / 카카오 프로필 사진 반영
       } else if (event === 'SIGNED_OUT') {
         clearUser();
       }

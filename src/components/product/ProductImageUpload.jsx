@@ -29,9 +29,7 @@ const ProductImageUpload = ({ onChangeImage, productImg }) => {
             alt="업로드된 이미지"
             className="object-contain max-w-full max-h-full"
           />
-        ) : (
-          <span className="text-gray-400">이미지 영역</span>
-        )}
+        ) : null}
       </div>
 
       {/* 숨겨진 파일 업로드 입력 */}

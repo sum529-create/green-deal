@@ -15,8 +15,10 @@ import { useState, useRef, useEffect } from 'react';
 import { useKakaoGeocoder } from '../../hooks/useKakaoGeocoder';
 
 const ProductForm = ({ product, onChangeProduct, onSubmit, productId }) => {
-  const FORM_INPUT_HEIGHT = 'leading-[32.5px]';
-  const FORM_SELECT_HEIGHT = 'py-[14px] px-4 leading-[50px]';
+  const FORM_INPUT_STYLE =
+    'leading-[32.5px] text-lg border-2 border-[#BEBEBE] placeholder-[#BEBEBE]';
+  const TEXT_AREA_STYLE =
+    'min-h-[100px] border-2 border-[#BEBEBE] px-4 text-lg placeholder-[#BEBEBE]';
   const { name, price, quality, refund, category, description, location } =
     product;
   const [isLocationModalOpen, setIsLocationModalOpen] = useState(false);
@@ -69,7 +71,7 @@ const ProductForm = ({ product, onChangeProduct, onSubmit, productId }) => {
   return (
     <>
       <form
-        className="space-y-5 max-w-[500px] mx-auto my-0 pt-8"
+        className="space-y-[24px] min-w-[500px] mx-auto my-0"
         onSubmit={(e) => {
           handleSubmit(e);
           autoFocusHandler();
@@ -86,7 +88,7 @@ const ProductForm = ({ product, onChangeProduct, onSubmit, productId }) => {
             name="name"
             onChange={handleChange}
             placeholder="제목"
-            className={FORM_INPUT_HEIGHT}
+            className={`${FORM_INPUT_STYLE} pl-4`}
           />
         </div>
 
@@ -94,7 +96,7 @@ const ProductForm = ({ product, onChangeProduct, onSubmit, productId }) => {
         <div>
           <Label>판매 금액</Label>
           <div className="relative">
-            <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500">
+            <span className="absolute inset-y-0 left-0 flex items-center pl-4 text-gray-500">
               ₩
             </span>
             <Input
@@ -105,7 +107,7 @@ const ProductForm = ({ product, onChangeProduct, onSubmit, productId }) => {
               inputMode="numeric"
               onChange={handleChange}
               placeholder="판매금액"
-              className={`pl-8 ${FORM_INPUT_HEIGHT}`}
+              className={`pl-9 ${FORM_INPUT_STYLE}`}
             />
           </div>
         </div>
@@ -114,12 +116,7 @@ const ProductForm = ({ product, onChangeProduct, onSubmit, productId }) => {
           {/* 물품상태 */}
           <div className="flex-1">
             <Label>물품 상태</Label>
-            <Select
-              value={quality}
-              name="quality"
-              onChange={handleChange}
-              className={FORM_SELECT_HEIGHT}
-            >
+            <Select value={quality} name="quality" onChange={handleChange}>
               {PRODUCT_QUALITY.map((quality) => (
                 <option value={quality} key={quality}>
                   {quality}
@@ -131,12 +128,7 @@ const ProductForm = ({ product, onChangeProduct, onSubmit, productId }) => {
           {/* 교환 가능 여부 */}
           <div className="flex-1">
             <Label>교환 가능 여부</Label>
-            <Select
-              value={refund}
-              name="refund"
-              onChange={handleChange}
-              className={FORM_SELECT_HEIGHT}
-            >
+            <Select value={refund} name="refund" onChange={handleChange}>
               {PRODUCT_REFUND.map((refund) => (
                 <option
                   value={Object.values(refund)}
@@ -152,12 +144,7 @@ const ProductForm = ({ product, onChangeProduct, onSubmit, productId }) => {
         {/* 카테고리 */}
         <div>
           <Label>카테 고리</Label>
-          <Select
-            value={category}
-            name="category"
-            onChange={handleChange}
-            className={FORM_SELECT_HEIGHT}
-          >
+          <Select value={category} name="category" onChange={handleChange}>
             {PRODUCT_CATEGORIES.map((category) => (
               <option key={category} value={category}>
                 {category}
@@ -174,7 +161,7 @@ const ProductForm = ({ product, onChangeProduct, onSubmit, productId }) => {
             name="description"
             onChange={handleChange}
             placeholder="상품에 대한 설명을 입력하세요"
-            className="min-h-[100px]"
+            className={TEXT_AREA_STYLE}
           />
         </div>
 
@@ -188,7 +175,7 @@ const ProductForm = ({ product, onChangeProduct, onSubmit, productId }) => {
         </div>
 
         {/* 등록 버튼 */}
-        <div className="flex justify-center pt-4">
+        <div className="flex justify-center pt-11">
           <Button type="submit" size="large">
             상품 {productId ? '수정' : '등록'}
           </Button>
