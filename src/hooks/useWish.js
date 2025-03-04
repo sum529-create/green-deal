@@ -96,6 +96,7 @@ export const useRemoveWish = (productId) => {
         context.prevWish,
       );
     },
+    // 최종 서버 데이터 동기화
     onSettled: () => {
       queryClient.invalidateQueries([QUERY_KEYS.WISH.LIST, productId]);
     },
