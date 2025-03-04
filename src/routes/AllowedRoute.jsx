@@ -2,6 +2,7 @@ import { Navigate, Outlet, useLocation } from 'react-router-dom';
 import useUserStore from '../store/userStore';
 import { useEffect } from 'react';
 import { getUserLocation } from '../utils/getUserLocation';
+import Loading from '../components/common/Loading';
 
 const AllowedRoute = ({ children }) => {
   const { pathname } = useLocation();
@@ -21,8 +22,9 @@ const AllowedRoute = ({ children }) => {
   if (pathname === '/product') {
     return isLocationAllowed === false ? (
       <div className="flex-grow full min-h-[300px]">
-        <h1 className="flex items-center justify-center h-full text-2xl ">
-          위치 정보가 필요한 서비스입니다.
+        <h1 className="flex flex-col items-center justify-center h-full text-2xl ">
+          <span>위치 정보가 필요한 서비스입니다.</span>
+          <Loading />
         </h1>
       </div>
     ) : (
