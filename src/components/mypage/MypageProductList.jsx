@@ -2,15 +2,18 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import Button from '../common/Button';
 import { useUserProducts } from '../../hooks/useProduct';
-import { useUserWishlist } from '../../hooks/useWishlist';
+import { useRemoveWish, useUserWishlist } from '../../hooks/useWish';
 const MypageProductList = ({ currentTab, user }) => {
   const navigate = useNavigate();
 
   const { products, productsLoading, productsError, removeProductMutation } =
     useUserProducts(user?.id);
 
-  const { wishlist, wishlistLoading, wishlistError, removeWishItemMutation } =
-    useUserWishlist(user?.id);
+  const { wishlist, wishlistLoading, wishlistError } = useUserWishlist(
+    user?.id,
+  );
+
+  const { mutate: removeWishMutation } = useRemoveWish();
 
   const getFilteredItems = () => {
     if (!products || !wishlist) return [];
@@ -52,7 +55,7 @@ const MypageProductList = ({ currentTab, user }) => {
       {
         buttonName: '찜해제',
         variant: 'outline',
-        onClick: removeWishItemMutation,
+        onClick: removeWishMutation,
       },
     ],
   };
