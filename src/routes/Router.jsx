@@ -23,7 +23,7 @@ const Router = () => {
           element: <Main />,
         },
         {
-          path: '/product',
+          path: '/products',
           element: <ProductList />,
         },
         {

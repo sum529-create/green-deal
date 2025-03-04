@@ -34,7 +34,8 @@ const SearchList = ({
           />
         );
       })}
-      <div ref={loadRef} />
+      <div ref={loadRef} className='w-2 h-2' >
+      </div>
     </ul>
   );
 };

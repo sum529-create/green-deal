@@ -120,7 +120,7 @@ const UserForm = () => {
 
       if (userData) {
         setUser(userData.session.user);
-        navigate('/product');
+        navigate('/products');
       }
     } catch (error) {
       if (error.message.includes('Invalid login credentials')) {
