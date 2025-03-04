@@ -4,17 +4,24 @@ const ProductInfo = ({ product }) => {
   const PRODUCT_INFO_CSS = 'ml-4 text-text-md text-deep-gray';
 
   return (
-    <div className="p-4 space-y-2 bg-white rounded-lg">
-      <h3 className="font-semibold text-title-sm text-deep-gray">상품정보</h3>
-      <p className={PRODUCT_INFO_CSS}>
-        <strong>상태 :</strong> {product.quality}
-      </p>
-      <p className={PRODUCT_INFO_CSS}>
-        <strong>교환 :</strong> {product.refund ? '가능' : '불가능'}
-      </p>
-      <p className={PRODUCT_INFO_CSS}>
-        <strong>카테고리:</strong> {product.category}
-      </p>
+    <div className="px-[20px] lg:px-[30px] py-[20px] border-b-[1px] border-light-gray">
+      <h3 className="font-semibold text-title-sm text-deep-gray mb-[20px]">
+        상품 정보
+      </h3>
+      <ul className="text-text-md text-deep-gray">
+        <li>
+          <strong className="font-semibold">상태 : </strong>
+          <span>{product.quality}</span>
+        </li>
+        <li className="mt-[14px]">
+          <strong className="font-semibold">교환 : </strong>
+          <span>{product.refund ? '가능' : '불가능'}</span>
+        </li>
+        <li className="mt-[14px]">
+          <strong className="font-semibold">카테고리 : </strong>{' '}
+          <span>{product.category}</span>
+        </li>
+      </ul>
     </div>
   );
 };

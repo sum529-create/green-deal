@@ -41,7 +41,6 @@ const ProductDetail = () => {
   };
 
   // 반복되는 css
-  const HR_BORDER_CSS = 'border-t-1 border-light-gray';
   const UX_TEXT_CSS = 'text-center text-title-sm';
 
   // 데이터 로딩중
@@ -65,10 +64,10 @@ const ProductDetail = () => {
   const isOwner = isLogin && currentUser?.id === product.user_id;
 
   return (
-    <div className="mx-auto max-w-7xl">
-      <div className="flex gap-12 p-8 mx-auto bg-white h-[860px">
+    <div className="pt-[120px] pb-[60px] px-[7%]">
+      <div className="lg:flex-row lg:items-start flex-col items-center flex gap-[7%] min-h-[860px] ">
         {/* 상품 이미지 */}
-        <div className="flex items-center justify-center p-6 w-[580px] bg-light-gray">
+        <div className="w-[34%] min-w-[350px] max-w-[660px] mb-10">
           <img
             src={product.img}
             alt={product.name}
@@ -77,50 +76,40 @@ const ProductDetail = () => {
         </div>
 
         {/* 상품 정보 */}
-        <div className="w-[600]">
+        <div className="flex-1">
           {/* 상품 정보 헤더 컴포넌트 */}
           <ProductHeader product={product} />
-
-          <hr className={HR_BORDER_CSS} />
 
           {/* 판매자 정보 컴포넌트 */}
           <SellerInfo seller={product.users} />
 
-          <hr className={HR_BORDER_CSS} />
+          {/* 상품 상세 정보 컴포넌트 */}
+          <ProductInfo product={product} />
 
-          <div className="flex flex-col w-[600px]">
-            {/* 상품 상세 정보 컴포넌트 */}
-            <ProductInfo product={product} />
+          {/* 상품 설명 컴포넌트 */}
+          <ProductDescription product={product} />
 
-            <hr className={HR_BORDER_CSS} />
+          {/* 지도 영역 */}
+          <ProductLocation
+            address={address}
+            isAddressLoading={isAddressLoading}
+          />
 
-            {/* 상품 설명 컴포넌트 */}
-            <ProductDescription product={product} />
-
-            {/* 지도 영역 */}
-            <ProductLocation
-              address={address}
-              isAddressLoading={isAddressLoading}
-            />
-
-            {/* 판매글 작성자에게만 보이는 판매완료 버튼 */}
-            <div className="flex justify-center mt-7">
-              {isOwner && (
-                <Button
-                  type="button"
-                  onClick={
-                    isOwner && !product.soldout
-                      ? handleConfirmSoldout
-                      : undefined
-                  }
-                  size="large"
-                  variant={isOwner && !product.soldout ? 'outline' : 'disabled'}
-                  disabled={!isOwner || product.soldout}
-                >
-                  {product.soldout ? '거래종료' : '판매완료'}
-                </Button>
-              )}
-            </div>
+          {/* 판매글 작성자에게만 보이는 판매완료 버튼 */}
+          <div className="flex justify-center mt-7">
+            {isOwner && (
+              <Button
+                type="button"
+                onClick={
+                  isOwner && !product.soldout ? handleConfirmSoldout : undefined
+                }
+                size="large"
+                variant={isOwner && !product.soldout ? 'outline' : 'disabled'}
+                disabled={!isOwner || product.soldout}
+              >
+                {product.soldout ? '거래종료' : '판매완료'}
+              </Button>
+            )}
           </div>
         </div>
       </div>
