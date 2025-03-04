@@ -71,7 +71,7 @@ const ProductForm = ({ product, onChangeProduct, onSubmit, productId }) => {
   return (
     <>
       <form
-        className="space-y-5 min-w-[500px] mx-auto my-0"
+        className="space-y-[24px] min-w-[500px] mx-auto my-0"
         onSubmit={(e) => {
           handleSubmit(e);
           autoFocusHandler();
