@@ -78,7 +78,7 @@ const ProductForm = ({ product, onChangeProduct, onSubmit, productId }) => {
   return (
     <>
       <form
-        className="space-y-[24px] min-w-[500px] mx-auto my-0"
+        className="space-y-[24px] w-full mx-auto my-0"
         onSubmit={(e) => {
           handleSubmit(e);
           autoFocusHandler();
@@ -174,7 +174,7 @@ const ProductForm = ({ product, onChangeProduct, onSubmit, productId }) => {
 
         {/* 거래위치 */}
         <div className="flex items-center justify-between">
-          <Label>거래 위치</Label>
+          <Label className="mb-0 xl:mb-2">거래 위치</Label>
           <span>{address}</span>
           <Button onClick={openLocationModal} variant="outline" size="medium">
             {address ? '변경' : '추가'}
