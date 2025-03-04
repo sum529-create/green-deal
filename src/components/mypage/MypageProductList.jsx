@@ -62,7 +62,7 @@ const MypageProductList = ({ currentTab, user }) => {
 
   if (getFilteredItems().length === 0 && currentTab === 'selling') {
     return (
-      <div className="w-[846px]">
+      <div className="flex flex-col items-center justify-center md:block">
         <article
           className="flex flex-col items-center justify-center w-[250px] h-[280px] bg-gray-100 rounded-md border-2 border-dashed border-light-gray cursor-pointer hover:cursor-pointer hover:shadow-lg mt-[34px]"
           onClick={() => navigate('/product/registration')}

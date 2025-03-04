@@ -9,14 +9,16 @@ const MyPage = () => {
   const [currentTab, setCurrentTab] = useState('selling');
 
   return (
-    <div className="flex items-start justify-center min-h-screen mt-32">
-      <section className="flex flex-col items-center justify-center gap-10 min-w-[400px] min-h-[830px] bg-light-gray rounded-md">
+    <div className="flex flex-col items-center justify-center w-full min-h-screen px-4 mt-16 md:items-start lg:flex-row lg:mt-32 sm:px-8">
+      {/* 왼쪽 프로필 및 탭 */}
+      <section className="flex flex-col items-center justify-center gap-6 w-full sm:w-[400px] min-h-[600px] p-6 bg-light-gray rounded-md">
         <ProfileSection user={user} />
         <TabNav currentTab={currentTab} setCurrentTab={setCurrentTab} />
       </section>
 
-      <section className="pl-20 min-w-[800px] min-h-screen">
-        <h1 className="min-w-full p-0 font-bold text-title-lg text-darkmint">
+      {/* 오른쪽 상품 목록 */}
+      <section className="flex flex-col items-center flex-grow min-h-screen mt-10 lg:pl-20 lg:mt-0 md:block">
+        <h1 className="w-full font-bold text-center text-title-lg text-darkmint lg:text-left">
           {currentTab === 'selling'
             ? '판매 중인 물품'
             : currentTab === 'sold'
