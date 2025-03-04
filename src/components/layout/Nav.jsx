@@ -17,7 +17,7 @@ const Nav = () => {
     <nav className="fixed top-0 flex items-center justify-between w-full h-[60px] bg-deep-mint px-7 text-white text-base font-light shadow-sm">
       <h1>
         <Link to="/product">
-          <img src="/public/Logo.jpeg" className="h-14" />
+          <img src="/Logo.jpeg" className="h-14" />
         </Link>
       </h1>
       <NavAuthStatus isLoading={isLoading} userData={userData} />
