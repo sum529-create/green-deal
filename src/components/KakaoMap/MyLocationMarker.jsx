@@ -1,12 +1,17 @@
 import { MapMarker } from 'react-kakao-maps-sdk';
+import { useUserData } from '../../hooks/useUserQuery';
+import useUserStore from '../../store/userStore';
 
 const MyLocationMarker = ({ location }) => {
+  const user = useUserStore((state) => state.user);
+  const { data } = useUserData(user?.user_metadata.sub);
+
   return (
     <div>
       <MapMarker
-        position={location} // ip 기반으로 현재 내 위치 지정
+        position={location}
         image={{
-          src: 'https://cdn-static.zep.us/static/assets/baked-avartar-images/10-35-3-253.png', // 프로필 사진 들어갈 예정
+          src: data?.profile_img || '/profile_default.png',
           size: {
             width: 39,
             height: 39,

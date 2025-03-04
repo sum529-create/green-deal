@@ -7,12 +7,12 @@ const SearchListItem = ({ product, selectedProduct, setSelectedProduct }) => {
 
   return (
     <li
-      className={`relative flex px-6 py-4 cursor-pointer group h-auto items-center border-b border-light-gray ${selectedProduct === product.id ? 'bg-light-gray' : ''}`}
+      className={`relative flex px-6 py-4 cursor-pointer group h-auto items-center border-b border-light-gray`}
       onClick={() => handleClick(product.id)}
     >
       <div className="flex flex-col justify-between w-full pr-24">
         <span
-          className={`mb-4 font-bold text-lg truncate max-w-[200px] ${selectedProduct === product.id ? 'text-light-mint' : 'group-hover:text-mint'}`}
+          className={`mb-4 font-bold text-lg truncate max-w-[200px] ${selectedProduct === product.id ? 'text-mint' : 'group-hover:text-mint'}`}
         >
           {product.name}
         </span>

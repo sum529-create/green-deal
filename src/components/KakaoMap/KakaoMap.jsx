@@ -24,8 +24,8 @@ const KakaoMap = ({
   useEffect(() => {
     getUserLocation()
       .then((coords) => {
-        setLocation({ lat: 37.5568, lng: 126.9237 });
-        setCenter({ lat: 37.5568, lng: 126.9237 });
+        setLocation(coords);
+        setCenter(coords);
       }) // 더미 데이터 확인을 위한 위도 경도 설정입니다. 추후에 coords로 변경 예정
       .catch((error) => console.error(error));
   }, []);
