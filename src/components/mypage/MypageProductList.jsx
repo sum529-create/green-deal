@@ -51,8 +51,28 @@ const MypageProductList = ({ currentTab, user }) => {
     ],
   };
 
+  if (getFilteredItems().length === 0 && currentTab === 'selling') {
+    return (
+      <div className="w-[846px]">
+        <article
+          className="flex flex-col items-center justify-center w-[250px] h-[280px] bg-gray-100 rounded-md border-2 border-dashed border-light-gray cursor-pointer hover:cursor-pointer hover:shadow-lg mt-[34px]"
+          onClick={() => navigate('/product/registration')}
+        >
+          <div className="flex flex-col items-center justify-center w-full h-full text-deep-mint">
+            <span className="text-title-md">+</span>
+            <p className="mt-2 text-title-sm">물품 등록하기</p>
+          </div>
+        </article>
+      </div>
+    );
+  }
+
   if (getFilteredItems().length === 0) {
-    return <div className="text-lg">아직 아무런 상품도 없습니다.</div>;
+    return (
+      <div className="w-[846px]">
+        <div className="text-lg mt-[34px]">등록된 상품이 없습니다.</div>
+      </div>
+    );
   }
 
   if (productsLoading || wishlistLoading) {
@@ -64,7 +84,7 @@ const MypageProductList = ({ currentTab, user }) => {
   }
 
   return (
-    <div className="grid grid-cols-3 gap-10 overflow-hidden">
+    <div className="grid grid-cols-3 overflow-hidden gap-x-[48px] min-w-[800px]">
       {getFilteredItems().map((item) => (
         <article
           key={item.id}
@@ -74,7 +94,7 @@ const MypageProductList = ({ currentTab, user }) => {
             }
             navigate(`/product/detail/${item.id}`);
           }}
-          className="flex flex-col items-center justify-center w-[250px] h-[280px] bg-gray-100 rounded-md border-2 border-light-gray hover:cursor-pointer hover:shadow-lg"
+          className="flex flex-col items-center justify-center w-[250px] h-[280px] bg-gray-100 rounded-md border-2 border-light-gray hover:cursor-pointer hover:shadow-lg mt-[34px]"
         >
           <img
             src={item.img}
@@ -85,7 +105,9 @@ const MypageProductList = ({ currentTab, user }) => {
             <h3 className="font-semibold truncate text-title-sm">
               {item.name}
             </h3>
-            <p className="mb-2 text-md text-deep-mint">{item.price}</p>
+            <p className="mb-2 text-md text-deep-mint">
+              {Number(item.price).toLocaleString()}
+            </p>
             <div className="flex items-center justify-center gap-4">
               {buttons[currentTab].map(({ buttonName, variant, onClick }) => (
                 <Button
@@ -112,7 +134,7 @@ const MypageProductList = ({ currentTab, user }) => {
 
       {currentTab === 'selling' && (
         <article
-          className="flex flex-col items-center justify-center w-[250px] h-[280px] bg-gray-100 rounded-md border-2 border-dashed border-light-gray cursor-pointer hover:cursor-pointer hover:shadow-lg"
+          className="flex flex-col items-center justify-center w-[250px] h-[280px] bg-gray-100 rounded-md border-2 border-dashed border-light-gray cursor-pointer hover:cursor-pointer hover:shadow-lg mt-[34px]"
           onClick={() => navigate('/product/registration')}
         >
           <div className="flex flex-col items-center justify-center w-full h-full text-deep-mint">

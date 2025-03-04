@@ -17,7 +17,7 @@ const TabNav = ({ currentTab, setCurrentTab }) => {
         <button
           key={tab.value}
           onClick={() => handleTabChange(tab.value)}
-          className={`w-full h-[70px] transition-colors text-title-sm hover:opacity-80 ${tab.rounded} ${
+          className={`w-full h-[70px] transition-colors text-title-sm hover:opacity-80 text-left pl-5 ${tab.rounded} ${
             currentTab === tab.value
               ? 'bg-graish-green text-white'
               : 'bg-white text-black'

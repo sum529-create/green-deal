@@ -9,14 +9,14 @@ const MyPage = () => {
   const [currentTab, setCurrentTab] = useState('selling');
 
   return (
-    <div className="flex items-center justify-center min-h-screen gap-14">
-      <section className="flex flex-col items-center justify-center gap-10 w-[400px] h-[830px] p-6 bg-light-gray rounded-md">
+    <div className="flex items-start justify-center min-h-screen mt-32">
+      <section className="flex flex-col items-center justify-center gap-10 min-w-[400px] min-h-[830px] bg-light-gray rounded-md">
         <ProfileSection user={user} />
         <TabNav currentTab={currentTab} setCurrentTab={setCurrentTab} />
       </section>
 
-      <section className="p-6 min-w-[800px] h-screen">
-        <h1 className="mb-4 font-bold text-title-lg text-deep-mint">
+      <section className="pl-20 min-w-[800px] min-h-screen">
+        <h1 className="min-w-full p-0 font-bold text-title-lg text-darkmint">
           {currentTab === 'selling'
             ? '판매 중인 물품'
             : currentTab === 'sold'
