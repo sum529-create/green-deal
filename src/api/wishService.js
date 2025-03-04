@@ -33,6 +33,11 @@ export const addWish = async ({ productId, userId }) => {
   return data;
 };
 
+/**
+ * 찜 삭제
+ * @param {number} wishId - 삭제할 찜 ID
+ * @returns {Promise<void>}
+ */
 export const removeWish = async (wishId) => {
   const { error } = await supabase.from('wishes').delete().eq('id', wishId);
 
