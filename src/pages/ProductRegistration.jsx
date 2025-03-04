@@ -20,7 +20,7 @@ const ProductRegistration = () => {
       } else {
         alert('상품이 등록되었습니다.');
       }
-      navigate('/product');
+      navigate('/products');
     }
   };
 

@@ -13,7 +13,7 @@ const MypageProductList = ({ currentTab, user }) => {
     user?.id,
   );
 
-  const { mutate: removeWishMutation } = useRemoveWish();
+  const { mutate: removeWishMutation } = useRemoveWish(user?.id);
 
   const getFilteredItems = () => {
     if (!products || !wishlist) return [];
@@ -34,7 +34,11 @@ const MypageProductList = ({ currentTab, user }) => {
       {
         buttonName: '삭제',
         variant: 'outline',
-        onClick: removeProductMutation,
+        onClick: (productId) => {
+          if (window.confirm('상품을 삭제하시겠습니까?')) {
+            removeProductMutation(productId);
+          }
+        },
       },
       {
         buttonName: '수정',
@@ -48,21 +52,29 @@ const MypageProductList = ({ currentTab, user }) => {
       {
         buttonName: '삭제',
         variant: 'outline',
-        onClick: removeProductMutation,
+        onClick: (productId) => {
+          if (window.confirm('상품을 삭제하시겠습니까?')) {
+            removeProductMutation(productId);
+          }
+        },
       },
     ],
     wishlist: [
       {
         buttonName: '찜해제',
         variant: 'outline',
-        onClick: removeWishMutation,
+        onClick: (wishId) => {
+          if (window.confirm('찜해제 하시겠습니까?')) {
+            removeWishMutation(wishId);
+          }
+        },
       },
     ],
   };
 
   if (getFilteredItems().length === 0 && currentTab === 'selling') {
     return (
-      <div className="w-[846px]">
+      <div className="flex flex-col items-center justify-center md:block">
         <article
           className="flex flex-col items-center justify-center w-[250px] h-[280px] bg-gray-100 rounded-md border-2 border-dashed border-light-gray cursor-pointer hover:cursor-pointer hover:shadow-lg mt-[34px]"
           onClick={() => navigate('/product/registration')}
@@ -85,7 +97,7 @@ const MypageProductList = ({ currentTab, user }) => {
   }
 
   if (productsLoading || wishlistLoading) {
-    return <div>Loading...</div>;
+    return <div><Loading/></div>;
   }
 
   if (productsError || wishlistError) {
@@ -93,7 +105,7 @@ const MypageProductList = ({ currentTab, user }) => {
   }
 
   return (
-    <div className="grid grid-cols-3 overflow-hidden gap-x-[48px] min-w-[800px]">
+    <div className="flex flex-col md:grid md:grid-cols-3 overflow-hidden md:gap-x-[48px]  md:min-w-0">
       {getFilteredItems().map((item) => (
         <article
           key={item.id}
@@ -124,9 +136,11 @@ const MypageProductList = ({ currentTab, user }) => {
                   type="button"
                   variant={variant}
                   size="medium"
-                  onClick={() =>
-                    onClick(currentTab === 'wishlist' ? item.wishId : item.id)
-                  }
+                  onClick={() => {
+                    const id =
+                      currentTab === 'wishlist' ? item.wishId : item.id;
+                    onClick(id);
+                  }}
                   className={
                     currentTab === 'sold' || currentTab === 'wishlist'
                       ? 'w-full'
