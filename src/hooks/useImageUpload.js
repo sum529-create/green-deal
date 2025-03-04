@@ -7,7 +7,6 @@ export const useImageUpload = ({ onChangeImage }) => {
       if (imageUrl) {
         // blob url 삭제
         URL.revokeObjectURL(imageUrl);
-        setImageUrl(null);
       }
     };
   }, [imageUrl]);

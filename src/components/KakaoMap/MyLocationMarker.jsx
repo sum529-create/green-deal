@@ -1,30 +1,19 @@
-import { MapMarker } from 'react-kakao-maps-sdk';
-import { useUserData } from '../../hooks/useUserQuery';
-import useUserStore from '../../store/userStore';
+import { CustomOverlayMap } from 'react-kakao-maps-sdk';
 
 const MyLocationMarker = ({ location }) => {
-  const user = useUserStore((state) => state.user);
-  const { data } = useUserData(user?.user_metadata.sub);
-
   return (
-    <div>
-      <MapMarker
-        position={location}
-        image={{
-          src: data?.profile_img || '/profile_default.png',
-          size: {
-            width: 39,
-            height: 39,
-          },
-          options: {
-            offset: {
-              x: 27,
-              y: 69,
-            },
-          },
+    <CustomOverlayMap position={location}>
+      <div
+        style={{
+          width: '20px',
+          height: '20px',
+          backgroundColor: '#DD0025',
+          borderRadius: '50%',
+          border: '2px solid white',
+          boxShadow: '0 0 5px rgba(0, 0, 0, 0.3)',
         }}
       />
-    </div>
+    </CustomOverlayMap>
   );
 };
 
