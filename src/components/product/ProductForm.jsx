@@ -29,7 +29,14 @@ const ProductForm = ({ product, onChangeProduct, onSubmit, productId }) => {
     handleSubmit,
     setAddress,
     handleSelectLocation,
-  } = useProductForm(product, onChangeProduct);
+  } = useProductForm(product, onChangeProduct, productId);
+
+  useEffect(() => {
+    // 상품 등록 페이지일 경우 초기화
+    if (!productId) {
+      setAddress('');
+    }
+  }, [productId]);
 
   // 상품 수정 시, 위도경도를 받아 주소로 변환
   useEffect(() => {

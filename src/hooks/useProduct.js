@@ -13,6 +13,8 @@ import {
 import { useState } from 'react';
 import { INITIAL_ADD_PRODUCT_DATA } from '../constants/productConstants';
 import useUserStore from '../store/userStore';
+import { useCallback } from 'react';
+import { useEffect } from 'react';
 
 /**
  * useGetProduct
@@ -109,6 +111,18 @@ export const useProductRegistration = (onSuccess, productId) => {
     error: updateError,
   } = useUpdateProduct(product, user.id, productId, onSuccess);
 
+  // 상품 정보 초기화 함수
+  const resetProduct = useCallback(() => {
+    setProduct(INITIAL_ADD_PRODUCT_DATA);
+  }, []);
+
+  useEffect(() => {
+    // 상품 등록 페이지일 경우 초기화
+    if (!productId) {
+      resetProduct();
+    }
+  }, [productId, resetProduct]);
+
   const handleImageChange = (newImg) => {
     setProduct((value) => ({
       ...value,
@@ -139,6 +153,7 @@ export const useProductRegistration = (onSuccess, productId) => {
     handleImageChange,
     handleProductChange,
     handleSubmit,
+    resetProduct,
   };
 };
 

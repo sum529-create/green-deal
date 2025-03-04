@@ -30,21 +30,25 @@ const ProductRegistration = () => {
     handleImageChange,
     handleProductChange,
     handleSubmit,
+    resetProduct,
   } = useProductRegistration(onSuccess, productId);
 
   const { data: productData, error: productError } =
     useGetProductDetail(productId);
 
   useEffect(() => {
-    if (productData) {
-      handleProductChange(productData);
-    }
+    if (!productId) resetProduct();
+    else if (productId) {
+      if (productData) {
+        handleProductChange(productData);
+      }
 
-    if (productError) {
-      alert('상품 정보를 불러오는 데 실패했습니다.');
-      console.error(productError);
+      if (productError) {
+        alert('상품 정보를 불러오는 데 실패했습니다.');
+        console.error(productError);
+      }
     }
-  }, [productData, productError]);
+  }, [productId, productData, productError]);
 
   return (
     <div className="flex flex-wrap items-center content-start justify-center h-screen max-h-[calc(100vh_-_60px)] relative mt-[60px]">

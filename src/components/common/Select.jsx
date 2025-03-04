@@ -8,7 +8,7 @@ const Select = ({
   className = '',
 }) => {
   const SELECT_DEFAULT_STYLE =
-    'appearance-none py-2 px-4 leading-[30px] border-2 border-[#BEBEBE] text-lg text-[#BEBEBE] w-full rounded-[10px] focus:outline-none focus:ring-1 focus:ring-graish-green';
+    'appearance-none py-2 px-4 leading-[30px] border-2 border-[#BEBEBE] text-lg w-full rounded-[10px] focus:outline-none focus:ring-1 focus:ring-graish-green';
   return (
     <div className="relative">
       <select
