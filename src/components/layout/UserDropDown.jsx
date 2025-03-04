@@ -3,11 +3,15 @@ import { authSignOut } from '../../api/userAuthService';
 import { Link } from 'react-router-dom';
 import { FiChevronDown, FiChevronUp } from 'react-icons/fi';
 import { PRODUCT_DEFAULT_IMG } from '../../constants/mypageConstants';
+import useUserStore from '../../store/userStore';
 
 const UserDropDown = ({ userData = {} }) => {
+  const clearUser = useUserStore((state) => state.clearUser);
+
   const handleLogout = async () => {
     try {
       await authSignOut();
+      clearUser();
       alert('로그아웃 되었습니다.');
     } catch (error) {
       alert('로그아웃에 실패하였습니다.');
