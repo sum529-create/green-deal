@@ -36,7 +36,13 @@ const MypageProductList = ({ currentTab, user }) => {
         variant: 'outline',
         onClick: removeProductMutation,
       },
-      { buttonName: '수정', variant: 'primary', onClick: () => {} },
+      {
+        buttonName: '수정',
+        variant: 'primary',
+        onClick: (id) => {
+          navigate(`/product/registration?productId=${id}`);
+        },
+      },
     ],
     sold: [
       {

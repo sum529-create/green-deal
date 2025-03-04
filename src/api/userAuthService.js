@@ -121,3 +121,24 @@ export const authKakaoSignIn = async () => {
     throw new Error(`카카오 로그인 실패: ${error.message}`);
   }
 };
+
+/**
+ * @function updateUserProfile
+ * @description 로그인한 사용자의 프로필 사진을 데이터베이스에 업데이트하는 비동기 함수
+ * @async
+ * @returns {Promise<Object>} 프로필 사진 반영 성공 시 반환 데이터
+ * @throws {Error} 프로필 사진 반영 실패 시 오류 발생
+ */
+export const updateUserProfile = async (session) => {
+  if (!session?.user) return;
+
+  const { id } = session.user;
+  const profileImage = session.user.user_metadata.picture;
+
+  const { error } = await supabase
+    .from('users')
+    .update({ profile_img: profileImage })
+    .eq('user_id', id);
+
+  if (error) console.error('프로필 업데이트 실패:', error);
+};
