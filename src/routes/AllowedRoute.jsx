@@ -19,7 +19,7 @@ const AllowedRoute = ({ children }) => {
       });
   }, [isLocationAllowed]);
 
-  if (pathname === '/products') {
+  if (pathname === '/') {
     return isLocationAllowed === false ? (
       <div className="flex-grow full min-h-[300px]">
         <h1 className="flex flex-col items-center justify-center h-full text-2xl ">
@@ -33,7 +33,7 @@ const AllowedRoute = ({ children }) => {
       </div>
     );
   }
-  return isLocationAllowed ? <Outlet /> : <Navigate to="/products" />;
+  return isLocationAllowed ? <Outlet /> : <Navigate to="/" />;
 };
 
 export default AllowedRoute;

@@ -1,4 +1,3 @@
-import { SOCIAL_LOGIN_REDIRECT_URL } from '../constants/constants';
 import { supabase } from './client';
 
 /**
@@ -84,7 +83,6 @@ export const authGoogleSignIn = async () => {
           access_type: 'offline',
           prompt: 'consent',
         },
-        redirectTo: SOCIAL_LOGIN_REDIRECT_URL,
       },
     });
 
@@ -111,7 +109,6 @@ export const authKakaoSignIn = async () => {
           access_type: 'offline',
           prompt: 'consent',
         },
-        redirectTo: SOCIAL_LOGIN_REDIRECT_URL,
       },
     });
 
