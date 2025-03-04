@@ -92,7 +92,7 @@ const UserForm = () => {
       const signUpData = await authSignUp(email, password, userName);
 
       if (!!signUpData) {
-        navigate('/signin');
+        navigate('/');
       }
     } catch (error) {
       if (error.message.includes('User already registered')) {
