@@ -26,7 +26,9 @@ const AllowedRoute = ({ children }) => {
         </h1>
       </div>
     ) : (
-      <div className="flex-grow full min-h-[400px] rounded-lg overflow-hidden border border-light-gray m-10">{children}</div>
+      <div className="flex-grow full min-h-[400px] rounded-[65px] overflow-hidden border border-light-gray">
+        {children}
+      </div>
     );
   }
   return isLocationAllowed ? <Outlet /> : <Navigate to="/product" />;
