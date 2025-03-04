@@ -42,18 +42,13 @@ export const useProfileInfo = (user) => {
   const [localError, setLocalError] = useState(null);
 
   // 유저 데이터 조회
-  const { data: userdata } = useQuery({
-    queryKey: ['user', user?.id], //QUERY_KEYS.USER를 하면 적용이 안됨
-    queryFn: () => fetchUserData(user.id),
-    enabled: !!user?.id,
-    select: (data) => data.data,
-  });
+  const { data: userdata } = useUserData(user?.id); //useUseData 사용
 
   // 프로필 업데이트
   const updateProfileMutation = useMutation({
     mutationFn: (newNickname) => updateProfile(newNickname, userdata),
     onSuccess: () => {
-      queryClient.invalidateQueries(['user', user?.id]);
+      queryClient.invalidateQueries([QUERY_KEYS.USER, user?.id]);
     },
   });
 
@@ -79,20 +74,10 @@ export const useProfileInfo = (user) => {
     }
 
     // 닉네임 중복 검사
-    try {
-      await checkNicknameMutation.mutateAsync(nickname);
-    } catch (error) {
-      setLocalError(error);
-      return;
-    }
+    await checkNicknameMutation.mutateAsync(nickname);
 
     // 프로필 업데이트
-    try {
-      await updateProfileMutation.mutateAsync(nickname);
-    } catch (error) {
-      setLocalError(error);
-      return;
-    }
+    await updateProfileMutation.mutateAsync(nickname);
 
     return { success: true };
   };
@@ -115,13 +100,15 @@ export const useProfileImage = (userdata) => {
   const updateProfileImageMutation = useMutation({
     mutationFn: (imageUrl) => updateProfileImage(imageUrl, userdata.user_id),
     onSuccess: () => {
-      queryClient.invalidateQueries(['user', userdata?.user_id]);
+      queryClient.invalidateQueries([QUERY_KEYS.USER, userdata?.user_id]);
     },
   });
 
   const handleImageChange = async (e) => {
     const file = e.target.files[0];
-    if (!file) return;
+    if (!file) {
+      return;
+    }
 
     if (file.size > MAX_FILE_SIZE) {
       alert('2MB 이하의 파일을 선택해주세요.');
