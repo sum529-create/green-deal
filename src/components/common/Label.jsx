@@ -1,6 +1,6 @@
 const Label = ({ children }) => {
   return (
-    <label className="block mb-1 text-lg font-medium text-deep-gray">
+    <label className="block mb-3 text-lg font-medium leading-none text-deep-gray">
       {children}
     </label>
   );
