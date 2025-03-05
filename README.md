@@ -136,8 +136,11 @@
 - #### [[카카오맵 API] React-Kakao-Maps에서 모달 클릭 UX 개선 & Zustand 사용 고민](https://debnjin.tistory.com/99)
 - #### [[카카오맵 API] 비인가 처리: 지도 영역만 접근 제한하는 방법](https://debnjin.tistory.com/100)
 - #### [[카카오맵 API] 카카오맵 UX 향상시키기 - API 문서를 잘 읽자!](https://dlawi0108.tistory.com/71)
+- #### [[물품 리스트] 무한 스크롤, 내 환경에서는 되는데 팀원들은 안 된다고?](https://dlawi0108.tistory.com/72)
 - #### [[물품 등록/수정] Tanstack Query와 useEffect의 무한 루프 함정](https://velog.io/@sum529/Trouble-Shooting-Tanstack-Query와-useEffect의-무한-루프-함정)
 - #### [[물품 등록/수정] Trouble Shooting - Tanstack Query에서 data.data 중첩 문제](https://velog.io/@sum529/Trouble-Shooting-Tanstack-Query에서-data.data-중첩-문제)
+- #### [[물품 상세] 낙관적 업데이트, 내 코드도 낙관적으로 봐줄 순 없었니](https://velog.io/@ly-ra/낙관적업데이트-내코드도-낙관적으로-봐줄순-없었니)
+- #### [[마이페이지] 닉네임 중복 검사 오류 해결](https://velog.io/@verdantgreeny/닉네임-중복-검사-오류-해결)
 
 
 <br />
