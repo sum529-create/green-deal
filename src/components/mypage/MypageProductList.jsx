@@ -105,7 +105,7 @@ const MypageProductList = ({ currentTab, user }) => {
   }
 
   return (
-    <div className="flex w-full flex-col justify-center items-center md:grid md:grid-cols-[repeat(auto-fit,minmax(250px,1fr))] md:gap-x-[48px]">
+    <div className="flex w-full flex-col justify-center items-center md:grid md:grid-cols-[repeat(auto-fit,minmax(250px,1fr))] md:gap-x-[48px] xl:gap-x-[10px]">
       {getFilteredItems().map((item) => (
         <article
           key={item.id}
