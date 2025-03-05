@@ -105,7 +105,7 @@ const MypageProductList = ({ currentTab, user }) => {
   }
 
   return (
-    <div className="flex flex-col md:grid md:grid-cols-3 overflow-hidden md:gap-x-[48px]  md:min-w-0">
+    <div className="flex w-full flex-col justify-center items-center md:grid md:grid-cols-[repeat(auto-fit,minmax(250px,1fr))] md:gap-x-[48px]">
       {getFilteredItems().map((item) => (
         <article
           key={item.id}
@@ -157,7 +157,7 @@ const MypageProductList = ({ currentTab, user }) => {
 
       {currentTab === 'selling' && (
         <article
-          className="flex flex-col items-center justify-center w-[250px] h-[280px] bg-gray-100 rounded-md border-2 border-dashed border-light-gray cursor-pointer hover:cursor-pointer hover:shadow-lg mt-[34px]"
+          className="flex flex-col items-center justify-center max-w-[250px] h-[280px] bg-gray-100 rounded-md border-2 border-dashed border-light-gray cursor-pointer hover:cursor-pointer hover:shadow-lg mt-[34px]"
           onClick={() => navigate('/product/registration')}
         >
           <div className="flex flex-col items-center justify-center w-full h-full text-deep-mint">

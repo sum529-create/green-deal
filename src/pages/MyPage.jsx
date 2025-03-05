@@ -17,7 +17,7 @@ const MyPage = () => {
       </section>
 
       {/* 오른쪽 상품 목록 */}
-      <section className="flex flex-col items-center flex-grow min-h-screen mt-10 lg:pl-20 lg:mt-0 md:block">
+      <section className="flex flex-col items-center flex-grow w-full min-h-screen mt-10 lg:pl-20 lg:mt-0">
         <h1 className="w-full font-bold text-center text-title-lg text-darkmint lg:text-left">
           {currentTab === 'selling'
             ? '판매 중인 물품'
