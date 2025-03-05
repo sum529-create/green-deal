@@ -112,9 +112,11 @@ export const useProfileImage = (userdata) => {
 
     if (file.size > MAX_FILE_SIZE) {
       alert('2MB 이하의 파일을 선택해주세요.');
+      return;
     }
     if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
       alert('JPG 또는 PNG 형식의 이미지만 업로드 가능합니다.');
+      return;
     }
 
     uploadImageMutation.mutate(file, {
