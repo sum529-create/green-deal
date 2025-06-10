@@ -15,7 +15,7 @@
  
 
 > - **작업 기간** : 2025. 02. 26 ~ 2025. 03. 04
-> - **배포 주소** : https://outsourcing-alpha.vercel.app/
+> - **배포 주소** : https://green-deal.vercel.app/
 
 <br />
 
