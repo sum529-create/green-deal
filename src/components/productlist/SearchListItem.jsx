@@ -1,4 +1,5 @@
 import React from 'react';
+import { PRODUCT_DEFAULT_IMG } from '../../constants/mypageConstants';
 
 const SearchListItem = ({ product, selectedProduct, setSelectedProduct }) => {
   const handleClick = (id) => {
@@ -19,7 +20,7 @@ const SearchListItem = ({ product, selectedProduct, setSelectedProduct }) => {
 
         <div className="flex items-center gap-2">
           <img
-            src={product.profile_img}
+            src={product.profile_img || PRODUCT_DEFAULT_IMG}
             className="w-6 h-6 rounded-full bg-deep-mint"
             alt="프로필 이미지"
           />
